@@ -1,4 +1,4 @@
-package src;
+package login;
 
 import java.awt.Font;
 
@@ -49,5 +49,6 @@ public class Ventana extends JFrame{
 		Password.setFont(new Font("Arial",Font.PLAIN,20));
 		Password.setBounds(10,200,200,50);
 		add(Password);
+		Password.setVisible(true);
 	}
 }
