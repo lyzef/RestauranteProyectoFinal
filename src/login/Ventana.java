@@ -1,5 +1,6 @@
 package login;
 
+import java.awt.Color;
 import java.awt.Font;
 
 import javax.swing.JButton;
@@ -22,12 +23,12 @@ public class Ventana extends JFrame{
 		//Cambia el título de la ventana
 		setTitle("Mi Aplicación");
 		//Coloca la ventana al centro de la pantalla
-		setLocationRelativeTo(null);
-		setVisible(true); //Establece visibilidad
+		setLocationRelativeTo(null); //A mitad de pantalla
+		setVisible(false); //Establece visibilidad
 		
 		setLayout(null);
 		JButton boton = new JButton("Ingresar");
-		boton.setBounds(10,250,200,50);
+		boton.setBounds(10,290,200,50);
 		add(boton);
 		
 		JLabel label = new JLabel("Ingrese su correo electronico");
@@ -36,19 +37,29 @@ public class Ventana extends JFrame{
 		add(label);
 		
 		JTextField textField = new JTextField();
-		textField.setFont(new Font("Arial",Font.PLAIN,20));
 		textField.setBounds(10,100,200,50);
+		textField.setFont(new Font("Arial",Font.PLAIN,20));
 		add(textField);
 		
 		JLabel label1 = new JLabel("Ingrese su contraseña");
 		label1.setFont(new Font("arial",Font.PLAIN,20));
-		label1.setBounds(10,120,500,100);
+		label1.setBounds(10,160,500,100);
 		add(label1);
 		
 		JPasswordField Password = new JPasswordField();
+		Password.setBounds(10,230,200,50);
 		Password.setFont(new Font("Arial",Font.PLAIN,20));
-		Password.setBounds(10,200,200,50);
 		add(Password);
-		Password.setVisible(true);
+		
+		
+		//Mal contraseña
+		JLabel mensajeError = new JLabel("Usuario inexistente o contraseña incorrecta");
+		mensajeError.setFont(new Font("arial",Font.PLAIN,15));
+		mensajeError.setBounds(10,300,500,100);
+		mensajeError.setForeground(Color.RED);
+		add(mensajeError);
+		
+		setVisible(true);
+		
 	}
 }

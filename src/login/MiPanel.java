@@ -9,7 +9,6 @@ public class MiPanel extends JPanel{
 		JButton boton = new JButton("BOTON");
 		boton.setBounds(10,10,200,50);
 		add(boton);
-		
 
 	}
 	
