@@ -3,7 +3,8 @@ package login;
 public class Main {
 
 	public static void main(String[] args) {
-		Ventana ventanita = new Ventana();
+		FormularioRegistro formulario = new FormularioRegistro();
+		//Ventana ventanita = new Ventana();
 	}
 
 }
