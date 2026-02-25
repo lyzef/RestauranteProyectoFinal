@@ -9,6 +9,9 @@ import java.awt.Toolkit;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -41,24 +44,39 @@ public class FormularioRegistro extends JFrame{
 	public void InicializarComponentes() {
 		//Label titulo (Panel Norte)
 		JPanel panelTitulo = new JPanel();
-		JLabel lblTitulo = new JLabel("Registro");
-		lblTitulo.setFont(new Font("Times", Font.PLAIN,17));
-		panelTitulo.add(lblTitulo);
-		lblTitulo.setHorizontalAlignment(SwingConstants.CENTER);
-		panelTitulo.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
-		
-		add(panelTitulo,BorderLayout.NORTH);
+		JPanel panelAbajo = new JPanel();
 		JPanel panelComponentes = new JPanel();
 		
+		JLabel lblTitulo = new JLabel("Registro - Datos personales");
+		lblTitulo.setFont(new Font("Times", Font.PLAIN,17));
+		lblTitulo.setHorizontalAlignment(SwingConstants.CENTER);
+		panelTitulo.add(lblTitulo);
+		
+		JButton lblBotonRegistro = new JButton("Siguiente");
+		panelAbajo.add(lblBotonRegistro);
+		
+		panelTitulo.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
 		panelComponentes.setLayout(new BoxLayout(panelComponentes, BoxLayout.Y_AXIS));
 		panelComponentes.setBorder(BorderFactory.createEmptyBorder(20,20,20,20));
 		
-		//Preguntas
-		JLabel lblNombre = new JLabel("Nombre completo ");
-		panelComponentes.add(lblNombre);
-		JTextField entradaNombre = new JTextField(20);
-		panelComponentes.add(entradaNombre);
+		add(panelTitulo,BorderLayout.NORTH);
+		add(panelAbajo,BorderLayout.SOUTH);
 		
+		//Preguntas
+		JLabel lblApellidpoP = new JLabel("Apellido Paterno");
+		panelComponentes.add(lblApellidpoP);
+		JTextField entradaApellidoP = new JTextField(20);
+		panelComponentes.add(entradaApellidoP);
+		
+		JLabel lblApellidoMaterno = new JLabel("Apellido Materno");
+		panelComponentes.add(lblApellidoMaterno);
+		JTextField entradaApellidoM = new JTextField(20);
+		panelComponentes.add(entradaApellidoM);
+		
+		JLabel lblNombres = new JLabel("Nombres");
+		panelComponentes.add(lblNombres);
+		JTextField entradaNombres = new JTextField(20);
+		panelComponentes.add(entradaNombres);
 		
 		JLabel lblEdad = new JLabel("Edad ");
 		panelComponentes.add(lblEdad);
@@ -75,13 +93,28 @@ public class FormularioRegistro extends JFrame{
 		JTextField entradaTelefono = new JTextField(20);
 		panelComponentes.add(entradaTelefono);
 		
-		JLabel lblCP = new JLabel("CP ");
-		panelComponentes.add(lblCP);
-		JTextField entradaCP = new JTextField(20);
-		panelComponentes.add(entradaCP);
+		JLabel lblGenero = new JLabel("Genero ");
+		panelComponentes.add(lblGenero);
+		String[] opcionesGenero = {"Hombre", "Mujer","Therian","Trans","Mamadero","Otro"};
+		JComboBox<String> generos = new JComboBox<String>(opcionesGenero);
+		generos.setSelectedIndex(2);
+		panelComponentes.add(generos);
+		
+		JLabel lblEstadoCivil = new JLabel("EstadoCivil ");
+		panelComponentes.add(lblEstadoCivil);
+		String[] opcionesEstadoCivil = {"Soltero","Casado","Union libre", "Viudo"};
+		JComboBox<String> estadoCivil = new JComboBox<String>(opcionesEstadoCivil);
+		estadoCivil.setSelectedIndex(2);
+		panelComponentes.add(estadoCivil);
+		
+		JLabel lblCurp = new JLabel("Curp ");
+		panelComponentes.add(lblCurp);
+		JTextField entradaCurp = new JTextField(20);
+		panelComponentes.add(entradaCurp);
+
+		//Registro parte 1 de formulario
 		
 		
-	
 		
 		JScrollPane scroll = new JScrollPane(panelComponentes);
 		scroll.setHorizontalScrollBar(null);
