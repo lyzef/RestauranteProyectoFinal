@@ -3,23 +3,15 @@ package login;
 import image.*;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Image;
 import java.awt.Toolkit;
 
-import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollBar;
-import javax.swing.JScrollPane;
-import javax.swing.JTextField;
-import javax.swing.SwingConstants;
-
+import javax.swing.*;
+import javax.swing.border.Border;
 public class FormularioRegistro extends JFrame{
 	
 	public FormularioRegistro() {
@@ -42,84 +34,69 @@ public class FormularioRegistro extends JFrame{
 	}
 	
 	public void InicializarComponentes() {
-		//Label titulo (Panel Norte)
-		JPanel panelTitulo = new JPanel();
-		JPanel panelAbajo = new JPanel();
-		JPanel panelComponentes = new JPanel();
+		//Paneles
+		JPanel panelContenedorSuperior = new JPanel();
+		JPanel panelContenedorInferior = new JPanel();
+		JPanel panelContenedorCentral = new JPanel();
+
 		
+		//Panel superior
 		JLabel lblTitulo = new JLabel("Registro - Datos personales");
 		lblTitulo.setFont(new Font("Times", Font.PLAIN,17));
 		lblTitulo.setHorizontalAlignment(SwingConstants.CENTER);
-		panelTitulo.add(lblTitulo);
+		panelContenedorSuperior.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
+		panelContenedorSuperior.add(lblTitulo);
 		
+		//Panel inferior
 		JButton lblBotonRegistro = new JButton("Siguiente");
-		panelAbajo.add(lblBotonRegistro);
+		lblBotonRegistro.setBackground(new Color(144, 224, 239));
+		panelContenedorInferior.add(lblBotonRegistro);
+			
+		//Panel central - Sub paneles
+		panelContenedorCentral.setLayout(new  BoxLayout(panelContenedorCentral, BoxLayout.Y_AXIS));
+		Border emptyBorder = BorderFactory.createEmptyBorder(10,20,10,20);
+		panelContenedorCentral.setBorder(emptyBorder);
+
+		String[] informacionPersonal = {"Nombres: ", "Fecha de nacimiento: ", "CURP: ", "Telefono: ", "Correo electronico: "};
+		int largoTotalDeInformacionPersonal = informacionPersonal.length;
+		for(int i = 0; i < largoTotalDeInformacionPersonal ; i++) {
+			JLabel lbl = new JLabel(informacionPersonal[i]);
+			
+			panelContenedorCentral.add(lbl);
+			JTextField txtField = new JTextField(10);
+			panelContenedorCentral.add(txtField);
+		}
 		
-		panelTitulo.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
-		panelComponentes.setLayout(new BoxLayout(panelComponentes, BoxLayout.Y_AXIS));
-		panelComponentes.setBorder(BorderFactory.createEmptyBorder(20,20,20,20));
 		
-		add(panelTitulo,BorderLayout.NORTH);
-		add(panelAbajo,BorderLayout.SOUTH);
 		
-		//Preguntas
-		JLabel lblApellidpoP = new JLabel("Apellido Paterno");
-		panelComponentes.add(lblApellidpoP);
-		JTextField entradaApellidoP = new JTextField(20);
-		panelComponentes.add(entradaApellidoP);
 		
-		JLabel lblApellidoMaterno = new JLabel("Apellido Materno");
-		panelComponentes.add(lblApellidoMaterno);
-		JTextField entradaApellidoM = new JTextField(20);
-		panelComponentes.add(entradaApellidoM);
-		
-		JLabel lblNombres = new JLabel("Nombres");
-		panelComponentes.add(lblNombres);
-		JTextField entradaNombres = new JTextField(20);
-		panelComponentes.add(entradaNombres);
-		
-		JLabel lblEdad = new JLabel("Edad ");
-		panelComponentes.add(lblEdad);
-		JTextField entradaEdad = new JTextField(20);
-		panelComponentes.add(entradaEdad);
-		
-		JLabel lblCorreo = new JLabel("Correo Electronico");
-		panelComponentes.add(lblCorreo);
-		JTextField entradaCorreo = new JTextField(20);
-		panelComponentes.add(entradaCorreo);
-		
-		JLabel lblTelefono = new JLabel("Telefono ");
-		panelComponentes.add(lblTelefono);
-		JTextField entradaTelefono = new JTextField(20);
-		panelComponentes.add(entradaTelefono);
-		
+		//Checkbox
 		JLabel lblGenero = new JLabel("Genero ");
-		panelComponentes.add(lblGenero);
-		String[] opcionesGenero = {"Hombre", "Mujer","Therian","Trans","Mamadero","Otro"};
+		lblGenero.setAlignmentX(Component.LEFT_ALIGNMENT);
+		panelContenedorCentral.add(lblGenero);
+		String[] opcionesGenero = {"Hombre", "Mujer","Therian","Otro"};
 		JComboBox<String> generos = new JComboBox<String>(opcionesGenero);
 		generos.setSelectedIndex(2);
-		panelComponentes.add(generos);
+		panelContenedorCentral.add(generos);
 		
 		JLabel lblEstadoCivil = new JLabel("EstadoCivil ");
-		panelComponentes.add(lblEstadoCivil);
+		lblEstadoCivil.setAlignmentX(Component.LEFT_ALIGNMENT);
+		panelContenedorCentral.add(lblEstadoCivil);
 		String[] opcionesEstadoCivil = {"Soltero","Casado","Union libre", "Viudo"};
 		JComboBox<String> estadoCivil = new JComboBox<String>(opcionesEstadoCivil);
 		estadoCivil.setSelectedIndex(2);
-		panelComponentes.add(estadoCivil);
+		panelContenedorCentral.add(estadoCivil);
 		
-		JLabel lblCurp = new JLabel("Curp ");
-		panelComponentes.add(lblCurp);
-		JTextField entradaCurp = new JTextField(20);
-		panelComponentes.add(entradaCurp);
-
-		//Registro parte 1 de formulario
-		
-		
-		
-		JScrollPane scroll = new JScrollPane(panelComponentes);
+		//Anadiendo paneles
+		JScrollPane scroll = new JScrollPane(panelContenedorCentral);
 		scroll.setHorizontalScrollBar(null);
 		
-		add(scroll);
+		
+		//add(panelContenedorCentral,BorderLayout.CENTER);
+		add(scroll); //Es el contenedor padre del panel contenedor central
+		add(panelContenedorSuperior,BorderLayout.NORTH);
+		add(panelContenedorInferior,BorderLayout.SOUTH);
+		
 	}
 
 }
