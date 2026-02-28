@@ -10,9 +10,9 @@ import java.awt.Toolkit;
 import javax.swing.*;
 import javax.swing.border.Border;
 
-public class Ventana2 extends JFrame {
+public class FormularioRegistroInformacionPuesto extends JFrame {
 
-    public Ventana2() {
+    public FormularioRegistroInformacionPuesto() {
         setSize(400, 400);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setResizable(true);
@@ -21,7 +21,7 @@ public class Ventana2 extends JFrame {
 
         // Ícono de la ventana (asegúrate de que la ruta apunte a un archivo de imagen real)
         Toolkit tk = Toolkit.getDefaultToolkit();
-        Image icono = tk.getImage("src/image/kfc.png"); // ejemplo: un archivo kfc.png dentro de src/image
+        Image icono = tk.getImage("src/image/icono.jpg");
         setIconImage(icono);
 
         InicializarComponentes();
@@ -53,7 +53,8 @@ public class Ventana2 extends JFrame {
         panelContenedorCentral.setBorder(emptyBorder);
 
         String[] informacionPersonal = {
-            "Identificacion del puesto: ", "Descripcion de funciones: ", "Perfil del puesto: ", "Condiciones laborales: ", "Ubicacion organizacional: "
+            "Puesto actual: ", "Descripcion de funciones: ", "Perfil del puesto: ", "Condiciones laborales: ", "Ubicacion organizacional: "
+            ,"Tipo de contrato"
         };
 
         for (String info : informacionPersonal) {
@@ -62,7 +63,16 @@ public class Ventana2 extends JFrame {
             JTextField txtField = new JTextField(10);
             panelContenedorCentral.add(txtField);
         }
-
+        
+        JLabel lblTurno = new JLabel("Turno");
+        panelContenedorCentral.add(lblTurno);
+        ButtonGroup radioTurno = new ButtonGroup();
+        JRadioButton rbMatutino = new JRadioButton("Matutino"); panelContenedorCentral.add(rbMatutino);
+        JRadioButton rbVespertino = new JRadioButton("Vespertino"); panelContenedorCentral.add(rbVespertino);
+        JRadioButton rbMixto = new JRadioButton("Mixto"); panelContenedorCentral.add(rbMixto);
+        radioTurno.add(rbMatutino);radioTurno.add(rbVespertino);radioTurno.add(rbMixto);
+        
+        
         // Scroll
         JScrollPane scroll = new JScrollPane(panelContenedorCentral);
         scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
@@ -73,7 +83,4 @@ public class Ventana2 extends JFrame {
         add(panelContenedorInferior, BorderLayout.SOUTH);
     }
 
-    public static void main(String[] args) {
-        new Ventana2();
-    }
 }

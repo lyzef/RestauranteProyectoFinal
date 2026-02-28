@@ -21,9 +21,9 @@ public class FormularioRegistro extends JFrame{
 		setTitle("Formulario");
 		setLocationRelativeTo(null);
 		
-		//FJOTO -- kfc
+		//FOTO
 		Toolkit tk = Toolkit.getDefaultToolkit();
-		Image icono = tk.getImage("/restauranteProyectoFinal/src/image") ;
+		Image icono = tk.getImage("src/image/icono.jpg");
 		setIconImage(icono);
 		
 		InicializarComponentes();
@@ -72,7 +72,6 @@ public class FormularioRegistro extends JFrame{
 		
 		//Checkbox
 		JLabel lblGenero = new JLabel("Genero ");
-		lblGenero.setAlignmentX(Component.LEFT_ALIGNMENT);
 		panelContenedorCentral.add(lblGenero);
 		String[] opcionesGenero = {"Hombre", "Mujer","Therian","Otro"};
 		JComboBox<String> generos = new JComboBox<String>(opcionesGenero);
@@ -80,7 +79,6 @@ public class FormularioRegistro extends JFrame{
 		panelContenedorCentral.add(generos);
 		
 		JLabel lblEstadoCivil = new JLabel("EstadoCivil ");
-		lblEstadoCivil.setAlignmentX(Component.LEFT_ALIGNMENT);
 		panelContenedorCentral.add(lblEstadoCivil);
 		String[] opcionesEstadoCivil = {"Soltero","Casado","Union libre", "Viudo"};
 		JComboBox<String> estadoCivil = new JComboBox<String>(opcionesEstadoCivil);

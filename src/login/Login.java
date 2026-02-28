@@ -4,8 +4,8 @@ import javax.swing.*;
 import java.awt.*;
 
 
-public class Ventana extends JFrame{
-	public Ventana() {
+public class Login extends JFrame{
+	public Login() {
 		setSize(500,400); //Establece el tamaño
 		//Termina la ejecución del programa al cerrar la ventana.
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -16,12 +16,16 @@ public class Ventana extends JFrame{
 		//Establece si la ventana puede redimensionarse
 		setResizable(false);
 		//Cambia el título de la ventana
-		setTitle("Mi Aplicación");
+		setTitle("Madero's System");
 		//Coloca la ventana al centro de la pantalla
 		setLocationRelativeTo(null); //A mitad de pantalla
 		setVisible(false); //Establece visibilidad
 		
 		//this.setLayout(new BorderLayout()); Layout por defecto de JFrame
+		
+		Toolkit tk = Toolkit.getDefaultToolkit();
+        Image icono = tk.getImage("src/image/IconoApliacionPrincipal.jpg");
+        setIconImage(icono);
 		
 		//Organizacion de paneles
 		JPanel panelNorteContenedor = new JPanel();
