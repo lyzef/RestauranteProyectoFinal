@@ -1,4 +1,4 @@
-package login;
+package login.formulario;
 
 import image.*;
 
@@ -51,6 +51,12 @@ public class FormularioRegistro extends JFrame{
 		JButton lblBotonRegistro = new JButton("Siguiente");
 		lblBotonRegistro.setBackground(new Color(144, 224, 239));
 		panelContenedorInferior.add(lblBotonRegistro);
+		
+		lblBotonRegistro.addActionListener( e -> {
+	        	FormularioRegistroInformacionPuesto f = new FormularioRegistroInformacionPuesto();
+	        	setVisible(false);
+	        	});
+	        
 			
 		//Panel central - Sub paneles
 		panelContenedorCentral.setLayout(new  BoxLayout(panelContenedorCentral, BoxLayout.Y_AXIS));

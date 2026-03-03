@@ -1,4 +1,4 @@
-package login;
+package login.formulario;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -45,6 +45,11 @@ public class FormularioRegistroInformacionPuesto extends JFrame {
         // Panel inferior
         JButton lblBotonRegistro = new JButton("Siguiente");
         lblBotonRegistro.setBackground(new Color(144, 224, 239));
+        lblBotonRegistro.addActionListener( e -> {
+        	FormularioRegistroDatosExtras f = new FormularioRegistroDatosExtras();
+        	});
+        
+        
         panelContenedorInferior.add(lblBotonRegistro);
 
         // Panel central - Sub paneles

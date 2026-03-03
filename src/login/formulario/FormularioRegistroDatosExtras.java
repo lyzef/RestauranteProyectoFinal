@@ -1,4 +1,4 @@
-package login;
+package login.formulario;
 
 import image.*;
 import java.awt.BorderLayout;
@@ -47,7 +47,12 @@ public class FormularioRegistroDatosExtras extends JFrame{
 	        JButton lblBotonRegistro = new JButton("Siguiente");
 	        lblBotonRegistro.setBackground(new Color(144, 224, 239));
 	        panelContenedorInferior.add(lblBotonRegistro);
-
+	        lblBotonRegistro.addActionListener( e -> {
+	        	JOptionPane.showMessageDialog(null,
+						"Error",
+						"No sabemos que salio mal",
+						JOptionPane.WARNING_MESSAGE);
+	        	});
 	        // Panel central - Sub paneles
 	        panelContenedorCentral.setLayout(new BoxLayout(panelContenedorCentral, BoxLayout.Y_AXIS));
 	        Border emptyBorder = BorderFactory.createEmptyBorder(10, 20, 10, 20);
