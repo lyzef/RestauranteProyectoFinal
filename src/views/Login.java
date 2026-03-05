@@ -1,12 +1,15 @@
-package login;
+package views;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import login.formulario.*;
+import views.formulario.FormularioRegistro;
 
 public class Login extends JFrame{
+	
+	Font font = new Font("Arial", Font.PLAIN, 16);
+	Font miniFont = new Font("Arial", Font.PLAIN, 13);
 	JTextField entradaCorreo;
 	JPasswordField entradaContrasena;
 	JLabel labelAdvertenciaContrasena;
@@ -23,97 +26,119 @@ public class Login extends JFrame{
 		//Establece si la ventana puede redimensionarse
 		setResizable(false);
 		//Cambia el título de la ventana
-		setTitle("Madero's System");
+		setTitle("Madero's Chef System");
 		//Coloca la ventana al centro de la pantalla
 		setLocationRelativeTo(null); //A mitad de pantalla
 		setVisible(false); //Establece visibilidad
-		
 		//this.setLayout(new BorderLayout()); Layout por defecto de JFrame
+		loadIcon();
+		initializeComponents();
+        setVisible(true);
+        
 		
+	}
+	
+	public void initializeComponents() {
+		createLogo();
+		createForm();
+		createButtons();
+	}
+	
+	public void loadIcon(){
 		Toolkit tk = Toolkit.getDefaultToolkit();
         Image icono = tk.getImage("src/image/IconoApliacionPrincipal.jpg");
         setIconImage(icono);
-		
-		//Organizacion de paneles
-		JPanel panelNorteContenedor = new JPanel();
-		panelNorteContenedor.setLayout(new BoxLayout(panelNorteContenedor, BoxLayout.Y_AXIS));
-		JPanel panelCentroEntrada = new JPanel(new GridLayout(6, 1, 10, 10));
-		JPanel panelSurEntrada = new JPanel();
-		
+	}
+	
+	public void createLogo() {
 		//Panel norte
+		JPanel panelLogo = new JPanel();
+		panelLogo.setLayout(new BoxLayout(panelLogo, BoxLayout.Y_AXIS));
+
 		JLabel labelNombreRestaurante = new JLabel("Madero's");
 		labelNombreRestaurante.setFont(new Font("Times", Font.PLAIN, 24));
 		labelNombreRestaurante.setAlignmentX(Component.CENTER_ALIGNMENT);
-	    panelNorteContenedor.add(labelNombreRestaurante);
+		panelLogo.add(labelNombreRestaurante);
 		
 		JLabel labelTitulo = new JLabel("Inicio de sesion");
-	    labelTitulo.setFont(new Font("Arial", Font.PLAIN, 16));
+	    labelTitulo.setFont(font);
 	    labelTitulo.setAlignmentX(Component.CENTER_ALIGNMENT);
-	    panelNorteContenedor.add(labelTitulo);
+	    panelLogo.add(labelTitulo);
 		
-	    panelNorteContenedor.setBorder(BorderFactory.createEmptyBorder(10,5,5,5));
-	    
-	    //Panel centro
+	    panelLogo.setBorder(BorderFactory.createEmptyBorder(10,5,5,5));
+
+		add(panelLogo, BorderLayout.NORTH);
+	}
+	
+	public void createForm() {
+		//Panel centro
+		JPanel panelForm = new JPanel(new GridLayout(6, 1, 10, 10));
         JLabel labelCorreo = new JLabel("Ingrese el correo electrónico");
-        labelCorreo.setFont(new Font("Arial", Font.PLAIN, 16));
-        panelCentroEntrada.add(labelCorreo);
+        labelCorreo.setFont(font);
+        panelForm.add(labelCorreo);
 
         entradaCorreo = new JTextField(20);
-        entradaCorreo.setFont(new Font("Arial", Font.PLAIN, 14));
-        panelCentroEntrada.add(entradaCorreo);
+        entradaCorreo.setFont(font);
+        panelForm.add(entradaCorreo);
         
         labelAdvertenciaCorreo = new JLabel("Correo es requerido");
-        labelAdvertenciaCorreo.setFont(new Font("Arial", Font.BOLD, 13));
+        labelAdvertenciaCorreo.setFont(miniFont);
         labelAdvertenciaCorreo.setVisible(false);
-        panelCentroEntrada.add(labelAdvertenciaCorreo);
-        
-        
+        panelForm.add(labelAdvertenciaCorreo);
         
         JLabel labelPass = new JLabel("Ingrese la contraseña");
-        labelPass.setFont(new Font("Arial", Font.PLAIN, 16));
-        panelCentroEntrada.add(labelPass);
+        labelPass.setFont(font);
+        panelForm.add(labelPass);
 
         entradaContrasena = new JPasswordField(20);
-        entradaContrasena.setFont(new Font("Arial", Font.PLAIN, 14));
-        panelCentroEntrada.add(entradaContrasena);
+        entradaContrasena.setFont(font);
+        panelForm.add(entradaContrasena);
         
         
         labelAdvertenciaContrasena = new JLabel("Contrasena es requerido");
-        labelAdvertenciaContrasena.setFont(new Font("Arial", Font.BOLD, 13));
+        labelAdvertenciaContrasena.setFont(miniFont);
         labelAdvertenciaContrasena.setVisible(false);
-        panelCentroEntrada.add(labelAdvertenciaContrasena);
+        panelForm.add(labelAdvertenciaContrasena);
         
-        panelCentroEntrada.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-        //Panel sur
+        panelForm.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        add(panelForm, BorderLayout.CENTER);
+	}
+	
+	public void createButtons() {
+		 //Panel sur
+		JPanel panelButtons = new JPanel();
         JButton boton = new JButton("Entrar");
-        panelSurEntrada.add(boton);
+        boton.setFont(font);
+        panelButtons.add(boton);
         
         boton.addActionListener( e -> {
         	validarLogin();
 		});
         
         JButton botonRegistrar = new JButton("Registrar");
-        panelSurEntrada.add(botonRegistrar);
+        botonRegistrar.setFont(font);
+        panelButtons.add(botonRegistrar);
         
         botonRegistrar.addActionListener( e -> {
         		registro();
         	});
-        panelSurEntrada.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        panelButtons.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
         //Layouts
-        add(panelNorteContenedor, BorderLayout.NORTH);
-        add(panelCentroEntrada, BorderLayout.CENTER);
-        add(panelSurEntrada, BorderLayout.SOUTH);
+       
         
-        setVisible(true);
-        
-		
+        add(panelButtons, BorderLayout.SOUTH);
 	}
-	
+	// Eventos
+	public void registro() {
+		FormularioRegistro f = new FormularioRegistro();
+		this.dispose();
+	}
+	// Metodos de presentacion
 	public void reinicarMensajesError() {
 		labelAdvertenciaCorreo.setVisible(false);
 		labelAdvertenciaContrasena.setVisible(false);
 	}
-	
+	// Validaciones
 	public void validarLogin() {
 		reinicarMensajesError();
 		
@@ -126,15 +151,14 @@ public class Login extends JFrame{
 			JOptionPane.showMessageDialog(
 					this,
 					"Felicidades sabes escribir!",
-					"No hay nada mas que ver aqui....",
+					"Bienvenido....",
 					JOptionPane.INFORMATION_MESSAGE
 					);
+			VentanaPrincipal v = new VentanaPrincipal();
+			this.dispose();
 		}
 		System.out.println("CORREO: " + entradaCorreo.getText());
 		System.out.println("CONTRASENA: " + String.valueOf(entradaContrasena.getPassword()));
 	}
-	public void registro() {
-		FormularioRegistro f = new FormularioRegistro();
-    	setVisible(false);
-	}
+	
 }

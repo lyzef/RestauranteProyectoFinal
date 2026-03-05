@@ -1,11 +1,9 @@
-package login.formulario;
+package views.formulario;
 
 import image.*;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Image;
 import java.awt.Toolkit;
@@ -54,7 +52,7 @@ public class FormularioRegistro extends JFrame{
 		
 		lblBotonRegistro.addActionListener( e -> {
 	        	FormularioRegistroInformacionPuesto f = new FormularioRegistroInformacionPuesto();
-	        	setVisible(false);
+	        	this.dispose();
 	        	});
 	        
 			

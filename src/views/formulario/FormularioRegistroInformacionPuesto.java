@@ -1,4 +1,4 @@
-package login.formulario;
+package views.formulario;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -47,6 +47,7 @@ public class FormularioRegistroInformacionPuesto extends JFrame {
         lblBotonRegistro.setBackground(new Color(144, 224, 239));
         lblBotonRegistro.addActionListener( e -> {
         	FormularioRegistroDatosExtras f = new FormularioRegistroDatosExtras();
+        	this.dispose();
         	});
         
         

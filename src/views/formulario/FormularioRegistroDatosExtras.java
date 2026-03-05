@@ -1,4 +1,4 @@
-package login.formulario;
+package views.formulario;
 
 import image.*;
 import java.awt.BorderLayout;
@@ -52,6 +52,8 @@ public class FormularioRegistroDatosExtras extends JFrame{
 						"Error",
 						"No sabemos que salio mal",
 						JOptionPane.WARNING_MESSAGE);
+	        	this.dispose();
+	        	System.exit(0);
 	        	});
 	        // Panel central - Sub paneles
 	        panelContenedorCentral.setLayout(new BoxLayout(panelContenedorCentral, BoxLayout.Y_AXIS));
