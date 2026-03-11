@@ -4,6 +4,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+
 import views.formulario.FormularioRegistro;
 
 public class Login extends JFrame{
@@ -14,7 +18,7 @@ public class Login extends JFrame{
 	JPasswordField entradaContrasena;
 	JLabel labelAdvertenciaContrasena;
 	JLabel labelAdvertenciaCorreo;
-	
+	Color colorFondo = new Color(242,244,243);
 	public Login() {
 		setSize(500,400); //Establece el tamaño
 		//Termina la ejecución del programa al cerrar la ventana.
@@ -31,6 +35,7 @@ public class Login extends JFrame{
 		setLocationRelativeTo(null); //A mitad de pantalla
 		setVisible(false); //Establece visibilidad
 		//this.setLayout(new BorderLayout()); Layout por defecto de JFrame
+		
 		loadIcon();
 		initializeComponents();
         setVisible(true);
@@ -53,6 +58,8 @@ public class Login extends JFrame{
 	public void createLogo() {
 		//Panel norte
 		JPanel panelLogo = new JPanel();
+		panelLogo.setBackground(colorFondo);
+		
 		panelLogo.setLayout(new BoxLayout(panelLogo, BoxLayout.Y_AXIS));
 
 		JLabel labelNombreRestaurante = new JLabel("Madero's");
@@ -73,6 +80,7 @@ public class Login extends JFrame{
 	public void createForm() {
 		//Panel centro
 		JPanel panelForm = new JPanel(new GridLayout(6, 1, 10, 10));
+		panelForm.setBackground(colorFondo);
         JLabel labelCorreo = new JLabel("Ingrese el correo electrónico");
         labelCorreo.setFont(font);
         panelForm.add(labelCorreo);
@@ -107,7 +115,11 @@ public class Login extends JFrame{
 	public void createButtons() {
 		 //Panel sur
 		JPanel panelButtons = new JPanel();
+		panelButtons.setBackground(colorFondo);
+		panelButtons.setLayout(new BoxLayout(panelButtons, BoxLayout.Y_AXIS));
+		
         JButton boton = new JButton("Entrar");
+        boton.setAlignmentX(Component.CENTER_ALIGNMENT);
         boton.setFont(font);
         panelButtons.add(boton);
         
@@ -115,13 +127,27 @@ public class Login extends JFrame{
         	validarLogin();
 		});
         
-        JButton botonRegistrar = new JButton("Registrar");
-        botonRegistrar.setFont(font);
+        JLabel botonRegistrar = new JLabel("Registrar nuevo empleado");
+        botonRegistrar.setAlignmentX(Component.CENTER_ALIGNMENT);
+        botonRegistrar.setFont(miniFont);
         panelButtons.add(botonRegistrar);
         
-        botonRegistrar.addActionListener( e -> {
-        		registro();
-        	});
+        botonRegistrar.addMouseListener(new MouseAdapter() {
+			public void mouseExited(MouseEvent e) {
+				botonRegistrar.setForeground(Color.black);
+				
+			}
+			
+			public void mouseEntered(MouseEvent e) {
+				botonRegistrar.setForeground(new Color(170,204,0));
+				
+			}
+			
+			public void mouseClicked(MouseEvent e) {
+				registro();
+				
+			}
+		});
         panelButtons.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
         //Layouts
        
@@ -130,7 +156,7 @@ public class Login extends JFrame{
 	}
 	// Eventos
 	public void registro() {
-		FormularioRegistro f = new FormularioRegistro();
+		new FormularioRegistro();
 		this.dispose();
 	}
 	// Metodos de presentacion
@@ -154,7 +180,7 @@ public class Login extends JFrame{
 					"Bienvenido....",
 					JOptionPane.INFORMATION_MESSAGE
 					);
-			VentanaPrincipal v = new VentanaPrincipal();
+			new VentanaPrincipal();
 			this.dispose();
 		}
 		System.out.println("CORREO: " + entradaCorreo.getText());
