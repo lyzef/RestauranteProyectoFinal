@@ -88,5 +88,6 @@ public class FormularioRegistroInformacionPuesto extends JFrame {
         add(panelContenedorSuperior, BorderLayout.NORTH);
         add(panelContenedorInferior, BorderLayout.SOUTH);
     }
-
+    
+    public void 
 }

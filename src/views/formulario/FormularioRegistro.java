@@ -1,16 +1,27 @@
 package views.formulario;
 
-import image.*;
-
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Image;
+import java.awt.Panel;
 import java.awt.Toolkit;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.util.*;
 
 import javax.swing.*;
 import javax.swing.border.Border;
 public class FormularioRegistro extends JFrame{
+	panelPregunta nombre;
+	panelPregunta fechaNacimiento;
+	panelPregunta curp;
+	panelPregunta telefono;
+	panelPregunta correo;
+	List <panelPregunta> listaPreguntas;
+	JComboBox<String> estadoCivil;
+	JComboBox<String> generos;
+	
 	
 	public FormularioRegistro() {
 		setSize(400,400);
@@ -35,8 +46,6 @@ public class FormularioRegistro extends JFrame{
 		//Paneles
 		JPanel panelContenedorSuperior = new JPanel();
 		JPanel panelContenedorInferior = new JPanel();
-		JPanel panelContenedorCentral = new JPanel();
-
 		
 		//Panel superior
 		JLabel lblTitulo = new JLabel("Registro - Datos personales");
@@ -51,54 +60,87 @@ public class FormularioRegistro extends JFrame{
 		panelContenedorInferior.add(lblBotonRegistro);
 		
 		lblBotonRegistro.addActionListener( e -> {
-	        	FormularioRegistroInformacionPuesto f = new FormularioRegistroInformacionPuesto();
-	        	this.dispose();
+	        	validarFormulario();
 	        	});
 	        
-			
-		//Panel central - Sub paneles
-		panelContenedorCentral.setLayout(new  BoxLayout(panelContenedorCentral, BoxLayout.Y_AXIS));
+		//Panel central
+		JScrollPane scroll = new JScrollPane(crearPreguntas()); //Scroll almacena al panel de preguntas
+		scroll.setHorizontalScrollBar(null);
+		
+		//Anadiendo paneles
+		
+		add(scroll,BorderLayout.CENTER); //Es el contenedor padre del panel cuestionario
+		add(panelContenedorSuperior,BorderLayout.NORTH);
+		add(panelContenedorInferior,BorderLayout.SOUTH);
+		
+		
+		
+	}
+	
+	public JPanel crearPreguntas() {
+		//Panel central cuestionario
+		JPanel panelCuestionario = new JPanel();
+		panelCuestionario.setLayout(new  BoxLayout(panelCuestionario, BoxLayout.Y_AXIS));
 		Border emptyBorder = BorderFactory.createEmptyBorder(10,20,10,20);
-		panelContenedorCentral.setBorder(emptyBorder);
-
-		String[] informacionPersonal = {"Nombres: ", "Fecha de nacimiento: ", "CURP: ", "Telefono: ", "Correo electronico: "};
-		int largoTotalDeInformacionPersonal = informacionPersonal.length;
-		for(int i = 0; i < largoTotalDeInformacionPersonal ; i++) {
-			JLabel lbl = new JLabel(informacionPersonal[i]);
-			
-			panelContenedorCentral.add(lbl);
-			JTextField txtField = new JTextField(10);
-			panelContenedorCentral.add(txtField);
+		panelCuestionario.setBorder(emptyBorder);
+		
+		nombre = new panelPregunta("Nombre", "ALFABETICO");
+		fechaNacimiento = new panelPregunta("Fecha de nacimiento", "FECHA");
+		curp = new panelPregunta("Curp", "ALFANUMERICO");
+		telefono = new panelPregunta("Telefono", "NUMERICO");
+		correo = new panelPregunta("Correo", "CORREO");
+		//Inicializacion de array
+		listaPreguntas = new ArrayList<>();
+		
+		listaPreguntas.add(nombre);
+		listaPreguntas.add(fechaNacimiento);
+		listaPreguntas.add(curp);
+		listaPreguntas.add(telefono);
+		listaPreguntas.add(correo);
+		
+		for(panelPregunta pregunta : listaPreguntas) {
+			panelCuestionario.add(pregunta);
 		}
 		
 		
 		
-		
-		//Checkbox
+		//ComboBox
 		JLabel lblGenero = new JLabel("Genero ");
-		panelContenedorCentral.add(lblGenero);
-		String[] opcionesGenero = {"Hombre", "Mujer","Therian","Otro"};
-		JComboBox<String> generos = new JComboBox<String>(opcionesGenero);
-		generos.setSelectedIndex(2);
-		panelContenedorCentral.add(generos);
+		panelCuestionario.add(lblGenero);
+		String[] opcionesGenero = {"Seleccionar","Hombre", "Mujer","Therian","Otro"};
+		generos = new JComboBox<String>(opcionesGenero);
+		generos.setSelectedIndex(0); //Item preseleccionado
+		panelCuestionario.add(generos);
 		
 		JLabel lblEstadoCivil = new JLabel("EstadoCivil ");
-		panelContenedorCentral.add(lblEstadoCivil);
-		String[] opcionesEstadoCivil = {"Soltero","Casado","Union libre", "Viudo"};
-		JComboBox<String> estadoCivil = new JComboBox<String>(opcionesEstadoCivil);
-		estadoCivil.setSelectedIndex(2);
-		panelContenedorCentral.add(estadoCivil);
+		panelCuestionario.add(lblEstadoCivil);
+		String[] opcionesEstadoCivil = {"Seleccionar","Soltero","Casado","Union libre", "Viudo"};
+		estadoCivil = new JComboBox<String>(opcionesEstadoCivil);
+		estadoCivil.setSelectedIndex(0);
+		panelCuestionario.add(estadoCivil);
 		
-		//Anadiendo paneles
-		JScrollPane scroll = new JScrollPane(panelContenedorCentral);
-		scroll.setHorizontalScrollBar(null);
+		return panelCuestionario;
+	}
+	
+	public void validarFormulario() {
+		//Comprueba preguntas sin responder
+		boolean faltaRellenar = false;
+		for(panelPregunta pregunta: listaPreguntas) {
+			if(pregunta.estaVacio()) {
+				pregunta.senalarEntradaVacia();
+				faltaRellenar = true;
+			}
+		}
+		if(faltaRellenar) {return;}
 		
+		if(estadoCivil.getSelectedItem() == "Seleccionar" || generos.getSelectedItem() == "Seleccionar" ) {
+			return;
+		}
 		
-		//add(panelContenedorCentral,BorderLayout.CENTER);
-		add(scroll); //Es el contenedor padre del panel contenedor central
-		add(panelContenedorSuperior,BorderLayout.NORTH);
-		add(panelContenedorInferior,BorderLayout.SOUTH);
+		new FormularioRegistroInformacionPuesto();
+    	this.dispose();
 		
 	}
-
+	
+	
 }
