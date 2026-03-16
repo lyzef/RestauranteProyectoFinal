@@ -1,6 +1,8 @@
 package views.formulario;
 
 import java.awt.Color;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
@@ -28,6 +30,7 @@ public class panelPregunta extends JPanel{
     	lblError = new JLabel("");
     	lblError.setBackground(Color.RED);
     	
+    	//Caracteres aceptados segun clasificacion
     	txtEntrada.addKeyListener(new KeyAdapter() {
     		@Override
 		    public void keyTyped(KeyEvent e) {
@@ -67,6 +70,14 @@ public class panelPregunta extends JPanel{
     		
 		});
     	
+    	//Contenido de textField aceptado segun clasificacion
+    	txtEntrada.addFocusListener(new FocusAdapter() {
+    		@Override
+    	    public void focusLost(FocusEvent e) {
+    	        validarContenido();
+    	    }
+		});
+    	
     	add(lblPregunta);
     	add(txtEntrada);
     	add(lblError);
@@ -80,6 +91,9 @@ public class panelPregunta extends JPanel{
     	lblError.setText("Entrada vacia");
     }
     
+    /**
+     * Regresa verdadero si el text field de la pregunta esta vacio
+     */
     public boolean estaVacio() {
     	if(txtEntrada.getText().isBlank()) {
 			return true;
@@ -116,7 +130,7 @@ public class panelPregunta extends JPanel{
     
     private void aceptarCorreo(KeyEvent e) {
     	char c = e.getKeyChar();
-		if(c == '@' || Character.isLetterOrDigit(c) || c == KeyEvent.VK_BACK_SPACE) {
+		if(c == '@' ||c == '.' ||c == '_' ||c == '-' || Character.isLetterOrDigit(c) || c == KeyEvent.VK_BACK_SPACE) {
 			return;
 		}
 		
@@ -133,7 +147,126 @@ public class panelPregunta extends JPanel{
 		lblError.setText("En forma DD/MM/AAAA");
 		e.consume();
     }
+    /**
+     *Valida el contenido dentro del textfield de la pregunta
+     *segun la clasificacion de la pregunta
+     */
+    public boolean validarContenido() {
+    	String texto = txtEntrada.getText();
+        
+        switch(caracteresAceptados) { 
+        case "CORREO":{
+        	return validarCorreo(texto);
+        } 
+        case "FECHA":{
+        	return validarFecha(texto);
+        } 
+        case "TELEFONO":{
+        	// TODO terminar verificacion telefono y consiguientes clasificaciones
+        	return true;
+        } 
+        default:
+			return true;
+        }
+    }
     
+    /**
+     * Regresa verdadero si el contenido es un correo
+     */
+    private boolean validarCorreo(String texto) {
+    	int totalArrobas = 0;
+    	String parteLocal = "";
+    	String dominio = "";
+    	String[] dominiosAdmitidos = {"gmail.com","outlook.com","outlook.es"};
+    	for(char c : texto.toCharArray()) {
+    		//Verifica total arrobas
+    		if(c == '@') {
+    			totalArrobas++;
+    			if(totalArrobas > 1) {
+    				lblError.setText("Correo invalido");
+    				return false;
+    			}
+    			continue;
+    		}
+    		
+    		//Obtener dominio
+    		if(totalArrobas != 0) {
+    			dominio = dominio + c;
+    		} else {
+    			parteLocal = parteLocal + c;
+    		}
+    	}
+    	//Comprobar parte local
+    	if(parteLocal.length() < 3) {
+    		lblError.setText("Correo invalido");
+    		return false;
+    	}
+    	//Comprobar dominio
+    	if(dominio.length() < 3) {
+    		lblError.setText("Dominio invalido");
+    		return false;
+    	}
+    	dominio = dominio.toLowerCase();
+    	for(String dominioAdmitido : dominiosAdmitidos) { //Compara el dominio con los DNS
+    		if(dominio.equals(dominioAdmitido)) {
+    			return true;
+    		}
+    	}
+    	System.out.println(dominio);
+    	lblError.setText("Dominio invalido");
+    	return false;
+    }
     
+    /**
+     * Regresa verdadero si el contenido es una fecha
+     * de tipo DD/MM/AAAA
+     */
+    private boolean validarFecha(String texto) {
+        //Validar longitud 
+        if (texto.length() != 10) {
+            lblError.setText("Longitud incorrecta (DD/MM/AAAA)");
+            return false;
+        }
+
+        //Comprobar separadores '/'
+        if (texto.charAt(2) != '/' || texto.charAt(5) != '/') {
+            lblError.setText("Usar el formato DD/MM/AAAA");
+            return false;
+        }
+
+        try {
+            //recortar valores de texto con substring
+            //substring(inicio, fin) -> el fin no se toma en cuenta
+        	//[1,2,3] - > [1,2] when substring(0,2) :o
+            int dia = Integer.parseInt(texto.substring(0, 2));
+            int mes = Integer.parseInt(texto.substring(3, 5));
+            int anio = Integer.parseInt(texto.substring(6, 10));
+
+            // 4. Validar Día 
+            if (dia < 1 || dia > 31) {
+                lblError.setText("Día inválido (1-31)");
+                return false;
+            }
+
+            // 5. Validar Mes
+            if (mes < 1 || mes > 12) {
+                lblError.setText("Mes inválido (1-12)");
+                return false;
+            }
+
+            // 6. Validar Año (rango razonable)
+            if (anio < 1969 || anio > 2067) {
+                lblError.setText("Año invalido");
+                return false;
+            }
+
+        } catch (NumberFormatException e) {
+            lblError.setText("Usar el formato DD/MM/AAAA");
+            return false;
+        }
+
+        lblError.setText(""); 
+        return true;
+    }
     
 }

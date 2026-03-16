@@ -8,6 +8,8 @@ import java.awt.Panel;
 import java.awt.Toolkit;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.*;
 
 import javax.swing.*;
@@ -39,6 +41,19 @@ public class FormularioRegistro extends JFrame{
 		
 		setVisible(true);
 		
+		//Confirmar salida de formulario
+		this.addWindowListener(new WindowAdapter() {
+		    @Override
+		    public void windowClosing(WindowEvent e) {
+		        int verif = JOptionPane.showConfirmDialog(null, 
+		            "¿Seguro que quieres salir?", 
+		            "Confirmar salida", JOptionPane.YES_NO_OPTION);
+		        
+		        if (verif == JOptionPane.YES_OPTION) {
+		            System.exit(0); 
+		        }
+		    }
+		});
 		
 	}
 	
@@ -132,9 +147,16 @@ public class FormularioRegistro extends JFrame{
 			}
 		}
 		if(faltaRellenar) {return;}
-		
+		//Comprueba checkbox
 		if(estadoCivil.getSelectedItem() == "Seleccionar" || generos.getSelectedItem() == "Seleccionar" ) {
 			return;
+		}
+		
+		//Comprueba contenidos invalidos
+		for(panelPregunta pregunta: listaPreguntas) {
+			if(!pregunta.validarContenido()) {
+				return;
+			}
 		}
 		
 		new FormularioRegistroInformacionPuesto();
