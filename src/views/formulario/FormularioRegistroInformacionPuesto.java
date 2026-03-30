@@ -6,12 +6,22 @@ import java.awt.Component;
 import java.awt.Font;
 import java.awt.Image;
 import java.awt.Toolkit;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.*;
 import javax.swing.border.Border;
 
 public class FormularioRegistroInformacionPuesto extends JFrame {
-
+	panelPregunta puestoActual;
+	panelPregunta descripcionFunciones;
+	panelPregunta perfilPuesto;
+	panelPregunta condicionesLaborales;
+	panelPregunta ubicacionOrganizacional;
+	panelPregunta tipoContrato;
+	List <panelPregunta> listaPreguntas;
+	ButtonGroup radioTurno;
+	
     public FormularioRegistroInformacionPuesto() {
         setSize(400, 400);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -33,7 +43,7 @@ public class FormularioRegistroInformacionPuesto extends JFrame {
         // Paneles
         JPanel panelContenedorSuperior = new JPanel();
         JPanel panelContenedorInferior = new JPanel();
-        JPanel panelContenedorCentral = new JPanel();
+        
 
         // Panel superior
         JLabel lblTitulo = new JLabel("Registro - Informacion del puesto");
@@ -46,41 +56,14 @@ public class FormularioRegistroInformacionPuesto extends JFrame {
         JButton lblBotonRegistro = new JButton("Siguiente");
         lblBotonRegistro.setBackground(new Color(144, 224, 239));
         lblBotonRegistro.addActionListener( e -> {
-        	FormularioRegistroDatosExtras f = new FormularioRegistroDatosExtras();
-        	this.dispose();
+        	validarFormulario();
         	});
         
         
         panelContenedorInferior.add(lblBotonRegistro);
 
-        // Panel central - Sub paneles
-        panelContenedorCentral.setLayout(new BoxLayout(panelContenedorCentral, BoxLayout.Y_AXIS));
-        Border emptyBorder = BorderFactory.createEmptyBorder(10, 20, 10, 20);
-        panelContenedorCentral.setBorder(emptyBorder);
-
-        String[] informacionPersonal = {
-            "Puesto actual: ", "Descripcion de funciones: ", "Perfil del puesto: ", "Condiciones laborales: ", "Ubicacion organizacional: "
-            ,"Tipo de contrato"
-        };
-
-        for (String info : informacionPersonal) {
-            JLabel lbl = new JLabel(info);
-            panelContenedorCentral.add(lbl);
-            JTextField txtField = new JTextField(10);
-            panelContenedorCentral.add(txtField);
-        }
-        
-        JLabel lblTurno = new JLabel("Turno");
-        panelContenedorCentral.add(lblTurno);
-        ButtonGroup radioTurno = new ButtonGroup();
-        JRadioButton rbMatutino = new JRadioButton("Matutino"); panelContenedorCentral.add(rbMatutino);
-        JRadioButton rbVespertino = new JRadioButton("Vespertino"); panelContenedorCentral.add(rbVespertino);
-        JRadioButton rbMixto = new JRadioButton("Mixto"); panelContenedorCentral.add(rbMixto);
-        radioTurno.add(rbMatutino);radioTurno.add(rbVespertino);radioTurno.add(rbMixto);
-        
-        
         // Scroll
-        JScrollPane scroll = new JScrollPane(panelContenedorCentral);
+        JScrollPane scroll = new JScrollPane(panelPreguntas());
         scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 
         // Añadiendo paneles
@@ -89,4 +72,68 @@ public class FormularioRegistroInformacionPuesto extends JFrame {
         add(panelContenedorInferior, BorderLayout.SOUTH);
     }
     
+    private JPanel panelPreguntas() {
+    	JPanel panelContenedorCentral = new JPanel();
+    	
+    	panelContenedorCentral.setLayout(new BoxLayout(panelContenedorCentral, BoxLayout.Y_AXIS));
+        Border emptyBorder = BorderFactory.createEmptyBorder(10, 20, 10, 20);
+        panelContenedorCentral.setBorder(emptyBorder);
+
+        puestoActual = new panelPregunta("Puesto actual:", "ALFANUMERICO");
+    	descripcionFunciones = new panelPregunta("Funciones en la empresa", "ALFANUMERICO");
+    	perfilPuesto = new panelPregunta("Perfil de puesto: ", "ALFANUMERICO");
+    	condicionesLaborales = new panelPregunta("Condiciones laborales: ", "ALFANUMERICO");
+    	ubicacionOrganizacional = new panelPregunta("Ubicacion organizacional", "ALFANUMERICO");
+    	tipoContrato = new panelPregunta("Tipo de contrato: ", "ALFANUMERICO");
+        
+    	listaPreguntas = new ArrayList<>();
+    	listaPreguntas.add(puestoActual);
+    	listaPreguntas.add(descripcionFunciones);
+    	listaPreguntas.add(perfilPuesto);
+    	listaPreguntas.add(condicionesLaborales);
+    	listaPreguntas.add(ubicacionOrganizacional);
+    	listaPreguntas.add(tipoContrato);
+    	
+    	for(panelPregunta pregunta : listaPreguntas) {
+    		panelContenedorCentral.add(pregunta);
+		}
+    	
+        JLabel lblTurno = new JLabel("Turno");
+        panelContenedorCentral.add(lblTurno);
+        radioTurno = new ButtonGroup();
+        JRadioButton rbMatutino = new JRadioButton("Matutino"); panelContenedorCentral.add(rbMatutino);
+        JRadioButton rbVespertino = new JRadioButton("Vespertino"); panelContenedorCentral.add(rbVespertino);
+        JRadioButton rbMixto = new JRadioButton("Mixto"); panelContenedorCentral.add(rbMixto);
+        radioTurno.add(rbMatutino);radioTurno.add(rbVespertino);radioTurno.add(rbMixto);
+     
+        	
+    	return panelContenedorCentral;
+    }
+    
+    public void validarFormulario() {
+		//Comprueba preguntas sin responder
+		boolean faltaRellenar = false;
+		for(panelPregunta pregunta: listaPreguntas) {
+			if(pregunta.estaVacio()) {
+				pregunta.senalarEntradaVacia();
+				faltaRellenar = true;
+			}
+		}
+		if(faltaRellenar) {return;}
+		//Comprueba checkbox
+		if(radioTurno.getSelection() == null) {
+			return;
+		}
+		
+		//Comprueba contenidos invalidos
+		for(panelPregunta pregunta: listaPreguntas) {
+			if(!pregunta.validarContenido()) {
+				return;
+			}
+		}
+		
+		new FormularioRegistroDatosExtras();
+    	this.dispose();
+		
+	}
 }
