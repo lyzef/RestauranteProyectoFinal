@@ -8,6 +8,8 @@ import java.awt.event.KeyEvent;
 
 import javax.swing.*;
 
+import excepciones.InvalidUser;
+
 public class panelPregunta extends JPanel{
 	private JLabel lblPregunta;
     private JTextField txtEntrada;
@@ -172,8 +174,9 @@ public class panelPregunta extends JPanel{
     
     /**
      * Regresa verdadero si el contenido es un correo
+     * @throws InvalidUser 
      */
-    private boolean validarCorreo(String texto) {
+    private boolean validarCorreo(String texto) throws InvalidUser {
     	int totalArrobas = 0;
     	String parteLocal = "";
     	String dominio = "";
@@ -214,6 +217,8 @@ public class panelPregunta extends JPanel{
     	}
     	System.out.println(dominio);
     	lblError.setText("Dominio invalido");
+    	throw new InvalidUser("Dominio invalido");
+    	
     	return false;
     }
     

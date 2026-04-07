@@ -1,6 +1,10 @@
 package views;
 
 import javax.swing.*;
+
+import excepciones.InvalidContraseña;
+import excepciones.InvalidUser;
+import views.formulario.panelPregunta;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -168,11 +172,9 @@ public class Login extends JFrame{
 	public void validarLogin() {
 		reinicarMensajesError();
 		
-		if(entradaCorreo.getText().isBlank() ) {
-			labelAdvertenciaCorreo.setVisible(true);
-		} else if (!(entradaContrasena.getPassword().length > 0)) {
-			labelAdvertenciaContrasena.setVisible(true);
-		} else {
+		try {
+			validarCredenciales();
+			
 			System.out.println("Es valido");
 			JOptionPane.showMessageDialog(
 					this,
@@ -182,9 +184,35 @@ public class Login extends JFrame{
 					);
 			new VentanaPrincipal();
 			this.dispose();
+			
+		} catch (InvalidUser ex) {
+			labelAdvertenciaCorreo.setText(ex.getMessage());
+			labelAdvertenciaCorreo.setVisible(true);
+		} catch (InvalidContraseña ex) {
+			labelAdvertenciaContrasena.setText(ex.getMessage());
+			labelAdvertenciaContrasena.setVisible(true);
 		}
-		System.out.println("CORREO: " + entradaCorreo.getText());
-		System.out.println("CONTRASENA: " + String.valueOf(entradaContrasena.getPassword()));
 	}
+	
+	private void validarCredenciales() throws InvalidUser, InvalidContraseña {
+		
+		if(entradaCorreo.getText().isBlank() ) {
+			throw new InvalidUser("Escribe el correo");
+		} 
+		
+		if(entradaCorreo.getText().length() < 5) {
+			throw new InvalidUser("Escribe un correo valido");
+		} 
+		
+		if (!(entradaContrasena.getPassword().length > 0)) {
+			throw new InvalidContraseña("Escribe la contraseña");
+		
+		}
+		
+	}
+	
+	
+	
+	
 	
 }
