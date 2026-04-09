@@ -12,14 +12,16 @@ import java.util.List;
 import javax.swing.*;
 import javax.swing.border.Border;
 
+import utilidades.PanelTipoPreguntaUtil;
+
 public class FormularioRegistroInformacionPuesto extends JFrame {
-	panelPregunta puestoActual;
-	panelPregunta descripcionFunciones;
-	panelPregunta perfilPuesto;
-	panelPregunta condicionesLaborales;
-	panelPregunta ubicacionOrganizacional;
-	panelPregunta tipoContrato;
-	List <panelPregunta> listaPreguntas;
+	PanelTipoPreguntaUtil puestoActual;
+	PanelTipoPreguntaUtil descripcionFunciones;
+	PanelTipoPreguntaUtil perfilPuesto;
+	PanelTipoPreguntaUtil condicionesLaborales;
+	PanelTipoPreguntaUtil ubicacionOrganizacional;
+	PanelTipoPreguntaUtil tipoContrato;
+	List <PanelTipoPreguntaUtil> listaPreguntas;
 	ButtonGroup radioTurno;
 	
     public FormularioRegistroInformacionPuesto() {
@@ -79,12 +81,12 @@ public class FormularioRegistroInformacionPuesto extends JFrame {
         Border emptyBorder = BorderFactory.createEmptyBorder(10, 20, 10, 20);
         panelContenedorCentral.setBorder(emptyBorder);
 
-        puestoActual = new panelPregunta("Puesto actual:", "ALFANUMERICO");
-    	descripcionFunciones = new panelPregunta("Funciones en la empresa", "ALFANUMERICO");
-    	perfilPuesto = new panelPregunta("Perfil de puesto: ", "ALFANUMERICO");
-    	condicionesLaborales = new panelPregunta("Condiciones laborales: ", "ALFANUMERICO");
-    	ubicacionOrganizacional = new panelPregunta("Ubicacion organizacional", "ALFANUMERICO");
-    	tipoContrato = new panelPregunta("Tipo de contrato: ", "ALFANUMERICO");
+        puestoActual = new PanelTipoPreguntaUtil("Puesto actual:", "ALFANUMERICO");
+    	descripcionFunciones = new PanelTipoPreguntaUtil("Funciones en la empresa", "ALFANUMERICO");
+    	perfilPuesto = new PanelTipoPreguntaUtil("Perfil de puesto: ", "ALFANUMERICO");
+    	condicionesLaborales = new PanelTipoPreguntaUtil("Condiciones laborales: ", "ALFANUMERICO");
+    	ubicacionOrganizacional = new PanelTipoPreguntaUtil("Ubicacion organizacional", "ALFANUMERICO");
+    	tipoContrato = new PanelTipoPreguntaUtil("Tipo de contrato: ", "ALFANUMERICO");
         
     	listaPreguntas = new ArrayList<>();
     	listaPreguntas.add(puestoActual);
@@ -94,7 +96,7 @@ public class FormularioRegistroInformacionPuesto extends JFrame {
     	listaPreguntas.add(ubicacionOrganizacional);
     	listaPreguntas.add(tipoContrato);
     	
-    	for(panelPregunta pregunta : listaPreguntas) {
+    	for(PanelTipoPreguntaUtil pregunta : listaPreguntas) {
     		panelContenedorCentral.add(pregunta);
 		}
     	
@@ -113,7 +115,7 @@ public class FormularioRegistroInformacionPuesto extends JFrame {
     public void validarFormulario() {
 		//Comprueba preguntas sin responder
 		boolean faltaRellenar = false;
-		for(panelPregunta pregunta: listaPreguntas) {
+		for(PanelTipoPreguntaUtil pregunta: listaPreguntas) {
 			if(pregunta.estaVacio()) {
 				pregunta.senalarEntradaVacia();
 				faltaRellenar = true;
@@ -126,7 +128,7 @@ public class FormularioRegistroInformacionPuesto extends JFrame {
 		}
 		
 		//Comprueba contenidos invalidos
-		for(panelPregunta pregunta: listaPreguntas) {
+		for(PanelTipoPreguntaUtil pregunta: listaPreguntas) {
 			if(!pregunta.validarContenido()) {
 				return;
 			}

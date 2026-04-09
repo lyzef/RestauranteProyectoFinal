@@ -14,17 +14,94 @@ import java.util.*;
 
 import javax.swing.*;
 import javax.swing.border.Border;
+
+import controller.PreguntaController;
+import utilidades.PanelTipoPreguntaUtil;
 public class FormularioRegistro extends JFrame{
-	panelPregunta nombre;
-	panelPregunta fechaNacimiento;
-	panelPregunta curp;
-	panelPregunta telefono;
-	panelPregunta correo;
-	List <panelPregunta> listaPreguntas;
+	PanelTipoPreguntaUtil nombre;
+	PanelTipoPreguntaUtil fechaNacimiento;
+	PanelTipoPreguntaUtil curp;
+	PanelTipoPreguntaUtil telefono;
+	PanelTipoPreguntaUtil correo;
+	List <PanelTipoPreguntaUtil> listaPreguntas;
 	JComboBox<String> estadoCivil;
 	JComboBox<String> generos;
+	JButton lblBotonRegistro;
 	
 	
+	
+	public PanelTipoPreguntaUtil getNombre() {
+		return nombre;
+	}
+
+	public void setNombre(PanelTipoPreguntaUtil nombre) {
+		this.nombre = nombre;
+	}
+
+	public PanelTipoPreguntaUtil getFechaNacimiento() {
+		return fechaNacimiento;
+	}
+
+	public void setFechaNacimiento(PanelTipoPreguntaUtil fechaNacimiento) {
+		this.fechaNacimiento = fechaNacimiento;
+	}
+
+	public PanelTipoPreguntaUtil getCurp() {
+		return curp;
+	}
+
+	public void setCurp(PanelTipoPreguntaUtil curp) {
+		this.curp = curp;
+	}
+
+	public PanelTipoPreguntaUtil getTelefono() {
+		return telefono;
+	}
+
+	public void setTelefono(PanelTipoPreguntaUtil telefono) {
+		this.telefono = telefono;
+	}
+
+	public PanelTipoPreguntaUtil getCorreo() {
+		return correo;
+	}
+
+	public void setCorreo(PanelTipoPreguntaUtil correo) {
+		this.correo = correo;
+	}
+
+	public List<PanelTipoPreguntaUtil> getListaPreguntas() {
+		return listaPreguntas;
+	}
+
+	public void setListaPreguntas(List<PanelTipoPreguntaUtil> listaPreguntas) {
+		this.listaPreguntas = listaPreguntas;
+	}
+
+	public JComboBox<String> getEstadoCivil() {
+		return estadoCivil;
+	}
+
+	public void setEstadoCivil(JComboBox<String> estadoCivil) {
+		this.estadoCivil = estadoCivil;
+	}
+
+	public JComboBox<String> getGeneros() {
+		return generos;
+	}
+
+	public void setGeneros(JComboBox<String> generos) {
+		this.generos = generos;
+	}
+
+	public JButton getLblBotonRegistro() {
+		return lblBotonRegistro;
+	}
+
+	public void setLblBotonRegistro(JButton lblBotonRegistro) {
+		this.lblBotonRegistro = lblBotonRegistro;
+	}
+
 	public FormularioRegistro() {
 		setSize(400,400);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -70,13 +147,9 @@ public class FormularioRegistro extends JFrame{
 		panelContenedorSuperior.add(lblTitulo);
 		
 		//Panel inferior
-		JButton lblBotonRegistro = new JButton("Siguiente");
+		lblBotonRegistro = new JButton("Siguiente");
 		lblBotonRegistro.setBackground(new Color(144, 224, 239));
 		panelContenedorInferior.add(lblBotonRegistro);
-		
-		lblBotonRegistro.addActionListener( e -> {
-	        	validarFormulario();
-	        	});
 	        
 		//Panel central
 		JScrollPane scroll = new JScrollPane(crearPreguntas()); //Scroll almacena al panel de preguntas
@@ -99,13 +172,23 @@ public class FormularioRegistro extends JFrame{
 		Border emptyBorder = BorderFactory.createEmptyBorder(10,20,10,20);
 		panelCuestionario.setBorder(emptyBorder);
 		
-		nombre = new panelPregunta("Nombre", "ALFABETICO");
-		fechaNacimiento = new panelPregunta("Fecha de nacimiento", "FECHA");
-		curp = new panelPregunta("Curp", "ALFANUMERICO");
-		telefono = new panelPregunta("Telefono", "NUMERICO");
-		correo = new panelPregunta("Correo", "CORREO");
+		//Inicializacion paneles
+		nombre = new PanelTipoPreguntaUtil("Nombre", "ALFABETICO");
+		fechaNacimiento = new PanelTipoPreguntaUtil("Fecha de nacimiento", "FECHA");
+		curp = new PanelTipoPreguntaUtil("Curp", "ALFANUMERICO");
+		telefono = new PanelTipoPreguntaUtil("Telefono", "NUMERICO");
+		correo = new PanelTipoPreguntaUtil("Correo", "CORREO");
 		//Inicializacion de array
 		listaPreguntas = new ArrayList<>();
+		
+		//Conexion con controlador 
+		PreguntaController.registrarPanel(nombre);
+		PreguntaController.registrarPanel(fechaNacimiento);
+		PreguntaController.registrarPanel(curp);
+		PreguntaController.registrarPanel(telefono);
+		PreguntaController.registrarPanel(correo);
+		
+		
 		
 		listaPreguntas.add(nombre);
 		listaPreguntas.add(fechaNacimiento);
@@ -113,7 +196,7 @@ public class FormularioRegistro extends JFrame{
 		listaPreguntas.add(telefono);
 		listaPreguntas.add(correo);
 		
-		for(panelPregunta pregunta : listaPreguntas) {
+		for(PanelTipoPreguntaUtil pregunta : listaPreguntas) {
 			panelCuestionario.add(pregunta);
 		}
 		
@@ -137,32 +220,7 @@ public class FormularioRegistro extends JFrame{
 		return panelCuestionario;
 	}
 	
-	public void validarFormulario() {
-		//Comprueba preguntas sin responder
-		boolean faltaRellenar = false;
-		for(panelPregunta pregunta: listaPreguntas) {
-			if(pregunta.estaVacio()) {
-				pregunta.senalarEntradaVacia();
-				faltaRellenar = true;
-			}
-		}
-		if(faltaRellenar) {return;}
-		//Comprueba checkbox
-		if(estadoCivil.getSelectedItem() == "Seleccionar" || generos.getSelectedItem() == "Seleccionar" ) {
-			return;
-		}
-		
-		//Comprueba contenidos invalidos
-		for(panelPregunta pregunta: listaPreguntas) {
-			if(!pregunta.validarContenido()) {
-				return;
-			}
-		}
-		
-		new FormularioRegistroInformacionPuesto();
-    	this.dispose();
-		
-	}
+	
 	
 	
 }

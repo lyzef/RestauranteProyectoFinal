@@ -6,17 +6,19 @@ import java.util.List;
 import javax.swing.*;
 import javax.swing.border.Border;
 
+import utilidades.PanelTipoPreguntaUtil;
+
 
 public class FormularioRegistroDatosExtras extends JFrame{
-	panelPregunta NSS;
-	panelPregunta alergiasConocidas;
-	panelPregunta contactoEmergencia;
-	panelPregunta banco;
-	panelPregunta numeroCuenta;
-	panelPregunta sueldo;
+	PanelTipoPreguntaUtil NSS;
+	PanelTipoPreguntaUtil alergiasConocidas;
+	PanelTipoPreguntaUtil contactoEmergencia;
+	PanelTipoPreguntaUtil banco;
+	PanelTipoPreguntaUtil numeroCuenta;
+	PanelTipoPreguntaUtil sueldo;
 	
 	
-	List <panelPregunta> listaPreguntas;
+	List <PanelTipoPreguntaUtil> listaPreguntas;
 	
 	JComboBox<String> tipoSangre;
 	
@@ -76,10 +78,10 @@ public class FormularioRegistroDatosExtras extends JFrame{
 		        Border emptyBorder = BorderFactory.createEmptyBorder(10, 20, 10, 20);
 		        panelContenedorCentral.setBorder(emptyBorder);
 		        
-		        listaPreguntas = new ArrayList<panelPregunta>();
-		        NSS = new panelPregunta("Numero seguro social: ", "ALFANUMERICO");
-		        alergiasConocidas = new panelPregunta("Alergias: ", "ALFANUMERICO");		        
-		        contactoEmergencia = new panelPregunta("Contacto emergencia", "ALFANUMERICO");
+		        listaPreguntas = new ArrayList<PanelTipoPreguntaUtil>();
+		        NSS = new PanelTipoPreguntaUtil("Numero seguro social: ", "ALFANUMERICO");
+		        alergiasConocidas = new PanelTipoPreguntaUtil("Alergias: ", "ALFANUMERICO");		        
+		        contactoEmergencia = new PanelTipoPreguntaUtil("Contacto emergencia", "ALFANUMERICO");
 		        
 		        panelContenedorCentral.add(NSS);
 		        panelContenedorCentral.add(alergiasConocidas);
@@ -103,9 +105,9 @@ public class FormularioRegistroDatosExtras extends JFrame{
 		        lblDatosBancarios.setFont(new Font("Arial",Font.BOLD,15));
 		        panelContenedorCentral.add(lblDatosBancarios);
 		        
-		        banco = new panelPregunta("Banco: ", "ALFANUMERICO");
-		        numeroCuenta = new panelPregunta("Clabe o numero de cuenta: ", "NUMERICO");		        
-		        sueldo = new panelPregunta("Sueldo", "NUMERICO");
+		        banco = new PanelTipoPreguntaUtil("Banco: ", "ALFANUMERICO");
+		        numeroCuenta = new PanelTipoPreguntaUtil("Clabe o numero de cuenta: ", "NUMERICO");		        
+		        sueldo = new PanelTipoPreguntaUtil("Sueldo", "NUMERICO");
 		        
 		        panelContenedorCentral.add(banco);
 		        panelContenedorCentral.add(numeroCuenta);
@@ -121,7 +123,7 @@ public class FormularioRegistroDatosExtras extends JFrame{
 	    public void validarFormulario() {
 			//Comprueba preguntas sin responder
 			boolean faltaRellenar = false;
-			for(panelPregunta pregunta: listaPreguntas) {
+			for(PanelTipoPreguntaUtil pregunta: listaPreguntas) {
 				if(pregunta.estaVacio()) {
 					pregunta.senalarEntradaVacia();
 					faltaRellenar = true;
@@ -134,7 +136,7 @@ public class FormularioRegistroDatosExtras extends JFrame{
 			}
 			
 			//Comprueba contenidos invalidos
-			for(panelPregunta pregunta: listaPreguntas) {
+			for(PanelTipoPreguntaUtil pregunta: listaPreguntas) {
 				if(!pregunta.validarContenido()) {
 					return;
 				}

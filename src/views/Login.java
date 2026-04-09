@@ -2,9 +2,11 @@ package views;
 
 import javax.swing.*;
 
+import controller.FormularioController;
 import excepciones.InvalidContraseña;
 import excepciones.InvalidUser;
-import views.formulario.panelPregunta;
+import utilidades.PanelTipoPreguntaUtil;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -160,7 +162,7 @@ public class Login extends JFrame{
 	}
 	// Eventos
 	public void registro() {
-		new FormularioRegistro();
+		new FormularioController(new FormularioRegistro());
 		this.dispose();
 	}
 	// Metodos de presentacion
