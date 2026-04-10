@@ -30,10 +30,12 @@ public class PreguntaController {
     			char c = e.getKeyChar();
     			
     			try {
-    				comprobacionTipoCaracterEntradaUtil.validarCaracterSegunTipo(c,panel.getTipoClasificacion());
+    				if(!comprobacionTipoCaracterEntradaUtil.validarCaracterSegunTipo(c,panel.getTipoClasificacion())) {
+    					e.consume();
+    				}
+    						
 				} catch (invalidInput error) {
-					panel.modificarLabelError(error.getMessage());
-					e.consume();
+					System.out.println(error.getMessage());
 				}
     			
 		    }
@@ -45,9 +47,12 @@ public class PreguntaController {
     	panel.getTxtEntrada().addFocusListener(new FocusAdapter() {
     		@Override
     	    public void focusLost(FocusEvent e) {
+    			//Limpia el error anterior
+    			panel.limpiarError();
     	        try {
 					ValidadorCadena.validarContenido(panel.getTxtEntrada().getText(), panel.getTipoClasificacion());
 				} catch (invalidInput e1) {
+					//Mostrando a usuario el error en la entrada
 					panel.modificarLabelError(e1.getMessage());
 				}
     	    }

@@ -9,7 +9,7 @@ import javax.swing.border.Border;
 import utilidades.PanelTipoPreguntaUtil;
 
 
-public class FormularioRegistroDatosExtras extends JFrame{
+public class FormularioRegistroParte3 extends JFrame{
 	PanelTipoPreguntaUtil NSS;
 	PanelTipoPreguntaUtil alergiasConocidas;
 	PanelTipoPreguntaUtil contactoEmergencia;
@@ -17,19 +17,92 @@ public class FormularioRegistroDatosExtras extends JFrame{
 	PanelTipoPreguntaUtil numeroCuenta;
 	PanelTipoPreguntaUtil sueldo;
 	
-	
 	List <PanelTipoPreguntaUtil> listaPreguntas;
-	
 	JComboBox<String> tipoSangre;
+	JButton botonFinalizar;
 	
-	 public FormularioRegistroDatosExtras() {
+	
+	
+	public PanelTipoPreguntaUtil getNSS() {
+		return NSS;
+	}
+
+	public void setNSS(PanelTipoPreguntaUtil nSS) {
+		NSS = nSS;
+	}
+
+	public PanelTipoPreguntaUtil getAlergiasConocidas() {
+		return alergiasConocidas;
+	}
+
+	public void setAlergiasConocidas(PanelTipoPreguntaUtil alergiasConocidas) {
+		this.alergiasConocidas = alergiasConocidas;
+	}
+
+	public PanelTipoPreguntaUtil getContactoEmergencia() {
+		return contactoEmergencia;
+	}
+
+	public void setContactoEmergencia(PanelTipoPreguntaUtil contactoEmergencia) {
+		this.contactoEmergencia = contactoEmergencia;
+	}
+
+	public PanelTipoPreguntaUtil getBanco() {
+		return banco;
+	}
+
+	public void setBanco(PanelTipoPreguntaUtil banco) {
+		this.banco = banco;
+	}
+
+	public PanelTipoPreguntaUtil getNumeroCuenta() {
+		return numeroCuenta;
+	}
+
+	public void setNumeroCuenta(PanelTipoPreguntaUtil numeroCuenta) {
+		this.numeroCuenta = numeroCuenta;
+	}
+
+	public PanelTipoPreguntaUtil getSueldo() {
+		return sueldo;
+	}
+
+	public void setSueldo(PanelTipoPreguntaUtil sueldo) {
+		this.sueldo = sueldo;
+	}
+
+	public List<PanelTipoPreguntaUtil> getListaPreguntas() {
+		return listaPreguntas;
+	}
+
+	public void setListaPreguntas(List<PanelTipoPreguntaUtil> listaPreguntas) {
+		this.listaPreguntas = listaPreguntas;
+	}
+
+	public JComboBox<String> getTipoSangre() {
+		return tipoSangre;
+	}
+
+	public void setTipoSangre(JComboBox<String> tipoSangre) {
+		this.tipoSangre = tipoSangre;
+	}
+
+	public JButton getBotonFinalizar() {
+		return botonFinalizar;
+	}
+
+	public void setBotonFinalizar(JButton botonFinalizar) {
+		this.botonFinalizar = botonFinalizar;
+	}
+
+	public FormularioRegistroParte3() {
 	        Toolkit tk = Toolkit.getDefaultToolkit();
 	        Image icono = tk.getImage("src/image/icono.jpg");
 	        setIconImage(icono);
 	        
 		 
 	        setSize(400, 400);
-	        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	        setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 	        setResizable(true);
 	        setTitle("Formulario");
 	        setLocationRelativeTo(null);
@@ -54,12 +127,9 @@ public class FormularioRegistroDatosExtras extends JFrame{
 	        panelContenedorSuperior.add(lblTitulo);
 
 	        // Panel inferior
-	        JButton lblBotonRegistro = new JButton("Siguiente");
-	        lblBotonRegistro.setBackground(new Color(144, 224, 239));
-	        panelContenedorInferior.add(lblBotonRegistro);
-	        lblBotonRegistro.addActionListener( e -> {
-	        	validarFormulario();
-	        	});
+	        botonFinalizar = new JButton("Siguiente");
+	        botonFinalizar.setBackground(new Color(144, 224, 239));
+	        panelContenedorInferior.add(botonFinalizar);
 	        // Panel central - Sub paneles
 	        
 	        // Scroll
@@ -120,34 +190,17 @@ public class FormularioRegistroDatosExtras extends JFrame{
 	    	return panelContenedorCentral;
 	    }
 	    
-	    public void validarFormulario() {
-			//Comprueba preguntas sin responder
-			boolean faltaRellenar = false;
-			for(PanelTipoPreguntaUtil pregunta: listaPreguntas) {
-				if(pregunta.estaVacio()) {
-					pregunta.senalarEntradaVacia();
-					faltaRellenar = true;
-				}
-			}
-			if(faltaRellenar) {return;}
-			//Comprueba checkbox
-			if(tipoSangre.getSelectedIndex() == 0) {
-				return;
-			}
-			
-			//Comprueba contenidos invalidos
-			for(PanelTipoPreguntaUtil pregunta: listaPreguntas) {
-				if(!pregunta.validarContenido()) {
-					return;
-				}
-			}
-			
-			JOptionPane.showMessageDialog(null,
-					"Error",
-					"No sabemos que salio mal",
-					JOptionPane.WARNING_MESSAGE);
-        	this.dispose();
-        	System.exit(0);
-			
-		}
+	    public int confirmacionSalidaPanel() {
+	    	return JOptionPane.showConfirmDialog(null, 
+		            "¿Seguro que quieres salir?", 
+		            "Confirmar salida", JOptionPane.YES_NO_OPTION);
+	    }
+	    
+	    public void mensajeConfirmacionFormularioCompleto() {
+	    	JOptionPane.showMessageDialog(null, 
+	    		    "Formulario terminado", 
+	    		    "Información", 
+	    		    JOptionPane.INFORMATION_MESSAGE);
+	    }
+	    
 }

@@ -16,8 +16,14 @@ import javax.swing.*;
 import javax.swing.border.Border;
 
 import controller.PreguntaController;
+import excepciones.invalidInput;
 import utilidades.PanelTipoPreguntaUtil;
-public class FormularioRegistro extends JFrame{
+
+/**
+ *Crea la primera parte visual del formulario
+ *Inicializa las preguntas y atributos del formulario, controladores de preguntas se crean desde controlador de este formulario
+ */
+public class FormularioRegistroParte1 extends JFrame{
 	PanelTipoPreguntaUtil nombre;
 	PanelTipoPreguntaUtil fechaNacimiento;
 	PanelTipoPreguntaUtil curp;
@@ -102,9 +108,9 @@ public class FormularioRegistro extends JFrame{
 		this.lblBotonRegistro = lblBotonRegistro;
 	}
 
-	public FormularioRegistro() {
+	public FormularioRegistroParte1() {
 		setSize(400,400);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		setResizable(true);
 		setTitle("Formulario");
 		setLocationRelativeTo(null);
@@ -117,20 +123,6 @@ public class FormularioRegistro extends JFrame{
 		InicializarComponentes();
 		
 		setVisible(true);
-		
-		//Confirmar salida de formulario
-		this.addWindowListener(new WindowAdapter() {
-		    @Override
-		    public void windowClosing(WindowEvent e) {
-		        int verif = JOptionPane.showConfirmDialog(null, 
-		            "¿Seguro que quieres salir?", 
-		            "Confirmar salida", JOptionPane.YES_NO_OPTION);
-		        
-		        if (verif == JOptionPane.YES_OPTION) {
-		            System.exit(0); 
-		        }
-		    }
-		});
 		
 	}
 	
@@ -178,17 +170,9 @@ public class FormularioRegistro extends JFrame{
 		curp = new PanelTipoPreguntaUtil("Curp", "ALFANUMERICO");
 		telefono = new PanelTipoPreguntaUtil("Telefono", "NUMERICO");
 		correo = new PanelTipoPreguntaUtil("Correo", "CORREO");
+		
 		//Inicializacion de array
 		listaPreguntas = new ArrayList<>();
-		
-		//Conexion con controlador 
-		PreguntaController.registrarPanel(nombre);
-		PreguntaController.registrarPanel(fechaNacimiento);
-		PreguntaController.registrarPanel(curp);
-		PreguntaController.registrarPanel(telefono);
-		PreguntaController.registrarPanel(correo);
-		
-		
 		
 		listaPreguntas.add(nombre);
 		listaPreguntas.add(fechaNacimiento);
@@ -220,6 +204,11 @@ public class FormularioRegistro extends JFrame{
 		return panelCuestionario;
 	}
 	
+	 public int confirmacionSalidaPanel() {
+	    	return JOptionPane.showConfirmDialog(null, 
+		            "¿Seguro que quieres salir?", 
+		            "Confirmar salida", JOptionPane.YES_NO_OPTION);
+	    }
 	
 	
 	

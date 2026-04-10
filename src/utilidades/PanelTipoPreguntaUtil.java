@@ -15,25 +15,6 @@ public class PanelTipoPreguntaUtil extends JPanel{
     private JTextField txtEntrada;
     private JLabel lblError;
     private String tipoClasificacion;
-    /**
-    * Constructor que genera un panel con pregunta, field y texto de error (jlabel)
-    * Se suele usar con los siguientes tipo de datos ALFANUMERICO, NUMERICO, ALFABETICO,CORREO,FECHA
-    * @param pregunta String contenido de pregunta
-    * 
-    */
-    public PanelTipoPreguntaUtil(String pregunta, String caracteresAceptados) {  	
-    	setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-    	lblPregunta = new JLabel(pregunta);
-    	txtEntrada = new JTextField();
-    	lblError = new JLabel("");
-    	lblError.setBackground(Color.RED);
-    	tipoClasificacion = caracteresAceptados;
-    	
-    	add(lblPregunta);
-    	add(txtEntrada);
-    	add(lblError);
-    	
-    }
     
     public JLabel getLblPregunta() {
 		return lblPregunta;
@@ -67,6 +48,28 @@ public class PanelTipoPreguntaUtil extends JPanel{
 		this.tipoClasificacion = tipoClasificacion;
 	}
 
+    
+    /**
+    * Constructor que genera un panel con pregunta, field y texto de error (jlabel)
+    * Se suele usar con los siguientes tipo de datos ALFANUMERICO, NUMERICO, ALFABETICO,CORREO,FECHA
+    * @param pregunta String contenido de pregunta
+    * 
+    */
+    public PanelTipoPreguntaUtil(String pregunta, String caracteresAceptados) {  	
+    	setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+    	lblPregunta = new JLabel(pregunta);
+    	txtEntrada = new JTextField();
+    	lblError = new JLabel("");
+    	lblError.setForeground(Color.RED);
+    	tipoClasificacion = caracteresAceptados;
+    	
+    	add(lblPregunta);
+    	add(txtEntrada);
+    	add(lblError);
+    	
+    }
+    
+   
 	/**
      * El texto de error dentro de pregunta se sobreescribe
      * para llamar la atencion del usuario y que rellene el hueco

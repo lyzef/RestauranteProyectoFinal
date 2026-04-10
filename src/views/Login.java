@@ -14,7 +14,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
-import views.formulario.FormularioRegistro;
+import views.formulario.FormularioRegistroParte1;
 
 public class Login extends JFrame{
 	
@@ -162,7 +162,7 @@ public class Login extends JFrame{
 	}
 	// Eventos
 	public void registro() {
-		new FormularioController(new FormularioRegistro());
+		new FormularioController(new FormularioRegistroParte1());
 		this.dispose();
 	}
 	// Metodos de presentacion

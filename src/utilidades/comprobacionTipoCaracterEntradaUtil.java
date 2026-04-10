@@ -13,69 +13,64 @@ public class comprobacionTipoCaracterEntradaUtil {
 	
 	/**
      *Verifica que el caracter ingresado pertenesca a los caracteres permitidos segun el tipo de entrada
-     *@throws invalidInput Tira en caso que el caracter no pertenesca al tipo definido
+     *@throws invalidInput Ocurre cuando la clasificacion ingresada es desconocida para esta clasificacion
      */
-	public static void validarCaracterSegunTipo(char c, String tipo) throws invalidInput {
+	public static boolean validarCaracterSegunTipo(char c, String tipo) throws invalidInput {
 		switch (tipo) {
 		case "ALFANUMERICO": {
-			esAlfanumerico(c);
-			break;
+			return esAlfanumerico(c);
 		}
 		case "NUMERICO": {
-			esNumerico(c);
-			break;
+			return esNumerico(c);
 		}
 		case "ALFABETICO":{
-			esAlfabetico(c);
-			break;
+			return esAlfabetico(c);
 		}
 		case "CORREO":{
-			esTipoCorreo(c);
-			break;
+			return esTipoCorreo(c);
 		}
 		case "FECHA":{
-			esTipoFecha(c);
-			break;
+			return esTipoFecha(c);
 		}
 		default:
 			throw new IllegalArgumentException("Clasificacion de string desconocida: " + tipo);
 		}
 	}
 	
-	private static void esAlfabetico(char c) throws invalidInput {
+	private static boolean esAlfabetico(char c) {
 		if(Character.isLetter(c) || c == ' ' || c == KeyEvent.VK_BACK_SPACE) {
-			return;
+			return true;
 		}
-		throw new invalidInput("Solo caracteres alfabeticos");
+		return false;
     }
     
-    private static void esNumerico(char c) throws invalidInput {
+    private static boolean esNumerico(char c) {
 		if(Character.isDigit(c) || c == ' ' || c == KeyEvent.VK_BACK_SPACE) {
-			return;
+			return true;
 		}
-		throw new invalidInput("Solo caracteres numericos");
+		return false;
     }
     
-    private static void esAlfanumerico(char c) throws invalidInput {
+    private static boolean esAlfanumerico(char c){
 		if(Character.isLetterOrDigit(c) || c == ' ' || c == KeyEvent.VK_BACK_SPACE) {
-			return;
+			return true;
 		}
-		throw new invalidInput("Solo caracteres alfanumericos");
+		return false;
     }
     
-    private static void esTipoCorreo(char c) throws invalidInput {
+    private static boolean esTipoCorreo(char c){
 		if(c == '@' ||c == '.' ||c == '_' ||c == '-' || Character.isLetterOrDigit(c) || c == KeyEvent.VK_BACK_SPACE) {
-			return;
+			return true;
 		}
 		
-		throw new invalidInput("Caracter no admitido");
+		return false;
     }
     
-    private static void esTipoFecha(char c) throws invalidInput {
+    private static boolean esTipoFecha(char c){
 		if(c == '/' || Character.isDigit(c) || c == KeyEvent.VK_BACK_SPACE) {
-			return;
+			return true;
 		}
 		
-		throw new invalidInput("En forma DD/MM/AAAA");
+		return false;
     }
 }

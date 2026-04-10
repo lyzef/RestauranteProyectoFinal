@@ -12,9 +12,10 @@ import java.util.List;
 import javax.swing.*;
 import javax.swing.border.Border;
 
+import controller.PreguntaController;
 import utilidades.PanelTipoPreguntaUtil;
 
-public class FormularioRegistroInformacionPuesto extends JFrame {
+public class FormularioRegistroParte2 extends JFrame {
 	PanelTipoPreguntaUtil puestoActual;
 	PanelTipoPreguntaUtil descripcionFunciones;
 	PanelTipoPreguntaUtil perfilPuesto;
@@ -23,10 +24,84 @@ public class FormularioRegistroInformacionPuesto extends JFrame {
 	PanelTipoPreguntaUtil tipoContrato;
 	List <PanelTipoPreguntaUtil> listaPreguntas;
 	ButtonGroup radioTurno;
+	JButton botonSiguiente;
 	
-    public FormularioRegistroInformacionPuesto() {
+	
+    public PanelTipoPreguntaUtil getPuestoActual() {
+		return puestoActual;
+	}
+
+	public void setPuestoActual(PanelTipoPreguntaUtil puestoActual) {
+		this.puestoActual = puestoActual;
+	}
+
+	public PanelTipoPreguntaUtil getDescripcionFunciones() {
+		return descripcionFunciones;
+	}
+
+	public void setDescripcionFunciones(PanelTipoPreguntaUtil descripcionFunciones) {
+		this.descripcionFunciones = descripcionFunciones;
+	}
+
+	public PanelTipoPreguntaUtil getPerfilPuesto() {
+		return perfilPuesto;
+	}
+
+	public void setPerfilPuesto(PanelTipoPreguntaUtil perfilPuesto) {
+		this.perfilPuesto = perfilPuesto;
+	}
+
+	public PanelTipoPreguntaUtil getCondicionesLaborales() {
+		return condicionesLaborales;
+	}
+
+	public void setCondicionesLaborales(PanelTipoPreguntaUtil condicionesLaborales) {
+		this.condicionesLaborales = condicionesLaborales;
+	}
+
+	public PanelTipoPreguntaUtil getUbicacionOrganizacional() {
+		return ubicacionOrganizacional;
+	}
+
+	public void setUbicacionOrganizacional(PanelTipoPreguntaUtil ubicacionOrganizacional) {
+		this.ubicacionOrganizacional = ubicacionOrganizacional;
+	}
+
+	public PanelTipoPreguntaUtil getTipoContrato() {
+		return tipoContrato;
+	}
+
+	public void setTipoContrato(PanelTipoPreguntaUtil tipoContrato) {
+		this.tipoContrato = tipoContrato;
+	}
+
+	public List<PanelTipoPreguntaUtil> getListaPreguntas() {
+		return listaPreguntas;
+	}
+
+	public void setListaPreguntas(List<PanelTipoPreguntaUtil> listaPreguntas) {
+		this.listaPreguntas = listaPreguntas;
+	}
+
+	public ButtonGroup getRadioTurno() {
+		return radioTurno;
+	}
+
+	public void setRadioTurno(ButtonGroup radioTurno) {
+		this.radioTurno = radioTurno;
+	}
+
+	public JButton getBotonSiguiente() {
+		return botonSiguiente;
+	}
+
+	public void setBotonSiguiente(JButton botonSiguiente) {
+		this.botonSiguiente = botonSiguiente;
+	}
+
+	public FormularioRegistroParte2() {
         setSize(400, 400);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         setResizable(true);
         setTitle("Formulario");
         setLocationRelativeTo(null);
@@ -55,14 +130,10 @@ public class FormularioRegistroInformacionPuesto extends JFrame {
         panelContenedorSuperior.add(lblTitulo);
 
         // Panel inferior
-        JButton lblBotonRegistro = new JButton("Siguiente");
-        lblBotonRegistro.setBackground(new Color(144, 224, 239));
-        lblBotonRegistro.addActionListener( e -> {
-        	validarFormulario();
-        	});
-        
-        
-        panelContenedorInferior.add(lblBotonRegistro);
+        botonSiguiente = new JButton("Siguiente");
+        botonSiguiente.setBackground(new Color(144, 224, 239));
+
+        panelContenedorInferior.add(botonSiguiente);
 
         // Scroll
         JScrollPane scroll = new JScrollPane(panelPreguntas());
@@ -112,30 +183,9 @@ public class FormularioRegistroInformacionPuesto extends JFrame {
     	return panelContenedorCentral;
     }
     
-    public void validarFormulario() {
-		//Comprueba preguntas sin responder
-		boolean faltaRellenar = false;
-		for(PanelTipoPreguntaUtil pregunta: listaPreguntas) {
-			if(pregunta.estaVacio()) {
-				pregunta.senalarEntradaVacia();
-				faltaRellenar = true;
-			}
-		}
-		if(faltaRellenar) {return;}
-		//Comprueba checkbox
-		if(radioTurno.getSelection() == null) {
-			return;
-		}
-		
-		//Comprueba contenidos invalidos
-		for(PanelTipoPreguntaUtil pregunta: listaPreguntas) {
-			if(!pregunta.validarContenido()) {
-				return;
-			}
-		}
-		
-		new FormularioRegistroDatosExtras();
-    	this.dispose();
-		
-	}
+    public int confirmacionSalidaPanel() {
+    	return JOptionPane.showConfirmDialog(null, 
+	            "¿Seguro que quieres salir?", 
+	            "Confirmar salida", JOptionPane.YES_NO_OPTION);
+    }
 }
