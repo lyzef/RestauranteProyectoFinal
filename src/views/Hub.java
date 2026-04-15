@@ -6,11 +6,17 @@ import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 
-public class VentanaPrincipal extends JFrame{
-	public VentanaPrincipal() {
+public class Hub extends JFrame{
+	JButton tocame;
+	
+	public JButton getTocame() {
+		return tocame;
+	}
+	public Hub() {
 		setSize(400,400);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setResizable(true);
@@ -29,27 +35,8 @@ public class VentanaPrincipal extends JFrame{
 	
 	public void InicializarComponentes() {
 		Panel informacionPrincipal = new Panel();
-		informacionPrincipal.addKeyListener(new KeyListener() {
-			
-			@Override
-			public void keyTyped(KeyEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
-			
-			@Override
-			public void keyReleased(KeyEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
-			
-			@Override
-			public void keyPressed(KeyEvent e) {
-				System.out.println("Nigger "+ "tocaste " + e.getKeyChar() );
-				
-			}
-		});
-		add(informacionPrincipal);
-		informacionPrincipal.requestFocus();
+		tocame = new JButton("Lista de usuario ;~/");
+		informacionPrincipal.add(tocame);
+		this.add(informacionPrincipal);
 	}
 }

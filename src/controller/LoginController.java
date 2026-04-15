@@ -1,7 +1,7 @@
 package controller;
 
 import views.Login;
-import views.VentanaPrincipal;
+import views.Hub;
 import views.formulario.FormularioRegistroParte1;
 import excepciones.InvalidContraseña;
 import excepciones.InvalidUser;
@@ -57,7 +57,7 @@ public class LoginController {
                     "Bienvenido....",
                     JOptionPane.INFORMATION_MESSAGE
             );
-            new VentanaPrincipal();
+            new HubController(new Hub());
             view.dispose();
         } catch (InvalidUser ex) {
             view.getLabelAdvertenciaCorreo().setText(ex.getMessage());

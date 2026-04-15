@@ -96,4 +96,7 @@ public class PanelTipoPreguntaUtil extends JPanel{
     	lblError.setText(null);
     }
     
+    public String obtenerTextoEntrada() {
+    	return txtEntrada.getText();
+    }
 }
