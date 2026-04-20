@@ -5,17 +5,22 @@ import java.awt.Panel;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-
+import java.awt.BorderLayout;
+import java.awt.CardLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 
 public class Hub extends JFrame{
-	JButton tocame;
+	public static final String USERS = "USERS";
 	
-	public JButton getTocame() {
-		return tocame;
-	}
+	private CardLayout cardLayout;
+	private JPanel contenedorPrincipal;
+	
+	public UsersView userPanel;
+	public JButton btnUsers;
+
 	public Hub() {
 		setSize(400,400);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -28,15 +33,32 @@ public class Hub extends JFrame{
 		Image icono = tk.getImage("src/image/icono.jpg");
 		setIconImage(icono);
 		
-		InicializarComponentes();
+		createButtons();
+		createViews();
 		
 		setVisible(true);
 	}
 	
-	public void InicializarComponentes() {
-		Panel informacionPrincipal = new Panel();
-		tocame = new JButton("Lista de usuario ;~/");
-		informacionPrincipal.add(tocame);
-		this.add(informacionPrincipal);
+	public void createButtons() {
+		JPanel barra = new JPanel();
+		
+		btnUsers = new JButton("Usuarios");
+		barra.add(btnUsers);
+		
+		add(barra, BorderLayout.NORTH);
+	}
+	
+	public void createViews() {
+		cardLayout = new CardLayout();
+		contenedorPrincipal = new JPanel(cardLayout);
+		
+		userPanel = new UsersView();
+		contenedorPrincipal.add(userPanel, USERS);
+		
+		add(contenedorPrincipal, BorderLayout.SOUTH);
+	}
+	
+	public void showView(String view) {
+		cardLayout.show(contenedorPrincipal, view);
 	}
 }

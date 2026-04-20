@@ -32,6 +32,7 @@ public class UserRepository {
 			}
 		}
 		
+		System.out.println("leido");
 		return users;
 		
 	}

@@ -3,32 +3,42 @@ package controller;
 import java.io.IOException;
 import java.util.List;
 
+import javax.swing.JOptionPane;
+
 import models.User;
 import repository.UserRepository;
+import tablemodels.UserTableModel;
 import views.*;
 
 public class HubController {
-	Hub hub;
+	Hub view;
+	
 	public HubController(Hub hub) {
-		this.hub = hub;
+		this.view = hub;
 		addListeners();
 	}
 	
 	public void addListeners() {
-		hub.getTocame().addActionListener( e -> {
-			UserRepository repository = new UserRepository();
-			
-			try {
-				List <User> usuarios = repository.getUsers();
-				
-				for(User user : usuarios) {
-					System.out.println(user);
-					System.out.println("---------------");
-				}
-			} catch (IOException e1) {
-				// TODO Auto-generated catch block
-				System.out.println("No se pudo generar la lista de usuarios");
-			}
+		view.btnUsers.addActionListener(e -> {
+			showUsers();
 		});
+	}
+	
+	private void showUsers() {
+		UserRepository repository = new UserRepository();
+		
+		try {
+			List<User> users = repository.getUsers();
+			
+			UserTableModel model = new UserTableModel(users);
+			
+			view.userPanel.setTableModel(model);
+			
+			view.showView(Hub.USERS);
+			
+		}catch (IOException ex) {
+			JOptionPane.showMessageDialog(view, ex.getMessage());
+		}
+		
 	}
 }
