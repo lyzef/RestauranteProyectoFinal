@@ -22,7 +22,7 @@ public class Hub extends JFrame{
 	public JButton btnUsers;
 
 	public Hub() {
-		setSize(400,400);
+		setSize(1200,700);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setResizable(true);
 		setTitle("Formulario");

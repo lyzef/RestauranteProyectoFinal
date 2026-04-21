@@ -24,7 +24,13 @@ public class HubController {
 		});
 	}
 	
+	/**
+	 *Obtiene los usuarios del repositorio
+	 *Establece la tabla para el panel del usuario
+	 *
+	 */
 	private void showUsers() {
+		UserController userControl = new UserController(view.userPanel); //Controlador de view userView
 		UserRepository repository = new UserRepository();
 		
 		try {
