@@ -3,151 +3,94 @@ package controller;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.List;
-import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-
-
-
 import models.User;
 import repository.UserRepository;
 import utilidades.PanelTipoPreguntaUtil;
 import utilidades.ValidadorCadena;
 import views.Login;
-import views.formulario.FormularioRegistroParte1;
-import views.formulario.FormularioRegistroParte3;
-import views.formulario.FormularioRegistroParte2;
+import views.formulario.FormularioRegistro;
 
 public class FormularioController {
-	private FormularioRegistroParte1 formularioEntrada;
-	private FormularioRegistroParte3 formularioDatos;
-	private FormularioRegistroParte2 formularioInformacion;
+	private FormularioRegistro formularioRegistro;
 	private UserRepository repositorio;
+	private String parteFormularioActual;	
 	
 	/**
 	 * Controlador de las clases dentro del paquete formulario
 	 * @param formulario Primera parte del formulario
 	 */
-	public FormularioController(FormularioRegistroParte1 formulario) {
-		this.formularioEntrada = formulario;
+	public FormularioController(FormularioRegistro formularioRegistro) {
+		this.formularioRegistro = formularioRegistro;
 		this.repositorio = new UserRepository();
-		controladorFormularioParte1();
+		
+		//Conectando paneles pregunta a su controlador
+		conectarPreguntasAsuControlador(formularioRegistro.getListaPreguntasParte1());
+		conectarPreguntasAsuControlador(formularioRegistro.getListaPreguntasParte2());
+		conectarPreguntasAsuControlador(formularioRegistro.getListaPreguntasParte3());
+		
+		//Iniciando vista formulario parte 1
+		parteFormularioActual = FormularioRegistro.FORMPARTE1;
+		formularioRegistro.showView(parteFormularioActual);
+		
+		
+		//Boton siguiente listener
+		formularioRegistro.getBotonSiguiente().addActionListener(e -> {
+			controlFlujoFormulario();
+			
+		});
+		
+		//Cerrar formulario
+		formularioRegistro.addWindowListener(new WindowAdapter() {
+		    @Override
+		    public void windowClosing(WindowEvent e) {
+		        int verif = formularioRegistro.confirmacionSalidaPanel();
+		        
+		        if (verif == JOptionPane.YES_OPTION) {
+		        	new LoginController( new Login());
+		            formularioRegistro.dispose();
+		        }
+		        
+		    }
+		});		
+		
 	}
 	
 	/**
-	 * Controla la primera parte del formulario 
+	 * Controla el flujo del formulario, cambia de ventana si la actual ya esta completa y validada
+	 * termina el formulario si ya esta completo
 	 */
-	public void controladorFormularioParte1() {
-		//Comprobacion datos primera parte
-		formularioEntrada.getLblBotonRegistro().addActionListener(e -> {
+	public void controlFlujoFormulario() {
+		switch (parteFormularioActual) {
+		case FormularioRegistro.FORMPARTE1:{
 			if(validarFormularioParte1()) {
-				controladorFormularioParte2();
-				formularioEntrada.setVisible(false);
-			} else {
-				// TODO anadir cambio visual en formulario parte 1
+				parteFormularioActual = formularioRegistro.FORMPARTE2;
+				formularioRegistro.showView(parteFormularioActual);
 			}
-			
-		});
-		
-		formularioEntrada.addWindowListener(new WindowAdapter() {
-		    @Override
-		    public void windowClosing(WindowEvent e) {
-		        int verif = formularioEntrada.confirmacionSalidaPanel();
-		        
-		        if (verif == JOptionPane.YES_OPTION) {
-		        	new LoginController( new Login());
-		            cerrarFormulario();
-		        }
-		        
-		    }
-		});
-		
-		conectarPreguntasAControlador(formularioEntrada.getListaPreguntas());
-	}
-	
-	/**
-	 * Controla la segunda parte del formulario agregando
-	 */
-	public void controladorFormularioParte2() {
-		formularioInformacion = new FormularioRegistroParte2();
-		formularioInformacion.getBotonSiguiente().addActionListener(e -> {
+			break;
+		}
+		case FormularioRegistro.FORMPARTE2:{
 			if(validarFormularioParte2()) {
-				controladorFormularioParte3();
-				formularioInformacion.setVisible(false);
-			} else {
-				// TODO anadir cambio visual en formulario parte 2
+				parteFormularioActual = formularioRegistro.FORMPARTE3;
+				formularioRegistro.showView(parteFormularioActual);
 			}
-			
-		});
-		
-		formularioInformacion.addWindowListener(new WindowAdapter() {
-		    @Override
-		    public void windowClosing(WindowEvent e) {
-		        int verif = formularioInformacion.confirmacionSalidaPanel();
-		      
-		        if (verif == JOptionPane.YES_OPTION) {
-		        	new LoginController( new Login());
-		            cerrarFormulario();
-		        }
-		        
-		    }
-		});
-		
-		conectarPreguntasAControlador(formularioInformacion.getListaPreguntas());
-	}
-	
-	/**
-	 * Controla la tercera parte del formulario agregado
-	 * Finaliza el formulario y regresa a login
-	 */
-	public void controladorFormularioParte3() {
-		formularioDatos = new FormularioRegistroParte3();
-		formularioDatos.getBotonFinalizar().addActionListener(e -> {
+			break;
+		}
+		case FormularioRegistro.FORMPARTE3:{
 			if(validarFormularioParte3()) {
+				formularioRegistro.mensajeConfirmacionFormularioCompleto();
 				guardarUsuario();
-				
-				formularioDatos.dispose();
-				formularioInformacion.dispose();
-				formularioEntrada.dispose();
-				new LoginController( new Login());
-			} else {
-				// TODO anadir cambio visual en formulario parte 3
+				new LoginController(new Login());
+				formularioRegistro.dispose();
 			}
-			
-		});
-		
-		formularioDatos.addWindowListener(new WindowAdapter() {
-		    @Override
-		    public void windowClosing(WindowEvent e) {
-		        int verif = formularioDatos.confirmacionSalidaPanel();
-		        
-		        if (verif == JOptionPane.YES_OPTION) {
-		            new LoginController( new Login());
-		            cerrarFormulario();		           
-		        }
-		        
-		    }
-		});
-		
-		conectarPreguntasAControlador(formularioDatos.getListaPreguntas());
-		
-	}
-	
-	/**
-	 * Detecta las interfazes de formularios abiertos y los cierra
-	 */
-	public void cerrarFormulario() {
-		if(formularioDatos != null) {
-			formularioDatos.dispose();
+			break;
 		}
-		if(formularioEntrada != null) {
-			formularioEntrada.dispose();
-		}
-		if(formularioInformacion != null) {
-			formularioInformacion.dispose();
+		default:
+			throw new IllegalArgumentException("Unexpected value: " + parteFormularioActual);
 		}
 	}
 	
-	public void conectarPreguntasAControlador(List <PanelTipoPreguntaUtil> preguntas ) {
+	public void conectarPreguntasAsuControlador(List <PanelTipoPreguntaUtil> preguntas ) {
 		for(PanelTipoPreguntaUtil p : preguntas) {
 			PreguntaController.registrarPanel(p);
 		}
@@ -160,31 +103,31 @@ public class FormularioController {
 		
 		try {
 			repositorio.save(new User(
-					formularioEntrada.getNombre().obtenerTextoEntrada(),
-					formularioEntrada.getFechaNacimiento().obtenerTextoEntrada(),
-					formularioEntrada.getCurp().obtenerTextoEntrada(),
-					formularioEntrada.getTelefono().obtenerTextoEntrada(),
-					formularioEntrada.getCorreo().obtenerTextoEntrada(),
-					(String) formularioEntrada.getEstadoCivil().getSelectedItem(),
-					(String) formularioEntrada.getGeneros().getSelectedItem(),
-					formularioInformacion.getPuestoActual().obtenerTextoEntrada(),
-					formularioInformacion.getDescripcionFunciones().obtenerTextoEntrada(),
-					formularioInformacion.getPerfilPuesto().obtenerTextoEntrada(),
-					formularioInformacion.getCondicionesLaborales().obtenerTextoEntrada(),
-					formularioInformacion.getUbicacionOrganizacional().obtenerTextoEntrada(),
-					formularioInformacion.getTipoContrato().obtenerTextoEntrada(),
-					formularioInformacion.getRadioTurno().getSelection().getActionCommand(),
-					formularioDatos.getNSS().obtenerTextoEntrada(),
-					formularioDatos.getAlergiasConocidas().obtenerTextoEntrada(),
-					formularioDatos.getContactoEmergencia().obtenerTextoEntrada(),
-			        (String) formularioDatos.getTipoSangre().getSelectedItem().toString(), // Extracción del JComboBox
-			        formularioDatos.getBanco().obtenerTextoEntrada(),
-			        formularioDatos.getNumeroCuenta().obtenerTextoEntrada(),
-			        formularioDatos.getSueldo().obtenerTextoEntrada()
+					formularioRegistro.getNombre().obtenerTextoEntrada(),
+					formularioRegistro.getFechaNacimiento().obtenerTextoEntrada(),
+					formularioRegistro.getCurp().obtenerTextoEntrada(),
+					formularioRegistro.getTelefono().obtenerTextoEntrada(),
+					formularioRegistro.getCorreo().obtenerTextoEntrada(),
+					(String) formularioRegistro.getEstadoCivil().getSelectedItem(),
+					(String) formularioRegistro.getGeneros().getSelectedItem(),
+					formularioRegistro.getPuestoActual().obtenerTextoEntrada(),
+					formularioRegistro.getDescripcionFunciones().obtenerTextoEntrada(),
+					formularioRegistro.getPerfilPuesto().obtenerTextoEntrada(),
+					formularioRegistro.getCondicionesLaborales().obtenerTextoEntrada(),
+					formularioRegistro.getUbicacionOrganizacional().obtenerTextoEntrada(),
+					formularioRegistro.getTipoContrato().obtenerTextoEntrada(),
+					formularioRegistro.getRadioTurno().getSelection().getActionCommand(),
+					formularioRegistro.getNSS().obtenerTextoEntrada(),
+					formularioRegistro.getAlergiasConocidas().obtenerTextoEntrada(),
+					formularioRegistro.getContactoEmergencia().obtenerTextoEntrada(),
+			        (String) formularioRegistro.getTipoSangre().getSelectedItem().toString(), // Extracción del JComboBox
+			        formularioRegistro.getBanco().obtenerTextoEntrada(),
+			        formularioRegistro.getNumeroCuenta().obtenerTextoEntrada(),
+			        formularioRegistro.getSueldo().obtenerTextoEntrada()
 					));
-			formularioDatos.mensajeConfirmacionFormularioCompleto();
+			formularioRegistro.mensajeConfirmacionFormularioCompleto();
 		} catch (Exception e) {
-			JOptionPane.showMessageDialog(formularioDatos, e.getMessage());
+			JOptionPane.showMessageDialog(formularioRegistro, e.getMessage());
 		}
 	}
 	
@@ -194,7 +137,7 @@ public class FormularioController {
 	public boolean validarFormularioParte1() {
 		boolean formularioListo = true; //Evita cambio con entradas vacias, incompletas o incorrectas
 		
-		for(PanelTipoPreguntaUtil pregunta: formularioEntrada.getListaPreguntas()) {
+		for(PanelTipoPreguntaUtil pregunta: formularioRegistro.getListaPreguntasParte1()) {
 			if(pregunta.estaVacio()) {
 				pregunta.senalarEntradaVacia();
 				formularioListo = false;
@@ -202,12 +145,12 @@ public class FormularioController {
 		}
 		
 		//Comprueba checkbox
-		if(formularioEntrada.getEstadoCivil().getSelectedItem() == "Seleccionar" || formularioEntrada.getGeneros().getSelectedItem() == "Seleccionar" ) {
+		if(formularioRegistro.getEstadoCivil().getSelectedItem() == "Seleccionar" || formularioRegistro.getGeneros().getSelectedItem() == "Seleccionar" ) {
 			formularioListo = false;
 		}
 		
 		//Comprueba contenidos invalidos en textfields
-		for(PanelTipoPreguntaUtil pregunta: formularioEntrada.getListaPreguntas()) {
+		for(PanelTipoPreguntaUtil pregunta: formularioRegistro.getListaPreguntasParte1()) {
 			try {
 				ValidadorCadena.validarContenido(pregunta);
 			} catch (Exception e) {
@@ -223,7 +166,7 @@ public class FormularioController {
 		boolean formularioListo = true; //Evita cambio con entradas vacias, incompletas o incorrectas
 		
 		//Preguntas vacias
-		for(PanelTipoPreguntaUtil pregunta: formularioInformacion.getListaPreguntas()) {
+		for(PanelTipoPreguntaUtil pregunta: formularioRegistro.getListaPreguntasParte2()) {
 			if(pregunta.estaVacio()) {
 				pregunta.senalarEntradaVacia();
 				formularioListo = false;
@@ -231,12 +174,12 @@ public class FormularioController {
 		}
 		
 		//Comprueba raddio button
-		if(formularioInformacion.getRadioTurno().getSelection() == null) {
+		if(formularioRegistro.getRadioTurno().getSelection() == null) {
 			formularioListo = false;
 		}
 		
 		//Comprueba contenidos invalidos en textfields
-		for(PanelTipoPreguntaUtil pregunta: formularioInformacion.getListaPreguntas()) {
+		for(PanelTipoPreguntaUtil pregunta: formularioRegistro.getListaPreguntasParte2()) {
 			try {
 				ValidadorCadena.validarContenido(pregunta);
 			} catch (Exception e) {
@@ -252,7 +195,7 @@ public class FormularioController {
 		boolean formularioListo = true; //Evita cambio con entradas vacias, incompletas o incorrectas
 		
 		//Preguntas vacias
-		for(PanelTipoPreguntaUtil pregunta: formularioDatos.getListaPreguntas()) {
+		for(PanelTipoPreguntaUtil pregunta: formularioRegistro.getListaPreguntasParte3()) {
 			if(pregunta.estaVacio()) {
 				pregunta.senalarEntradaVacia();
 				formularioListo = false;
@@ -260,12 +203,12 @@ public class FormularioController {
 		}
 		
 		//Comprueba checkbox
-		if(formularioDatos.getTipoSangre().getSelectedIndex() == 0) {
+		if(formularioRegistro.getTipoSangre().getSelectedIndex() == 0) {
 			formularioListo = false;
 		}
 		
 		//Comprueba contenidos invalidos en textfields
-		for(PanelTipoPreguntaUtil pregunta: formularioDatos.getListaPreguntas()) {
+		for(PanelTipoPreguntaUtil pregunta: formularioRegistro.getListaPreguntasParte3()) {
 			try {
 				ValidadorCadena.validarContenido(pregunta);
 			} catch (Exception e) {

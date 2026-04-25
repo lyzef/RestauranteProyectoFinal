@@ -2,7 +2,7 @@ package controller;
 
 import views.Login;
 import views.Hub;
-import views.formulario.FormularioRegistroParte1;
+import views.formulario.FormularioRegistro;
 import excepciones.InvalidContraseña;
 import excepciones.InvalidUser;
 import javax.swing.*;
@@ -38,7 +38,7 @@ public class LoginController {
     }
 
     private void registro() {
-        new FormularioController(new FormularioRegistroParte1());
+        new FormularioController(new FormularioRegistro());
         view.dispose();
     }
 

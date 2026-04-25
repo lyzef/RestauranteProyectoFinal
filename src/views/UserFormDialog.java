@@ -36,7 +36,7 @@ public class UserFormDialog extends JDialog{
 	JButton lblBotonGuardar;
 	JButton lblBotonCancelar;
 	
-	 private User user;
+	private User user;
 	
 	
 	

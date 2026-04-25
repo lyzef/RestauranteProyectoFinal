@@ -4,7 +4,7 @@ import repository.UserRepository;
 import tablemodels.UserTableModel;
 import views.UserFormDialog;
 import views.UsersView;
-import views.formulario.FormularioRegistroParte1;
+import views.formulario.FormularioRegistro;
 
 public class UserController {
 		private UsersView view;
