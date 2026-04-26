@@ -3,195 +3,173 @@ package views;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.Image;
-import java.awt.Toolkit;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
+import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
-import javax.swing.SwingConstants;
-import javax.swing.border.Border;
 
+import controller.PreguntaController;
+
+import java.util.*;
+import javax.swing.*;
 import models.User;
 import utilidades.PanelTipoPreguntaUtil;
+import utilidades.ValidadorCadena;
 
-public class UserFormDialog extends JDialog{
-	PanelTipoPreguntaUtil nombre;
-	PanelTipoPreguntaUtil fechaNacimiento;
-	PanelTipoPreguntaUtil curp;
-	PanelTipoPreguntaUtil telefono;
-	PanelTipoPreguntaUtil correo;
-	List <PanelTipoPreguntaUtil> listaPreguntas;
-	JComboBox<String> estadoCivil;
-	JComboBox<String> generos;
-	JButton lblBotonGuardar;
-	JButton lblBotonCancelar;
-	
-	private User user;
-	
-	
-	
-	public PanelTipoPreguntaUtil getNombre() {
-		return nombre;
-	}
+public class UserFormDialog extends JDialog {
+    JPanel panelContenedorCentral;
+    User usuario;
+    private boolean saved = false;
+    
+    // Parte 1
+    PanelTipoPreguntaUtil nombre, fechaNacimiento, curp, telefono, correo;
+    // Parte 2
+    PanelTipoPreguntaUtil puestoActual, descripcionFunciones, perfilPuesto, condicionesLaborales, ubicacionOrganizacional, tipoContrato;
+    // Parte 3
+    PanelTipoPreguntaUtil nss, alergiasConocidas, contactoEmergencia, banco, numeroCuenta, sueldo;
 
-	public void setNombre(PanelTipoPreguntaUtil nombre) {
-		this.nombre = nombre;
-	}
+    // Todas las preguntas 
+    List<PanelTipoPreguntaUtil> listaPreguntas;
 
-	public PanelTipoPreguntaUtil getFechaNacimiento() {
-		return fechaNacimiento;
-	}
+    // Otros 
+    JComboBox<String> estadoCivil, generos, tipoSangre;
+    ButtonGroup radioTurno;
+    JButton botonCancelar, botonGuardar;
 
-	public void setFechaNacimiento(PanelTipoPreguntaUtil fechaNacimiento) {
-		this.fechaNacimiento = fechaNacimiento;
-	}
-
-	public PanelTipoPreguntaUtil getCurp() {
-		return curp;
-	}
-
-	public void setCurp(PanelTipoPreguntaUtil curp) {
-		this.curp = curp;
-	}
-
-	public PanelTipoPreguntaUtil getTelefono() {
-		return telefono;
-	}
-
-	public void setTelefono(PanelTipoPreguntaUtil telefono) {
-		this.telefono = telefono;
-	}
-
-	public PanelTipoPreguntaUtil getCorreo() {
-		return correo;
-	}
-
-	public void setCorreo(PanelTipoPreguntaUtil correo) {
-		this.correo = correo;
-	}
-
-	public List<PanelTipoPreguntaUtil> getListaPreguntas() {
-		return listaPreguntas;
-	}
-
-	public void setListaPreguntas(List<PanelTipoPreguntaUtil> listaPreguntas) {
-		this.listaPreguntas = listaPreguntas;
-	}
-
-	public JComboBox<String> getEstadoCivil() {
-		return estadoCivil;
-	}
-
-	public void setEstadoCivil(JComboBox<String> estadoCivil) {
-		this.estadoCivil = estadoCivil;
-	}
-
-	public JComboBox<String> getGeneros() {
-		return generos;
-	}
-
-	public void setGeneros(JComboBox<String> generos) {
-		this.generos = generos;
-	}
-
-	public UserFormDialog(JFrame parent, User usuario) {
-		super(parent, true);
-		this.user = usuario;
-		
-		setSize(400,400);
-		setLocationRelativeTo(parent);
-		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+    public UserFormDialog(JFrame parent, User usuario) {
+    	super(parent,true);
+    	this.usuario = usuario;
+    	
+    	setSize(400,400);
+		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		setResizable(true);
 		setTitle("Formulario");
+		setLocationRelativeTo(null);
 		
-		InicializarComponentes();
+        inicializarComponentes();
+        setVisible(true);
+    }
+    
+    
+
+    private void inicializarComponentes() {
+        listaPreguntas = new ArrayList<>(); 
+
+        JPanel panelSuperior = new JPanel();
+        panelContenedorCentral = new JPanel(new BorderLayout());
+        JPanel panelInferior = new JPanel();
+
+        // Configuración de Título
+        JLabel lblTitulo = new JLabel(usuario == null ? "Agregar usuario" : "Editar usuario" );
+        lblTitulo.setFont(new Font("Times", Font.PLAIN, 17));
+        panelSuperior.add(lblTitulo);
+        
+        // Botón cancelar
+        botonCancelar = new JButton("Cancelar");
+        botonCancelar.setBackground(new Color(255, 25, 45));
+        panelInferior.add(botonCancelar);
+        
+        // Botón Siguiente
+        botonGuardar = new JButton("Guardar");
+        botonGuardar.setBackground(new Color(144, 224, 239));
+        panelInferior.add(botonGuardar);
+        
+     
+
+        // Crear y añadir el formulario (con scroll)
+        panelContenedorCentral.add(crearFormularioCompleto(), BorderLayout.CENTER);
+
+        add(panelSuperior, BorderLayout.NORTH);
+        add(panelContenedorCentral, BorderLayout.CENTER);
+        add(panelInferior, BorderLayout.SOUTH);
+        
+        loadData();
+        
+        botonGuardar.addActionListener(e -> save());
+        botonCancelar.addActionListener(e -> dispose());
+    }
+
+    private JScrollPane crearFormularioCompleto() {
+        JPanel panelCuestionario = new JPanel();
+        panelCuestionario.setLayout(new BoxLayout(panelCuestionario, BoxLayout.Y_AXIS));
+        panelCuestionario.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
+        
+        // Parte 1
+        nombre = new PanelTipoPreguntaUtil("Nombre", "ALFABETICO");
+        fechaNacimiento = new PanelTipoPreguntaUtil("Fecha de nacimiento", "FECHA");
+        curp = new PanelTipoPreguntaUtil("Curp", "ALFANUMERICO");
+        telefono = new PanelTipoPreguntaUtil("Telefono", "NUMERICO");
+        correo = new PanelTipoPreguntaUtil("Correo", "CORREO");
+
+        // Parte 2
+        puestoActual = new PanelTipoPreguntaUtil("Puesto actual:", "ALFANUMERICO");
+        descripcionFunciones = new PanelTipoPreguntaUtil("Funciones", "ALFANUMERICO");
+        perfilPuesto = new PanelTipoPreguntaUtil("Perfil de puesto:", "ALFANUMERICO");
+        condicionesLaborales = new PanelTipoPreguntaUtil("Condiciones:", "ALFANUMERICO");
+        ubicacionOrganizacional = new PanelTipoPreguntaUtil("Ubicación:", "ALFANUMERICO");
+        tipoContrato = new PanelTipoPreguntaUtil("Tipo contrato:", "ALFANUMERICO");
+        
+        // Parte 3
+        nss = new PanelTipoPreguntaUtil("NSS:", "ALFANUMERICO");
+        alergiasConocidas = new PanelTipoPreguntaUtil("Alergias:", "ALFANUMERICO");
+        contactoEmergencia = new PanelTipoPreguntaUtil("Contacto Emergencia:", "ALFANUMERICO");
+        banco = new PanelTipoPreguntaUtil("Banco:", "ALFANUMERICO");
+        numeroCuenta = new PanelTipoPreguntaUtil("Cuenta/CLABE:", "NUMERICO");
+        sueldo = new PanelTipoPreguntaUtil("Sueldo:", "NUMERICO");
+        
+
+        //Anadir todos a lista
+        Collections.addAll(listaPreguntas, 
+            nombre, fechaNacimiento, curp, telefono, correo,
+            puestoActual, descripcionFunciones, perfilPuesto, condicionesLaborales, ubicacionOrganizacional, tipoContrato,
+            nss, alergiasConocidas, contactoEmergencia, banco, numeroCuenta, sueldo
+        );
+
+        // Anadir todos a panel
+        for (PanelTipoPreguntaUtil p : listaPreguntas) {
+            panelCuestionario.add(p);
+        }
+        
+        conectarPreguntasAsuControlador(listaPreguntas);
+        
+        JLabel lblSangre = new JLabel("Tipo de sangre");
+        panelCuestionario.add(lblSangre);
+		String[] opcionesSangre = {"Seleccionar","O-","O+","B-","B+","A-","A+","AB+","AB-"};
+		tipoSangre = new JComboBox<String>(opcionesSangre);
+		tipoSangre.setSelectedIndex(0);
+		panelCuestionario.add(tipoSangre);
+		tipoSangre.setBorder(BorderFactory.createEmptyBorder(0,0,20,0));
 		
-		
-	}
-	
-	public void InicializarComponentes() {
-		//Paneles
-		JPanel panelContenedorSuperior = new JPanel();
-		JPanel panelContenedorInferior = new JPanel();
-		
-		//Panel superior
-		JLabel lblTitulo = new JLabel("Registro - Datos personales");
-		lblTitulo.setFont(new Font("Times", Font.PLAIN,17));
-		lblTitulo.setHorizontalAlignment(SwingConstants.CENTER);
-		panelContenedorSuperior.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
-		panelContenedorSuperior.add(lblTitulo);
-		
-		//Panel inferior
-		lblBotonGuardar = new JButton("Guardar");
-		lblBotonCancelar = new JButton("Cancelar");
-		
-		lblBotonGuardar.setBackground(new Color(144, 224, 239));
-		panelContenedorInferior.add(lblBotonGuardar);
-		
-		lblBotonCancelar.setBackground(new Color(255, 0, 0));
-		panelContenedorInferior.add(lblBotonCancelar);
-	        
-		//Panel central
-		JScrollPane scroll = new JScrollPane(crearPreguntas()); //Scroll almacena al panel de preguntas
-		scroll.setHorizontalScrollBar(null);
-		
-		//Anadiendo paneles
-		
-		add(scroll,BorderLayout.CENTER); //Es el contenedor padre del panel cuestionario
-		add(panelContenedorSuperior,BorderLayout.NORTH);
-		add(panelContenedorInferior,BorderLayout.SOUTH);
-		
-		
-		
-	}
-	
-	public JPanel crearPreguntas() {
-		//Panel central cuestionario
-		JPanel panelCuestionario = new JPanel();
-		panelCuestionario.setLayout(new  BoxLayout(panelCuestionario, BoxLayout.Y_AXIS));
-		Border emptyBorder = BorderFactory.createEmptyBorder(10,20,10,20);
-		panelCuestionario.setBorder(emptyBorder);
-		
-		//Inicializacion paneles
-		nombre = new PanelTipoPreguntaUtil("Nombre", "ALFABETICO");
-		fechaNacimiento = new PanelTipoPreguntaUtil("Fecha de nacimiento", "FECHA");
-		curp = new PanelTipoPreguntaUtil("Curp", "ALFANUMERICO");
-		telefono = new PanelTipoPreguntaUtil("Telefono", "NUMERICO");
-		correo = new PanelTipoPreguntaUtil("Correo", "CORREO");
-		
-		//Inicializacion de array
-		listaPreguntas = new ArrayList<>();
-		
-		listaPreguntas.add(nombre);
-		listaPreguntas.add(fechaNacimiento);
-		listaPreguntas.add(curp);
-		listaPreguntas.add(telefono);
-		listaPreguntas.add(correo);
-		
-		for(PanelTipoPreguntaUtil pregunta : listaPreguntas) {
-			panelCuestionario.add(pregunta);
-		}
-		
-		
-		
-		//ComboBox
-		JLabel lblGenero = new JLabel("Genero ");
-		panelCuestionario.add(lblGenero);
-		String[] opcionesGenero = {"Seleccionar","Hombre", "Mujer","Therian","Otro"};
-		generos = new JComboBox<String>(opcionesGenero);
-		generos.setSelectedIndex(0); //Item preseleccionado
-		panelCuestionario.add(generos);
-		
+		//Turno
+		JLabel lblTurno = new JLabel("Turno");
+        panelCuestionario.add(lblTurno);
+        radioTurno = new ButtonGroup();
+        
+        JRadioButton rbMatutino = new JRadioButton("Matutino"); 
+        panelCuestionario.add(rbMatutino);
+        rbMatutino.setActionCommand("Matutino");
+        
+        JRadioButton rbVespertino = new JRadioButton("Vespertino"); 
+        panelCuestionario.add(rbVespertino);
+        rbVespertino.setActionCommand("Vespertino");
+        
+        JRadioButton rbMixto = new JRadioButton("Mixto"); 
+        panelCuestionario.add(rbMixto);
+        rbMixto.setActionCommand("Mixto");
+        
+        radioTurno.add(rbMatutino);radioTurno.add(rbVespertino);radioTurno.add(rbMixto);
+       
+        //Estado civil
 		JLabel lblEstadoCivil = new JLabel("EstadoCivil ");
 		panelCuestionario.add(lblEstadoCivil);
 		String[] opcionesEstadoCivil = {"Seleccionar","Soltero","Casado","Union libre", "Viudo"};
@@ -199,7 +177,174 @@ public class UserFormDialog extends JDialog{
 		estadoCivil.setSelectedIndex(0);
 		panelCuestionario.add(estadoCivil);
 		
-		return panelCuestionario;
+		//Genero
+		JLabel lblGenero = new JLabel("Genero ");
+        panelCuestionario.add(lblGenero);
+		String[] opcionesGenero = {"Seleccionar","Hombre", "Mujer","Therian","Otro"};
+		generos = new JComboBox<String>(opcionesGenero);
+		generos.setSelectedIndex(0); //Item preseleccionado
+		panelCuestionario.add(generos);
+
+        return new JScrollPane(panelCuestionario);
+    }
+    
+    public void conectarPreguntasAsuControlador(List <PanelTipoPreguntaUtil> preguntas ) {
+		for(PanelTipoPreguntaUtil p : preguntas) {
+			PreguntaController.registrarPanel(p);
+		}
 	}
-	
+    
+    private void loadData() {
+        if (usuario != null) {
+            // --- Parte 1: Datos Personales ---
+            nombre.getTxtEntrada().setText(usuario.getNombre());
+            fechaNacimiento.getTxtEntrada().setText(usuario.getFechaNacimiento());
+            curp.getTxtEntrada().setText(usuario.getCurp());
+            telefono.getTxtEntrada().setText(usuario.getTelefono());
+            correo.getTxtEntrada().setText(usuario.getCorreo());
+            
+            // ComboBoxes (Género y Estado Civil)
+            generos.setSelectedItem(usuario.getGenero());
+            estadoCivil.setSelectedItem(usuario.getEstadoCivil());
+
+            // --- Parte 2: Datos Laborales ---
+            puestoActual.getTxtEntrada().setText(usuario.getPuestoActual());
+            descripcionFunciones.getTxtEntrada().setText(usuario.getDescripcionFunciones());
+            perfilPuesto.getTxtEntrada().setText(usuario.getPerfilPuesto());
+            condicionesLaborales.getTxtEntrada().setText(usuario.getCondicionesLaborales());
+            ubicacionOrganizacional.getTxtEntrada().setText(usuario.getUbicacionOrganizacional());
+            tipoContrato.getTxtEntrada().setText(usuario.getTipoContrato());
+
+            // Manejo de RadioButtons para el Turno
+            if (usuario.getTurno() != null) {
+                String turno = usuario.getTurno();
+                Enumeration<AbstractButton> buttons = radioTurno.getElements();
+                while (buttons.hasMoreElements()) {
+                	JRadioButton button = (JRadioButton) buttons.nextElement();
+                    if (button.getText().equals(turno)) {
+                        button.setSelected(true);
+                        break;
+                    }
+                }
+            }
+
+            // --- Parte 3: Datos Médicos y Bancarios ---
+            nss.getTxtEntrada().setText(usuario.getNSS());
+            alergiasConocidas.getTxtEntrada().setText(usuario.getAlergiasConocidas());
+            contactoEmergencia.getTxtEntrada().setText(usuario.getContactoEmergencia());
+            banco.getTxtEntrada().setText(usuario.getBanco());
+            numeroCuenta.getTxtEntrada().setText(usuario.getNumeroCuenta());
+            sueldo.getTxtEntrada().setText(usuario.getSueldo());
+            
+            // ComboBox de Sangre
+            tipoSangre.setSelectedItem(usuario.getTipoDeSangre());
+        }
+    }
+    
+    private void save() {
+    	if(validarFormulario() == false) {
+    		return;
+    	}
+    	
+    	if(usuario == null) {
+    		usuario = new User(
+					nombre.obtenerTextoEntrada(),
+					fechaNacimiento.obtenerTextoEntrada(),
+					curp.obtenerTextoEntrada(),
+					telefono.obtenerTextoEntrada(),
+					correo.obtenerTextoEntrada(),
+					(String) estadoCivil.getSelectedItem(),
+					(String) generos.getSelectedItem(),
+					puestoActual.obtenerTextoEntrada(),
+					descripcionFunciones.obtenerTextoEntrada(),
+					perfilPuesto.obtenerTextoEntrada(),
+					condicionesLaborales.obtenerTextoEntrada(),
+					ubicacionOrganizacional.obtenerTextoEntrada(),
+					tipoContrato.obtenerTextoEntrada(),
+					radioTurno.getSelection().getActionCommand(),
+					nss.obtenerTextoEntrada(),
+					alergiasConocidas.obtenerTextoEntrada(),
+					contactoEmergencia.obtenerTextoEntrada(),
+			        (String) tipoSangre.getSelectedItem().toString(), // Extracción del JComboBox
+			        banco.obtenerTextoEntrada(),
+			        numeroCuenta.obtenerTextoEntrada(),
+			        sueldo.obtenerTextoEntrada()
+					);
+    	} else {
+    		usuario.setNombre(nombre.obtenerTextoEntrada());
+            usuario.setFechaNacimiento(fechaNacimiento.obtenerTextoEntrada());
+            usuario.setCurp(curp.obtenerTextoEntrada());
+            usuario.setTelefono(telefono.obtenerTextoEntrada());
+            usuario.setCorreo(correo.obtenerTextoEntrada());
+            usuario.setEstadoCivil((String) estadoCivil.getSelectedItem());
+            usuario.setGenero((String) generos.getSelectedItem());
+            
+            usuario.setPuestoActual(puestoActual.obtenerTextoEntrada());
+            usuario.setDescripcionFunciones(descripcionFunciones.obtenerTextoEntrada());
+            usuario.setPerfilPuesto(perfilPuesto.obtenerTextoEntrada());
+            usuario.setCondicionesLaborales(condicionesLaborales.obtenerTextoEntrada());
+            usuario.setUbicacionOrganizacional(ubicacionOrganizacional.obtenerTextoEntrada());
+            usuario.setTipoContrato(tipoContrato.obtenerTextoEntrada());
+            usuario.setTurno(radioTurno.getSelection().getActionCommand());
+            
+            usuario.setNSS(nss.obtenerTextoEntrada());
+            usuario.setAlergiasConocidas(alergiasConocidas.obtenerTextoEntrada());
+            usuario.setContactoEmergencia(contactoEmergencia.obtenerTextoEntrada());
+            usuario.setTipoDeSangre((String) tipoSangre.getSelectedItem());
+            usuario.setBanco(banco.obtenerTextoEntrada());
+            usuario.setNumeroCuenta(numeroCuenta.obtenerTextoEntrada());
+            usuario.setSueldo(sueldo.obtenerTextoEntrada());
+    	}
+    	
+    	saved = true;
+        dispose();
+    }
+    		
+    public boolean isSaved() {
+    	return saved;
+    }
+    
+    public User getUsuario() {
+    	return usuario;
+    }
+
+    private boolean validarFormulario() {
+    	boolean formularioListo = true; //Evita cambio con entradas vacias, incompletas o incorrectas
+		
+		for(PanelTipoPreguntaUtil pregunta: listaPreguntas) {
+			if(pregunta.estaVacio()) {
+				pregunta.senalarEntradaVacia();
+				formularioListo = false;
+			}
+		}
+		
+		//Comprueba checkbox
+		if(estadoCivil.getSelectedItem() == "Seleccionar" || generos.getSelectedItem() == "Seleccionar" ) {
+			formularioListo = false;
+		}
+		
+		//Comprueba raddio button
+				if(radioTurno.getSelection() == null) {
+					formularioListo = false;
+		}
+		
+		//Comprueba checkbox
+		if(tipoSangre.getSelectedIndex() == 0) {
+			formularioListo = false;
+		}
+				
+				
+		//Comprueba contenidos invalidos en textfields
+		for(PanelTipoPreguntaUtil pregunta: listaPreguntas) {
+			try {
+				ValidadorCadena.validarContenido(pregunta);
+			} catch (Exception e) {
+				formularioListo = false;
+			}	
+		}
+		
+		return formularioListo;
+    }
+    
+    
 }

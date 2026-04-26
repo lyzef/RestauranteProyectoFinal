@@ -32,7 +32,7 @@ public class UserRepository {
 			}
 		}
 		
-		System.out.println("leido");
+		System.out.println("Usuarios obtenidos");
 		return users;
 		
 	}

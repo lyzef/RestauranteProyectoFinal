@@ -1,5 +1,11 @@
 package controller;
 
+import java.io.IOException;
+import java.util.List;
+
+import javax.swing.JOptionPane;
+
+import models.User;
 import repository.UserRepository;
 import tablemodels.UserTableModel;
 import views.UserFormDialog;
@@ -7,22 +13,99 @@ import views.UsersView;
 import views.formulario.FormularioRegistro;
 
 public class UserController {
-		private UsersView view;
-		private UserRepository repo;
-		private UserTableModel model;
+
+	private UsersView view;
+	private UserRepository repo;
+	private UserTableModel model;
+	
+	public UserController(UsersView view) {
+		this.view = view;
+		repo = new UserRepository();
 		
-		public UserController(UsersView view) {
-			this.view = view;
-			repo = new UserRepository();
+		this.view.getBtnAdd().addActionListener(e -> {
+			openForm(null);
+		});
+		
+		this.view.getBtnEdit().addActionListener(e -> {
+			int row = view.getSelectedRow();
+			if(row == -1) {
+				JOptionPane.showMessageDialog(view, "Selecciona un usuario");
+				return;
+			}
 			
-			view.getBtnAdd().addActionListener(e -> {
-				//Falta crear userFormDialog con elementos de este
-				UserFormDialog form = new UserFormDialog(null, null);
-				form.setVisible(true);
-			});
+			openForm(model.getUserAt(row));
+		});
+		
+		this.view.getBtnDelete().addActionListener(e -> {
+			int row = view.getSelectedRow();
+			if(row == -1) {
+				JOptionPane.showMessageDialog(view, "Selecciona un usuario");
+				return;
+			}
+			
+			deleteUser(row);
+		});
+	}
+	
+	/**
+	 *Carga el modelo de la tabla y los establece en userView
+	 *Si ya existe solo actualiza
+	 */
+	public void loadUsers() {
+		view.getAdvertencias().setText("Tabla cargada");
+		try {
+			List<User> users = repo.getUsers();
+			
+			if(model == null) {
+				model = new UserTableModel(users);
+				view.setTableModel(model);
+			}else {
+				model.setUsers(users);
+			}
+			
+		}catch (IOException ex) {
+			JOptionPane.showMessageDialog(view, ex.getMessage());
+		}
+	}
+	
+	private void openForm(User user) {
+		resetAdvertencias();
+		UserFormDialog dialog = new UserFormDialog(null, user);
+		dialog.setVisible(true);
+		
+		if(dialog.isSaved()) {
+			User savedUser = dialog.getUsuario();
+			
+			try {
+				if(user == null) {
+					repo.save(savedUser);
+				}else {
+					int row = view.getSelectedRow();
+					repo.update(row, savedUser);
+				}
+				
+				loadUsers();
+			}catch(Exception e) {
+				e.printStackTrace();
+				JOptionPane.showMessageDialog(view, e.getMessage());
+			}
+			
 		}
 		
+	}
+	
+	private void deleteUser(int row) {
+		try {
+			repo.delete(row);
+			loadUsers();
+		} catch (IOException e) {
+			view.getAdvertencias().setText(e.getMessage());
+		}
+	}
+	
+	private void resetAdvertencias() {
+		view.getAdvertencias().setText("");
+	}
+	
 }
-
-
 

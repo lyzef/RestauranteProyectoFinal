@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -20,6 +21,7 @@ public class UsersView extends JPanel{
 	private JButton btnEdit;
 	private JButton btnAdd;
 	private JButton btnDelete;
+	private JLabel advertencias;
 	
 	public UsersView() {
 		setLayout(new BorderLayout());
@@ -28,14 +30,16 @@ public class UsersView extends JPanel{
 		add(new JScrollPane(table), BorderLayout.CENTER);
 		
 		JPanel panelButtons = new JPanel(new FlowLayout(FlowLayout.LEFT));
-
+		
         btnAdd = new JButton("Agregar");
         btnEdit = new JButton("Editar");
         btnDelete = new JButton("Eliminar");
+        advertencias = new JLabel("");
 
         panelButtons.add(btnAdd);
         panelButtons.add(btnEdit);
         panelButtons.add(btnDelete);
+        panelButtons.add(advertencias);
         
         add(panelButtons, BorderLayout.NORTH);
 	}
@@ -63,5 +67,14 @@ public class UsersView extends JPanel{
 	public JTable getTable() {
 		return table;
 	}
+
+	public JLabel getAdvertencias() {
+		return advertencias;
+	}
+
+	public void setAdvertencias(JLabel advertencias) {
+		this.advertencias = advertencias;
+	}
+	
 	
 }

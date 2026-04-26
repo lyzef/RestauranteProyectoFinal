@@ -189,8 +189,14 @@ public class FormularioRegistro extends JFrame{
 	        panelCuestionarioParte2.add(lblTurno);
 	        radioTurno = new ButtonGroup();
 	        JRadioButton rbMatutino = new JRadioButton("Matutino"); panelCuestionarioParte2.add(rbMatutino);
+	        rbMatutino.setActionCommand("Matutino");
+	        
 	        JRadioButton rbVespertino = new JRadioButton("Vespertino"); panelCuestionarioParte2.add(rbVespertino);
+	        rbVespertino.setActionCommand("Vespertino");
+	        
 	        JRadioButton rbMixto = new JRadioButton("Mixto"); panelCuestionarioParte2.add(rbMixto);
+	        rbMixto.setActionCommand("Mixto");
+	        
 	        radioTurno.add(rbMatutino);radioTurno.add(rbVespertino);radioTurno.add(rbMixto);
 	     
 	        JScrollPane scroll = new JScrollPane(panelCuestionarioParte2);
