@@ -53,7 +53,7 @@ public class HubController {
 		
 	}
 	
-	//Activa o desactiva el boton del panel actual
+
 	private void updateMenuState(String viewName) {
 		view.btnUsers.setEnabled(!viewName.equals(Hub.USERS));
 		view.btnHub.setEnabled(!viewName.equals(Hub.MENU));

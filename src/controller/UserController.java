@@ -8,9 +8,9 @@ import javax.swing.JOptionPane;
 import models.User;
 import repository.UserRepository;
 import tablemodels.UserTableModel;
+import utilidades.PDFExporter; 
 import views.UserFormDialog;
 import views.UsersView;
-import views.formulario.FormularioRegistro;
 
 public class UserController {
 
@@ -20,7 +20,7 @@ public class UserController {
 	
 	public UserController(UsersView view) {
 		this.view = view;
-		repo = new UserRepository();
+		this.repo = new UserRepository(); 
 		
 		this.view.getBtnAdd().addActionListener(e -> {
 			openForm(null);
@@ -35,7 +35,7 @@ public class UserController {
 			
 			openForm(model.getUserAt(row));
 		});
-		
+	
 		this.view.getBtnDelete().addActionListener(e -> {
 			int row = view.getSelectedRow();
 			if(row == -1) {
@@ -43,28 +43,42 @@ public class UserController {
 				return;
 			}
 			
-			deleteUser(row);
+			int confirm = JOptionPane.showConfirmDialog(view, "¿Estás seguro de eliminar este registro?", "Confirmar", JOptionPane.YES_NO_OPTION);
+			if (confirm == JOptionPane.YES_OPTION) {
+				deleteUser(row);
+			}
+		});
+		this.view.getBtnExportPDF().addActionListener(e -> {
+			List<User> listaParaExportar = repo.getAllUsers(); 
+			if (listaParaExportar.isEmpty()) {
+				JOptionPane.showMessageDialog(view, "No hay datos para exportar");
+				return;
+			}
+			new PDFExporter().exportUsers(view, listaParaExportar);
 		});
 	}
 	
 	/**
-	 *Carga el modelo de la tabla y los establece en userView
-	 *Si ya existe solo actualiza
+	 * Carga los usuarios del archivo y actualiza la tabla
 	 */
 	public void loadUsers() {
-		view.getAdvertencias().setText("Tabla cargada");
+		if(view.getAdvertencias() != null) {
+			view.getAdvertencias().setText("Tabla cargada");
+		}
+		
 		try {
-			List<User> users = repo.getUsers();
+			List<User> users = repo.getAllUsers();
 			
 			if(model == null) {
 				model = new UserTableModel(users);
 				view.setTableModel(model);
-			}else {
+			} else {
 				model.setUsers(users);
+				model.fireTableDataChanged(); 
 			}
 			
-		}catch (IOException ex) {
-			JOptionPane.showMessageDialog(view, ex.getMessage());
+		} catch (Exception ex) {
+			JOptionPane.showMessageDialog(view, "Error al cargar usuarios: " + ex.getMessage());
 		}
 	}
 	
@@ -77,35 +91,66 @@ public class UserController {
 			User savedUser = dialog.getUsuario();
 			
 			try {
+				List<User> actuales = repo.getAllUsers();
+				
 				if(user == null) {
-					repo.save(savedUser);
-				}else {
+					actuales.add(savedUser);
+				} else {
 					int row = view.getSelectedRow();
-					repo.update(row, savedUser);
+					if (row != -1) {
+						actuales.set(row, savedUser);
+					}
 				}
 				
-				loadUsers();
-			}catch(Exception e) {
+
+				repo.saveAll(actuales);
+				loadUsers(); 
+				
+			} catch(Exception e) {
 				e.printStackTrace();
-				JOptionPane.showMessageDialog(view, e.getMessage());
+				JOptionPane.showMessageDialog(view, "Error al guardar: " + e.getMessage());
 			}
-			
 		}
-		
 	}
 	
 	private void deleteUser(int row) {
 		try {
-			repo.delete(row);
-			loadUsers();
-		} catch (IOException e) {
-			view.getAdvertencias().setText(e.getMessage());
+			List<User> usuariosActuales = repo.getAllUsers();
+			if (row >= 0 && row < usuariosActuales.size()) {
+				usuariosActuales.remove(row);
+				repo.saveAll(usuariosActuales);
+				loadUsers();
+			}
+		} catch (Exception e) {
+			if(view.getAdvertencias() != null) {
+				view.getAdvertencias().setText("Error al eliminar: " + e.getMessage());
+			}
 		}
 	}
 	
 	private void resetAdvertencias() {
-		view.getAdvertencias().setText("");
+		if(view.getAdvertencias() != null) {
+			view.getAdvertencias().setText("");
+		}
 	}
-	
-}
+	public void loadUsers() {
+	    try {
+	        List<User> users = repo.getAllUsers();
+	        
+	        if(model == null) {
+	            model = new UserTableModel(users);
+	            view.setTableModel(model);
+	        } else {
+	            model.setUsers(users);
+	        }
+	        
 
+	        model.fireTableDataChanged(); 
+	        view.getTabla().repaint();
+	        view.getTabla().revalidate();
+
+	    } catch (Exception ex) {
+	        JOptionPane.showMessageDialog(view, "Error: " + ex.getMessage());
+	    }
+	}
+}
