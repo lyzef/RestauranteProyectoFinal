@@ -14,7 +14,7 @@ public class UsersView extends JFrame {
     private JButton btnAdd;
     private JButton btnEdit;
     private JButton btnDelete;
-    private JButton btnExportPDF; // Botón para JFileChooser y PDF
+    private JButton btnExportPDF; 
     private JLabel advertencias;
 
     public UsersView() {
@@ -28,7 +28,6 @@ public class UsersView extends JFrame {
         contentPane.setLayout(new BorderLayout(0, 0));
         setContentPane(contentPane);
 
-
         JPanel panelAcciones = new JPanel();
         panelAcciones.setBackground(new Color(45, 45, 45));
         contentPane.add(panelAcciones, BorderLayout.NORTH);
@@ -38,12 +37,12 @@ public class UsersView extends JFrame {
         btnDelete = new JButton("Eliminar");
         btnExportPDF = new JButton("Exportar PDF"); 
 
-
-        configurarBoton(btnAdd, new Color(0, 153, 51));
-        configurarBoton(btnEdit, new Color(0, 102, 204));
+        configurarBoton(btnAdd, new Color(0, 153, 51)); 
+        configurarBoton(btnEdit, Color.YELLOW); 
+        btnEdit.setForeground(Color.BLACK); 
         configurarBoton(btnDelete, new Color(204, 0, 0));
         configurarBoton(btnExportPDF, new Color(255, 102, 0)); 
-
+        
         panelAcciones.add(btnAdd);
         panelAcciones.add(btnEdit);
         panelAcciones.add(btnDelete);
@@ -87,6 +86,8 @@ public class UsersView extends JFrame {
         boton.setBackground(colorFondo);
         boton.setForeground(Color.WHITE);
         boton.setFocusPainted(false);
+        boton.setOpaque(true);
+        boton.setBorderPainted(false); 
         boton.setFont(new Font("Segoe UI", Font.BOLD, 12));
     }
 
@@ -99,20 +100,9 @@ public class UsersView extends JFrame {
         return table.getSelectedRow();
     }
 
-
-    public JButton getBtnAdd() { 
-    	return btnAdd;
-    	}
-    public JButton getBtnEdit() {
-    	return btnEdit;
-    	}
-    public JButton getBtnDelete() {
-    	return btnDelete; 
-    	}
-    public JButton getBtnExportPDF() { 
-    	return btnExportPDF; 
-    	}
-    public JLabel getAdvertencias() { 
-    	return advertencias;
-    	}
+    public JButton getBtnAdd() { return btnAdd; }
+    public JButton getBtnEdit() { return btnEdit; }
+    public JButton getBtnDelete() { return btnDelete; }
+    public JButton getBtnExportPDF() { return btnExportPDF; }
+    public JLabel getAdvertencias() { return advertencias; }
 }

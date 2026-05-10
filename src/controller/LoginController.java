@@ -5,32 +5,37 @@ import views.Hub;
 import views.formulario.FormularioRegistro;
 import excepciones.InvalidContraseña;
 import excepciones.InvalidUser;
+import models.User;
+import repository.UserRepository;
+
 import javax.swing.*;
 import java.awt.*;
+import java.util.List;
 
 public class LoginController {
 
     private Login view;
+    private UserRepository repo;
 
     public LoginController(Login view) {
         this.view = view;
-        initController();
+        this.repo = new UserRepository();
+        this.initController();
     }
 
     private void initController() {
-    	view.getBotonEntrar().addActionListener(new java.awt.event.ActionListener() {
-    	    @Override
-    	    public void actionPerformed(java.awt.event.ActionEvent e) {
-    	        validarLogin();
-    	    }
-    	});
+        view.getBotonEntrar().addActionListener(e -> validarLogin());
+
         view.getBotonRegistrar().addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
             public void mouseExited(java.awt.event.MouseEvent e) {
                 view.getBotonRegistrar().setForeground(Color.black);
             }
+            @Override
             public void mouseEntered(java.awt.event.MouseEvent e) {
-                view.getBotonRegistrar().setForeground(new Color(170,204,0));
+                view.getBotonRegistrar().setForeground(new Color(170, 204, 0));
             }
+            @Override
             public void mouseClicked(java.awt.event.MouseEvent e) {
                 registro();
             }
@@ -51,12 +56,7 @@ public class LoginController {
         reinicarMensajesError();
         try {
             validarCredenciales();
-            JOptionPane.showMessageDialog(
-                    view,
-                    "Felicidades sabes escribir!",
-                    "Bienvenido....",
-                    JOptionPane.INFORMATION_MESSAGE
-            );
+            JOptionPane.showMessageDialog(view, "Acceso concedido", "Bienvenido", JOptionPane.INFORMATION_MESSAGE);
             new HubController(new Hub());
             view.dispose();
         } catch (InvalidUser ex) {
@@ -69,15 +69,23 @@ public class LoginController {
     }
 
     private void validarCredenciales() throws InvalidUser, InvalidContraseña {
-        if(view.getEntradaCorreo().getText().isBlank()) {
-            throw new InvalidUser("Escribe el correo");
+        String correo = view.getEntradaCorreo().getText().trim();
+        String pass = new String(view.getEntradaContrasena().getPassword());
+
+        if (correo.isEmpty()) throw new InvalidUser("Escribe el correo");
+        if (pass.isEmpty()) throw new InvalidContraseña("Escribe la contraseña");
+
+        List<User> usuarios = repo.getAllUsers();
+        boolean encontrado = false;
+        for (User u : usuarios) {
+            if (u.getCorreo().equalsIgnoreCase(correo)) {
+                encontrado = true;
+                break;
+            }
         }
-        if(view.getEntradaCorreo().getText().length() < 5) {
-            throw new InvalidUser("Escribe un correo valido");
-        }
-        if (!(view.getEntradaContrasena().getPassword().length > 0)) {
-            throw new InvalidContraseña("Escribe la contraseña");
+
+        if (!encontrado) {
+            throw new InvalidUser("Usuario no encontrado");
         }
     }
 }
-

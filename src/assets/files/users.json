@@ -1,0 +1,25 @@
+[
+  {
+    "nombre": "carlos",
+    "fechaNacimiento": "10/12/2000",
+    "curp": "qweqweasda",
+    "telefono": "64513213",
+    "correo": "dawdsadsa@gmail.com",
+    "estadoCivil": "Casado",
+    "genero": "Therian",
+    "puestoActual": "tu padre",
+    "descripcionFunciones": "dsea",
+    "perfilPuesto": "idk",
+    "condicionesLaborales": "idk",
+    "ubicacionOrganizacional": "idk",
+    "tipoContrato": "idk",
+    "turno": "Matutino",
+    "NSS": "idk",
+    "alergiasConocidas": "idk",
+    "contactoEmergencia": "idk",
+    "tipoDeSangre": "A+",
+    "banco": "idk",
+    "numeroCuenta": "idk",
+    "sueldo": "idk"
+  }
+]

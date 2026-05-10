@@ -45,7 +45,7 @@ public class PDFExporter {
                 String[] encabezados = {"Nombre", "Puesto", "Teléfono", "Correo", "Sueldo"};
                 for (String textoCabecera : encabezados) {
                     PdfPCell celdaCabecera = new PdfPCell(new Phrase(textoCabecera, fuenteCabecera));
-                    celdaCabecera.setBackgroundColor(new BaseColor(255, 102, 0)); // Naranja Madero's
+                    celdaCabecera.setBackgroundColor(new BaseColor(255, 102, 0)); 
                     celdaCabecera.setHorizontalAlignment(Element.ALIGN_CENTER);
                     celdaCabecera.setPadding(8);
                     tablaDatos.addCell(celdaCabecera);

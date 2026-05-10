@@ -1,72 +1,55 @@
 package repository;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.lang.reflect.Type;
 import models.User;
 
 public class UserRepository {
-    private final String rutaArchivoCsv = "src/assets/files/users.csv"; 
+    private final String rutaArchivoJson = "src/assets/files/users.json"; 
+    private final Gson gson;
 
     public UserRepository() {
+        this.gson = new GsonBuilder().setPrettyPrinting().create();
     }
-
-    /**
-     * Guarda un usuario nuevo en el archivo CSV
-     */
     public void save(User nuevoUsuario) {
         List<User> listaActual = getAllUsers();
         listaActual.add(nuevoUsuario);
         saveAll(listaActual);
     }
-
-    /**
-     * Obtiene la lista completa de usuarios desde el archivo CSV
-     */
     public List<User> getAllUsers() {
-        List<User> listaUsuarios = new ArrayList<>();
-        File archivoPersonal = new File(rutaArchivoCsv);
+        File archivo = new File(rutaArchivoJson);
         
-        if (!archivoPersonal.exists()) {
-            return listaUsuarios;
+        if (!archivo.exists()) {
+            return new ArrayList<>();
         }
+        try (BufferedReader lector = new BufferedReader(new InputStreamReader(
+                new FileInputStream(archivo), StandardCharsets.UTF_8))) {
 
-        try (BufferedReader lectorArchivo = new BufferedReader(new InputStreamReader(
-                new FileInputStream(archivoPersonal), StandardCharsets.UTF_8))) {
+            Type listType = new TypeToken<ArrayList<User>>(){}.getType();
+            List<User> lista = gson.fromJson(lector, listType);
             
-            String linea;
-
-            while ((linea = lectorArchivo.readLine()) != null) {
-                if (!linea.trim().isEmpty()) {
-                    User usuario = User.fromCSV(linea);
-                    if (usuario != null) {
-                        listaUsuarios.add(usuario);
-                    }
-                }
-            }
+            return (lista != null) ? lista : new ArrayList<>();
             
-        } catch (IOException errorLectura) {
-            System.err.println("Error al leer el archivo CSV: " + errorLectura.getMessage());
+        } catch (IOException e) {
+            System.err.println("Error al leer archivo JSON: " + e.getMessage());
+            return new ArrayList<>();
         }
-        return listaUsuarios;
     }
 
     public void saveAll(List<User> listaParaGuardar) {
-        try (BufferedWriter escritorArchivo = new BufferedWriter(new OutputStreamWriter(
-                new FileOutputStream(rutaArchivoCsv), StandardCharsets.UTF_8))) {
+        try (BufferedWriter escritor = new BufferedWriter(new OutputStreamWriter(
+                new FileOutputStream(rutaArchivoJson), StandardCharsets.UTF_8))) {
             
-            for (User u : listaParaGuardar) {
-                escritorArchivo.write(u.toCSV());
-                escritorArchivo.newLine();
-            }
+            gson.toJson(listaParaGuardar, escritor);
             
-        } catch (IOException errorEscritura) {
-            System.err.println("Error al escribir en el archivo CSV: " + errorEscritura.getMessage());
+        } catch (IOException e) {
+            System.err.println("Error al escribir archivo JSON: " + e.getMessage());
         }
-    }
-
-    public List<User> getUsers() {
-        return getAllUsers();
     }
 }

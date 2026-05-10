@@ -30,18 +30,11 @@ public class HubController {
 		});
 	}
 	
-	/**
-	 *Muestra el menu en HUB
-	 */
 	private void showHub() {
 		view.showView(Hub.MENU);
 		updateMenuState(Hub.MENU);
 	}
 	
-	/**
-	 *Obtiene los usuarios del repositorio
-	 *Establece la tabla para el panel del usuario
-	 */
 	private void showUsers() {
 		if(userController == null) {
 			userController = new UserController(view.userPanel);
