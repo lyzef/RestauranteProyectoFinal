@@ -26,7 +26,7 @@ public class Login extends JFrame {
 
         loadIcon();
         initializeComponents();
-        configurarEventos(); // Método para la lógica del botón
+        //configurarEventos(); // Método para la lógica del botón
         setVisible(true);
     }
 

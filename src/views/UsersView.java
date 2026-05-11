@@ -11,9 +11,8 @@ import javax.swing.table.JTableHeader;
 import tablemodels.UserTableModel;
 import utilidades.Config;
 
-public class UsersView extends JFrame {
+public class UsersView extends JPanel {
 
-    private JPanel contentPane;
     private JTable table;
     private JButton btnAdd;
     private JButton btnEdit;
@@ -22,19 +21,15 @@ public class UsersView extends JFrame {
     private JLabel advertencias;
 
     public UsersView() {
-        setTitle("Administración de Empleados - Madero's");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(100, 100, 900, 600);
         
-        contentPane = new JPanel();
-        contentPane.setBackground(new Color(30, 30, 30)); 
-        contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-        contentPane.setLayout(new BorderLayout(0, 0));
-        setContentPane(contentPane);
+        this.setBackground(new Color(30, 30, 30)); 
+        this.setBorder(new EmptyBorder(5, 5, 5, 5));
+        this.setLayout(new BorderLayout(0, 0));
 
         JPanel panelAcciones = new JPanel();
         panelAcciones.setBackground(new Color(45, 45, 45));
-        contentPane.add(panelAcciones, BorderLayout.NORTH);
+        this.add(panelAcciones, BorderLayout.NORTH);
 
         btnAdd = new JButton("Añadir");
         btnEdit = new JButton("Editar");
@@ -55,13 +50,11 @@ public class UsersView extends JFrame {
         table = new JTable();
         JScrollPane scrollPane = new JScrollPane(table);
         scrollPane.getViewport().setBackground(Color.WHITE);
-        contentPane.add(scrollPane, BorderLayout.CENTER);
+        this.add(scrollPane, BorderLayout.CENTER);
 
         advertencias = new JLabel("Listo");
         advertencias.setForeground(Color.WHITE);
-        contentPane.add(advertencias, BorderLayout.SOUTH);
-        
-        setLocationRelativeTo(null);
+        this.add(advertencias, BorderLayout.SOUTH);
     }
     
    

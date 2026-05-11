@@ -20,11 +20,13 @@ public class LoginController {
     public LoginController(Login view) {
         this.view = view;
         this.repo = new UserRepository();
-        this.initController();
+        initController();
     }
 
     private void initController() {
-        view.getBotonEntrar().addActionListener(e -> validarLogin());
+        view.getBotonEntrar().addActionListener(e -> validarLogin()
+        		
+        );
 
         view.getBotonRegistrar().addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
@@ -66,6 +68,8 @@ public class LoginController {
             view.getLabelAdvertenciaContrasena().setText(ex.getMessage());
             view.getLabelAdvertenciaContrasena().setVisible(true);
         }
+        
+        
     }
 
     private void validarCredenciales() throws InvalidUser, InvalidContraseña {

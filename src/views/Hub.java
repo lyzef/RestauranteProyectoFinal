@@ -67,9 +67,9 @@ public class Hub extends JFrame{
 		return barra;
 	}
 	
-	public JScrollPane crearAdministradorUsuarios() {
+	public JPanel crearAdministradorUsuarios() {
 		userPanel = new UsersView();
-		return new JScrollPane(userPanel) ;
+		return userPanel;
 	}
 	
 	public JPanel crearMenu() {
