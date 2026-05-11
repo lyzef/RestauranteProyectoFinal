@@ -11,7 +11,10 @@ import models.User;
 public class PDFExporter {
 
     public void exportUsers(JFrame ventanaPadre, List<User> listaUsuarios) {
-        JFileChooser selectorDeArchivos = new JFileChooser();
+    	String path = Config.get("users.export.pdf", System.getProperty("user.home"));
+    	
+    	
+        JFileChooser selectorDeArchivos = new JFileChooser(path);
         selectorDeArchivos.setDialogTitle("Guardar Reporte de Empleados");
         selectorDeArchivos.setSelectedFile(new File("Reporte_Empleados_Maderos.pdf"));
 
@@ -19,7 +22,9 @@ public class PDFExporter {
 
         if (seleccion == JFileChooser.APPROVE_OPTION) {
             File archivoDestino = selectorDeArchivos.getSelectedFile();
-
+            Config.set("users.export.pdf", archivoDestino.getParent()); //Guardar ruta
+            
+            
             if (!archivoDestino.getName().toLowerCase().endsWith(".pdf")) {
                 archivoDestino = new File(archivoDestino.getAbsolutePath() + ".pdf");
             }

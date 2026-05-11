@@ -176,14 +176,57 @@ public class Login extends JFrame {
         panelLogin.add(panelButtons, BorderLayout.SOUTH);
     }
 
+	public JTextField getEntradaCorreo() {
+		return entradaCorreo;
+	}
+
+	public void setEntradaCorreo(JTextField entradaCorreo) {
+		this.entradaCorreo = entradaCorreo;
+	}
+
+	public JPasswordField getEntradaContrasena() {
+		return entradaContrasena;
+	}
+
+	public void setEntradaContrasena(JPasswordField entradaContrasena) {
+		this.entradaContrasena = entradaContrasena;
+	}
+	
+	
+
+	public JLabel getLabelAdvertenciaCorreo() {
+		return labelAdvertenciaCorreo;
+	}
+
+	public void setLabelAdvertenciaCorreo(JLabel labelAdvertenciaCorreo) {
+		this.labelAdvertenciaCorreo = labelAdvertenciaCorreo;
+	}
+
+	public JLabel getLabelAdvertenciaContrasena() {
+		return labelAdvertenciaContrasena;
+	}
+
+	public void setLabelAdvertenciaContrasena(JLabel labelAdvertenciaContrasena) {
+		this.labelAdvertenciaContrasena = labelAdvertenciaContrasena;
+	}
+
+	public JButton getBotonEntrar() {
+		return botonEntrar;
+	}
+
+	public void setBotonEntrar(JButton botonEntrar) {
+		this.botonEntrar = botonEntrar;
+	}
+
+	public JLabel getBotonRegistrar() {
+		return botonRegistrar;
+	}
+
+	public void setBotonRegistrar(JLabel botonRegistrar) {
+		this.botonRegistrar = botonRegistrar;
+	}
+
     // Getters
-    public JTextField getEntradaCorreo() { 
-    	return entradaCorreo;
-    	}
-    public JPasswordField getEntradaContrasena() { 
-    	return entradaContrasena;
-    	}
-    public JButton getBotonEntrar() { 
-    	return botonEntrar; 
-    	}
+    
+    
 }

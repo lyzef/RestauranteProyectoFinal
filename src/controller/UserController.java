@@ -1,5 +1,6 @@
 package controller;
 
+import java.io.File;
 import java.util.List;
 import javax.swing.JOptionPane;
 
@@ -46,12 +47,7 @@ public class UserController {
         });
 
         this.view.getBtnExportPDF().addActionListener(e -> {
-            List<User> listaParaExportar = repo.getAllUsers(); 
-            if (listaParaExportar.isEmpty()) {
-                JOptionPane.showMessageDialog(view, "No hay datos para exportar");
-                return;
-            }
-            new PDFExporter().exportUsers(null, listaParaExportar); // Ajustado según tu PDFExporter
+            generatePdf();
         });
     }
     
@@ -127,6 +123,18 @@ public class UserController {
             }
         }
     }
+    
+public void generatePdf() {
+		
+	List<User> listaParaExportar = repo.getAllUsers(); 
+    if (listaParaExportar.isEmpty()) {
+        JOptionPane.showMessageDialog(view, "No hay datos para exportar");
+        return;
+    }
+    new PDFExporter().exportUsers(null, listaParaExportar); // Exportar PDF, Crear PDF, Elegir ruta
+		
+		
+	}
     
     private void resetAdvertencias() {
         if(view.getAdvertencias() != null) {

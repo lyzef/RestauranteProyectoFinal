@@ -1,11 +1,15 @@
 package views;
 
 import java.awt.*;
+import java.io.File;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.JTableHeader;
 import tablemodels.UserTableModel;
+import utilidades.Config;
 
 public class UsersView extends JFrame {
 
@@ -59,7 +63,9 @@ public class UsersView extends JFrame {
         
         setLocationRelativeTo(null);
     }
-
+    
+   
+    
     private void aplicarEstiloTabla() {
         table.setBackground(Color.WHITE);
         table.setSelectionBackground(new Color(255, 102, 0, 100));
