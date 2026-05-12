@@ -1,11 +1,12 @@
 package controller;
 
 import views.Login;
+import views.FormularioView;
 import views.Hub;
-import views.formulario.FormularioRegistro;
 import excepciones.InvalidContraseña;
 import excepciones.InvalidUser;
 import models.User;
+import repository.LoginRepository;
 import repository.UserRepository;
 
 import javax.swing.*;
@@ -15,11 +16,11 @@ import java.util.List;
 public class LoginController {
 
     private Login view;
-    private UserRepository repo;
+    private LoginRepository repository;
 
     public LoginController(Login view) {
         this.view = view;
-        this.repo = new UserRepository();
+        this.repository = new LoginRepository();
         initController();
     }
 
@@ -45,7 +46,7 @@ public class LoginController {
     }
 
     private void registro() {
-        new FormularioController(new FormularioRegistro());
+        new FormularioController(new FormularioView());
         view.dispose();
     }
 
@@ -58,6 +59,11 @@ public class LoginController {
         reinicarMensajesError();
         try {
             validarCredenciales();
+            User user = repository.login(view.getEntradaCorreo().getText(),new String(view.getEntradaContrasena().getPassword()));
+            if(user == null) {
+            	throw new InvalidContraseña("Credenciales incorrectas");
+    		}
+            
             JOptionPane.showMessageDialog(view, "Acceso concedido", "Bienvenido", JOptionPane.INFORMATION_MESSAGE);
             new HubController(new Hub());
             view.dispose();
@@ -78,18 +84,5 @@ public class LoginController {
 
         if (correo.isEmpty()) throw new InvalidUser("Escribe el correo");
         if (pass.isEmpty()) throw new InvalidContraseña("Escribe la contraseña");
-
-        List<User> usuarios = repo.getAllUsers();
-        boolean encontrado = false;
-        for (User u : usuarios) {
-            if (u.getCorreo().equalsIgnoreCase(correo)) {
-                encontrado = true;
-                break;
-            }
-        }
-
-        if (!encontrado) {
-            throw new InvalidUser("Usuario no encontrado");
-        }
     }
 }

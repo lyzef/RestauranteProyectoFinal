@@ -53,7 +53,6 @@ public class UserController {
     
     /**
      * Carga los usuarios del archivo JSON y actualiza la tabla.
-     * (Se eliminó la versión duplicada que tenías al final)
      */
     public void loadUsers() {
         try {

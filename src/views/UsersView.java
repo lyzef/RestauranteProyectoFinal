@@ -8,9 +8,11 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.JTableHeader;
-import tablemodels.UserTableModel;
-import utilidades.Config;
 
+import config.Config;
+import tablemodels.UserTableModel;
+
+//Muestra la tabla, botones de edicion, eliminacion, añadido y exportacion de tablas a PDF
 public class UsersView extends JPanel {
 
     private JTable table;
@@ -29,7 +31,6 @@ public class UsersView extends JPanel {
 
         JPanel panelAcciones = new JPanel();
         panelAcciones.setBackground(new Color(45, 45, 45));
-        this.add(panelAcciones, BorderLayout.NORTH);
 
         btnAdd = new JButton("Añadir");
         btnEdit = new JButton("Editar");
@@ -48,13 +49,21 @@ public class UsersView extends JPanel {
         panelAcciones.add(btnExportPDF);
 
         table = new JTable();
+        table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+        
         JScrollPane scrollPane = new JScrollPane(table);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
         scrollPane.getViewport().setBackground(Color.WHITE);
-        this.add(scrollPane, BorderLayout.CENTER);
+        
 
         advertencias = new JLabel("Listo");
         advertencias.setForeground(Color.WHITE);
+        
+       
+        this.add(panelAcciones, BorderLayout.NORTH);
+        this.add(scrollPane, BorderLayout.CENTER);
         this.add(advertencias, BorderLayout.SOUTH);
+        
     }
     
    

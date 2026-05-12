@@ -8,11 +8,11 @@ import models.User;
 import repository.UserRepository;
 import utilidades.PanelTipoPreguntaUtil;
 import utilidades.ValidadorCadena;
+import views.FormularioView;
 import views.Login;
-import views.formulario.FormularioRegistro;
 
 public class FormularioController {
-	private FormularioRegistro formularioRegistro;
+	private FormularioView formularioRegistro;
 	private UserRepository repositorio;
 	private String parteFormularioActual;	
 	
@@ -20,7 +20,7 @@ public class FormularioController {
 	 * Controlador de las clases dentro del paquete formulario
 	 * @param formulario Primera parte del formulario
 	 */
-	public FormularioController(FormularioRegistro formularioRegistro) {
+	public FormularioController(FormularioView formularioRegistro) {
 		this.formularioRegistro = formularioRegistro;
 		this.repositorio = new UserRepository();
 		
@@ -30,7 +30,7 @@ public class FormularioController {
 		conectarPreguntasAsuControlador(formularioRegistro.getListaPreguntasParte3());
 		
 		//Iniciando vista formulario parte 1
-		parteFormularioActual = FormularioRegistro.FORMPARTE1;
+		parteFormularioActual = FormularioView.FORMPARTE1;
 		formularioRegistro.showView(parteFormularioActual);
 		
 		
@@ -62,21 +62,21 @@ public class FormularioController {
 	 */
 	public void controlFlujoFormulario() {
 		switch (parteFormularioActual) {
-		case FormularioRegistro.FORMPARTE1:{
+		case FormularioView.FORMPARTE1:{
 			if(validarFormularioParte1()) {
 				parteFormularioActual = formularioRegistro.FORMPARTE2;
 				formularioRegistro.showView(parteFormularioActual);
 			}
 			break;
 		}
-		case FormularioRegistro.FORMPARTE2:{
+		case FormularioView.FORMPARTE2:{
 			if(validarFormularioParte2()) {
 				parteFormularioActual = formularioRegistro.FORMPARTE3;
 				formularioRegistro.showView(parteFormularioActual);
 			}
 			break;
 		}
-		case FormularioRegistro.FORMPARTE3:{
+		case FormularioView.FORMPARTE3:{
 			if(validarFormularioParte3()) {
 				formularioRegistro.mensajeConfirmacionFormularioCompleto();
 				guardarUsuario();

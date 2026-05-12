@@ -2,6 +2,9 @@ package utilidades;
 
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.*;
+
+import config.Config;
+
 import javax.swing.*;
 import java.io.File;
 import java.io.FileOutputStream;

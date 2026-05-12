@@ -1,4 +1,4 @@
-package views.formulario;
+package views;
 
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
@@ -15,7 +15,7 @@ import utilidades.PanelTipoPreguntaUtil;
  *Crea la primera parte visual del formulario
  *Inicializa las preguntas y atributos del formulario, controladores de preguntas se crean desde controlador de este formulario
  */
-public class FormularioRegistro extends JFrame{
+public class FormularioView extends JFrame{
 	public static final String FORMPARTE1 = "FORMPARTE1"; //Dato
 	public static final String FORMPARTE2 = "FORMPARTE2"; //Info puesto
 	public static final String FORMPARTE3 = "FORMPARTE3"; //Datos extra
@@ -54,7 +54,7 @@ public class FormularioRegistro extends JFrame{
 	List <PanelTipoPreguntaUtil> listaPreguntasParte3;
 	JComboBox<String> tipoSangre;
 	
-	public FormularioRegistro() {
+	public FormularioView() {
 		setSize(400,400);
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		setResizable(true);

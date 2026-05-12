@@ -1,7 +1,10 @@
 package models;
 
 public class User {
-
+	
+	private int id;
+	private String contrasena;
+	
     private String nombre, fechaNacimiento, curp, telefono, correo, estadoCivil, genero;
     private String puestoActual, descripcionFunciones, perfilPuesto, condicionesLaborales;
     private String ubicacionOrganizacional, tipoContrato, turno, NSS, alergiasConocidas;
@@ -10,6 +13,13 @@ public class User {
     public User() {}
 
     public User(String correo, char[] contrasena) {
+    	this.contrasena = new String(contrasena);
+        this.correo = correo;
+    }
+    
+    public User(int id,String correo, char[] contrasena) {
+    	this.id = id;
+    	this.contrasena = new String(contrasena);
         this.correo = correo;
     }
     
@@ -41,8 +51,25 @@ public class User {
         this.sueldo = sueldo;
     }
 
+    
+    
+    public int getId() {
+		return id;
+	}
 
-    public String getNombre() {
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public String getContrasena() {
+		return contrasena;
+	}
+
+	public void setContrasena(String contrasena) {
+		this.contrasena = contrasena;
+	}
+
+	public String getNombre() {
     	return nombre; 
     }
     public void setNombre(String nombre) { 
