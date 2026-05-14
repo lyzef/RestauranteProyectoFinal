@@ -6,9 +6,9 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
 import excepciones.invalidInput;
-import utilidades.PanelTipoPreguntaUtil;
 import utilidades.ValidadorCadena;
 import utilidades.comprobacionTipoCaracterEntradaUtil;
+import utilidades.views.PanelTipoPreguntaUtil;
 
 public class PreguntaController {
 	/**

@@ -9,7 +9,8 @@ import java.awt.Toolkit;
 import java.util.*;
 import javax.swing.*;
 import javax.swing.border.Border;
-import utilidades.PanelTipoPreguntaUtil;
+
+import utilidades.views.PanelTipoPreguntaUtil;
 
 /**
  *Crea la primera parte visual del formulario

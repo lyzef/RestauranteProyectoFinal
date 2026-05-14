@@ -6,8 +6,8 @@ import java.util.List;
 import javax.swing.JOptionPane;
 import models.User;
 import repository.UserRepository;
-import utilidades.PanelTipoPreguntaUtil;
 import utilidades.ValidadorCadena;
+import utilidades.views.PanelTipoPreguntaUtil;
 import views.FormularioView;
 import views.Login;
 

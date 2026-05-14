@@ -1,5 +1,7 @@
 package controller;
 
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.util.List;
 
@@ -17,38 +19,38 @@ public class HubController {
 	public HubController(Hub hub) {
 		this.view = hub;
 		addListeners();
-		showHub();
+		showDashboard();
 	}
 	
 	public void addListeners() {
-		view.btnUsers.addActionListener(e -> {
-			showUsers();
+		view.getBotonUsuarios().addMouseListener( new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				showUsers();
+		    }
 		});
 		
-		view.btnHub.addActionListener(e -> {
-			showHub();
+		view.getBotonDashboard().addMouseListener( new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				showDashboard();
+		    }
 		});
 	}
 	
-	private void showHub() {
-		view.showView(Hub.MENU);
-		updateMenuState(Hub.MENU);
+	private void showDashboard() {
+		view.showView(Hub.DASHBOARD);
 	}
 	
 	private void showUsers() {
+		//Evita crear otro user controller
 		if(userController == null) {
-			userController = new UserController(view.userPanel);
+			userController = new UserController(view.getUserPanel());
 		}
 			
 		userController.loadUsers();
 		view.showView(Hub.USERS);
-		updateMenuState(Hub.USERS);
 		
 	}
-	
 
-	private void updateMenuState(String viewName) {
-		view.btnUsers.setEnabled(!viewName.equals(Hub.USERS));
-		view.btnHub.setEnabled(!viewName.equals(Hub.MENU));
-	}
 }

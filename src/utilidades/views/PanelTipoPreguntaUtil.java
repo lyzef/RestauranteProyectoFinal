@@ -1,4 +1,4 @@
-package utilidades;
+package utilidades.views;
 
 import java.awt.Color;
 import java.awt.event.FocusAdapter;
@@ -81,6 +81,7 @@ public class PanelTipoPreguntaUtil extends JPanel{
     /**
      * Regresa verdadero si el text field de la pregunta esta vacio
      */
+    
     public boolean estaVacio() {
     	if(txtEntrada.getText().isBlank()) {
 			return true;

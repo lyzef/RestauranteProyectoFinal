@@ -23,8 +23,8 @@ import controller.PreguntaController;
 import java.util.*;
 import javax.swing.*;
 import models.User;
-import utilidades.PanelTipoPreguntaUtil;
 import utilidades.ValidadorCadena;
+import utilidades.views.PanelTipoPreguntaUtil;
 
 public class UserFormDialog extends JDialog {
     JPanel panelContenedorCentral;

@@ -2,6 +2,7 @@ package utilidades;
 
 import excepciones.InvalidUser;
 import excepciones.invalidInput;
+import utilidades.views.PanelTipoPreguntaUtil;
 
 public class ValidadorCadena {
 	 /**

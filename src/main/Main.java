@@ -1,11 +1,15 @@
 package main;
 
+import controller.HubController;
 import controller.LoginController;
+import views.Hub;
 import views.Login;
 
 public class Main {
     public static void main(String[] args) {
-        Login vista = new Login();
-        new LoginController(vista);
+        
+        //new LoginController(new Login());
+        
+        new HubController(new Hub());
     }
 }
