@@ -24,7 +24,10 @@ import javax.swing.JScrollPane;
 import javax.swing.border.Border;
 import javax.swing.border.MatteBorder;
 
+import utilidades.Paleta_Colores;
 import utilidades.views.BotonMenu;
+import views.Admin.DashboardView;
+import views.Admin.UsersView;
 
 public class Hub extends JFrame{
 	public static final String USERS = "USERS";
@@ -34,7 +37,7 @@ public class Hub extends JFrame{
 	private JPanel panelPrincipal;
 	
 	public UsersView userPanel;
-	public JPanel menu;
+	public JPanel dashboard;
 
 	public JPanel botonUsuarios;
 	public JPanel botonInventario;
@@ -59,7 +62,7 @@ public class Hub extends JFrame{
 		setVisible(true);
 	}
 	
-	public void inicializarComponentes() {
+	private void inicializarComponentes() {
 		JPanel contenedorPrincipal = new JPanel(new BorderLayout());
 		
 		//Panel principal y identificador de panel para cardlayout
@@ -89,30 +92,36 @@ public class Hub extends JFrame{
 		
 	}
 	
-	public JPanel crearBarraSuperior() {
+	private JPanel crearBarraSuperior() {
 		JPanel barra = new JPanel();
 		barra.setLayout(new BoxLayout(barra, BoxLayout.X_AXIS));
 		
 		Border margenEntrePanel = BorderFactory.createEmptyBorder(15, 20, 15, 20);
-		Border lineaInferior = new MatteBorder(0, 0, 1, 0, Color.LIGHT_GRAY);
+		Border lineaInferior = new MatteBorder(0, 0, 1, 0, Paleta_Colores.CONTENEDORES.getColor());
 
 		// Combinamos: la línea va afuera y el margen adentro
 		barra.setBorder(BorderFactory.createCompoundBorder(lineaInferior, margenEntrePanel));
 		
-		barra.setBackground(new Color(255, 255, 255));
+		barra.setBackground(Paleta_Colores.FONDO.getColor());
 		JLabel nombre = new JLabel("Madero system");
 		nombre.setFont(new Font("Arial",Font.BOLD,25));
+		nombre.setForeground(Paleta_Colores.TEXTO_PRINCIPAL.getColor());
 		
 		barra.add(nombre);
 		
 		return barra;
 	}
 	
-	public JPanel crearBarraLateral() {
+	private JPanel crearBarraLateral() {
 		JPanel panelLateral = new JPanel();
-		panelLateral.setBackground(new Color(255, 255, 255));
+		panelLateral.setBackground(Paleta_Colores.FONDO.getColor());
 		panelLateral.setLayout(new BoxLayout(panelLateral, BoxLayout.PAGE_AXIS));
-		panelLateral.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
+		
+		Border margenEntrePanel = BorderFactory.createEmptyBorder(15, 20, 15, 20);
+		Border lineaInferior = new MatteBorder(0, 1, 0, 0, Paleta_Colores.CONTENEDORES.getColor());
+
+		// Combinamos: la línea va afuera y el margen adentro
+		panelLateral.setBorder(BorderFactory.createCompoundBorder(lineaInferior, margenEntrePanel));
 		
 		botonDashboard = new BotonMenu("Dashboard", null);					
 		botonDashboard.setMaximumSize(new Dimension(Integer.MAX_VALUE, 50));		//Establece que el componente se puede estirar a infinito en x pero solo hasta 50 en Y
@@ -137,24 +146,23 @@ public class Hub extends JFrame{
 		return panelLateral;
 	}
 	
-	public JPanel crearAdministradorUsuarios() {
+	private JPanel crearAdministradorUsuarios() {
 		userPanel = new UsersView();
 		return userPanel;
 	}
 	
-	public JPanel crearDashboard() {
-		menu = new JPanel();
-		
-		JLabel bienvenida = new JLabel("Stats bro");
-		menu.add(bienvenida);
-		
-		return menu;
+	private JPanel crearDashboard() {
+		dashboard = new DashboardView();
+		return dashboard;
 	}
 	
 	public void showView(String view) {
 		cardLayout.show(panelPrincipal, view);
 	}
-
+	
+	
+	//Getter y setters
+	
 	public JPanel getBotonUsuarios() {
 		return botonUsuarios;
 	}

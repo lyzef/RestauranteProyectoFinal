@@ -7,9 +7,9 @@ import javax.swing.JOptionPane;
 import models.User;
 import repository.UserRepository;
 import tablemodels.UserTableModel;
-import utilidades.PDFExporter; 
-import views.UserFormDialog;
-import views.UsersView;
+import utilidades.PDFExporter;
+import views.Admin.UserFormDialog;
+import views.Admin.UsersView;
 
 public class UserController {
 

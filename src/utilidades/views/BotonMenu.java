@@ -1,6 +1,9 @@
 package utilidades.views;
 
 import javax.swing.*;
+
+import utilidades.Paleta_Colores;
+
 import java.awt.*;
 import java.awt.geom.RoundRectangle2D;
 import java.awt.event.MouseAdapter;
@@ -11,10 +14,9 @@ public class BotonMenu extends JPanel {
     private JLabel lblTexto;
     
     
-    private final Color COLOR_AZUL_FONDO = new Color(240, 245, 255);
-    private final Color COLOR_AZUL_BORDE = new Color(20, 80, 200);
-    private final Color COLOR_TEXTO_ACTIVO = new Color(40, 90, 210);
-    private final Color COLOR_TEXTO_INACTIVO = new Color(120, 120, 120); // Gris cuando no hay hover
+    private final Color COLOR_AZUL_FONDO = Paleta_Colores.ACENTO_PRIMARIO.getColor();
+    private final Color COLOR_TEXTO_ACTIVO = Paleta_Colores.TEXTO_PRINCIPAL.getColor();
+    private final Color COLOR_TEXTO_INACTIVO = Paleta_Colores.TEXTO_SECUNDARIO.getColor(); // Gris cuando no hay hover
 
     private boolean mouseEncima = false;
 
@@ -63,13 +65,8 @@ public class BotonMenu extends JPanel {
 
         // SOLO dibujamos si el mouse está encima
         if (mouseEncima) {
-            // 1. Dibujar el fondo azul claro
             g2.setColor(COLOR_AZUL_FONDO);
             g2.fill(new RoundRectangle2D.Float(0, 0, getWidth(), getHeight(), 15, 15));
-
-            // 2. Dibujar la barra lateral azul fuerte (estilo image_e80aa0.png)
-            g2.setColor(COLOR_AZUL_BORDE);
-            g2.fillRoundRect(-5, 5, 10, getHeight() - 10, 10, 10);
         }
 
         g2.dispose();

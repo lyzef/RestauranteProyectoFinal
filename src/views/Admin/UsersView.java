@@ -1,4 +1,4 @@
-package views;
+package views.Admin;
 
 import java.awt.*;
 import java.io.File;

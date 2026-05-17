@@ -10,5 +10,6 @@
 	<classpathentry kind="lib" path="Lib/gson-2.10.1.jar.zip"/>
 	<classpathentry kind="lib" path="Lib/itextpdf-5.5.13.3.jar.zip"/>
 	<classpathentry kind="lib" path="Lib/jbcrypt-0.4.jar"/>
+	<classpathentry kind="lib" path="Lib/jfreechart-1.0.19.zip"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
