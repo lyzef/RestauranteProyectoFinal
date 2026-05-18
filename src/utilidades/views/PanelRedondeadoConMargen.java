@@ -14,9 +14,9 @@ public class PanelRedondeadoConMargen extends JPanel {
         this.colorFondo = colorFondo;
         this.margen = margen;
         
-        setOpaque(false); // Sigue siendo vital para que el margen sea transparente
-        int padding = margen + 15; 
-        this.setBorder(BorderFactory.createEmptyBorder(padding - 10, padding, padding, padding - 10));
+        setOpaque(false); 
+        int padding = margen + 15; //Margen de componentes interno
+        this.setBorder(BorderFactory.createEmptyBorder(padding - 5, padding, padding - 5, padding));
     }
 
     @Override
