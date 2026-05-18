@@ -99,36 +99,37 @@ public class FormularioController {
 	/**
 	 * Guarda todos las entradas del formulario a clase usuario
 	 */
-	public void  guardarUsuario() {
-		
-		try {
-			repositorio.save(new User(
-					formularioRegistro.getNombre().obtenerTextoEntrada(),
-					formularioRegistro.getFechaNacimiento().obtenerTextoEntrada(),
-					formularioRegistro.getCurp().obtenerTextoEntrada(),
-					formularioRegistro.getTelefono().obtenerTextoEntrada(),
-					formularioRegistro.getCorreo().obtenerTextoEntrada(),
-					(String) formularioRegistro.getEstadoCivil().getSelectedItem(),
-					(String) formularioRegistro.getGeneros().getSelectedItem(),
-					formularioRegistro.getPuestoActual().obtenerTextoEntrada(),
-					formularioRegistro.getDescripcionFunciones().obtenerTextoEntrada(),
-					formularioRegistro.getPerfilPuesto().obtenerTextoEntrada(),
-					formularioRegistro.getCondicionesLaborales().obtenerTextoEntrada(),
-					formularioRegistro.getUbicacionOrganizacional().obtenerTextoEntrada(),
-					formularioRegistro.getTipoContrato().obtenerTextoEntrada(),
-					formularioRegistro.getRadioTurno().getSelection().getActionCommand(),
-					formularioRegistro.getNSS().obtenerTextoEntrada(),
-					formularioRegistro.getAlergiasConocidas().obtenerTextoEntrada(),
-					formularioRegistro.getContactoEmergencia().obtenerTextoEntrada(),
-			        (String) formularioRegistro.getTipoSangre().getSelectedItem().toString(), // Extracción del JComboBox
-			        formularioRegistro.getBanco().obtenerTextoEntrada(),
-			        formularioRegistro.getNumeroCuenta().obtenerTextoEntrada(),
-			        formularioRegistro.getSueldo().obtenerTextoEntrada()
-					));
-			formularioRegistro.mensajeConfirmacionFormularioCompleto();
-		} catch (Exception e) {
-			JOptionPane.showMessageDialog(formularioRegistro, e.getMessage());
-		}
+	public void guardarUsuario() {
+	    try {
+	        // Obtención del turno
+	        String turnoSeleccionado = (formularioRegistro.getRadioTurno().getSelection() != null) 
+	                ? formularioRegistro.getRadioTurno().getSelection().getActionCommand() 
+	                : "";
+	        repositorio.save(new User(
+	            formularioRegistro.getNombre().obtenerTextoEntrada(),
+	            formularioRegistro.getFechaNacimiento().obtenerTextoEntrada(),
+	            formularioRegistro.getCurp().obtenerTextoEntrada(),
+	            formularioRegistro.getTelefono().obtenerTextoEntrada(),
+	            formularioRegistro.getCorreo().obtenerTextoEntrada(),
+	            formularioRegistro.getNSS().obtenerTextoEntrada(),
+	            (String) formularioRegistro.getEstadoCivil().getSelectedItem(),
+	            (String) formularioRegistro.getGeneros().getSelectedItem(),
+	            formularioRegistro.getRol().obtenerTextoEntrada(),
+	            formularioRegistro.getDescripcionFunciones().obtenerTextoEntrada(),
+	            formularioRegistro.getTipoContrato().obtenerTextoEntrada(),
+	            turnoSeleccionado,
+	            formularioRegistro.getAlergiasConocidas().obtenerTextoEntrada(),
+	            formularioRegistro.getContactoEmergencia().obtenerTextoEntrada(),
+	            (String) formularioRegistro.getTipoSangre().getSelectedItem(), 
+	            formularioRegistro.getBanco().obtenerTextoEntrada(),
+	            formularioRegistro.getNumeroCuenta().obtenerTextoEntrada(),
+	            formularioRegistro.getSueldo().obtenerTextoEntrada()
+	        ));
+	        
+	        formularioRegistro.mensajeConfirmacionFormularioCompleto();
+	    } catch (Exception e) {
+	        JOptionPane.showMessageDialog(formularioRegistro, e.getMessage());
+	    }
 	}
 	
 	/**

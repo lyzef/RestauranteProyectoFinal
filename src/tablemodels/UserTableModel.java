@@ -2,116 +2,106 @@ package tablemodels;
 
 import java.util.List;
 import javax.swing.table.AbstractTableModel;
-
 import models.User;
 
-public class UserTableModel extends AbstractTableModel{
+public class UserTableModel extends AbstractTableModel {
 
-	private List<User> users;
-	
-	private final String[] columns = {
-			"nombre",
-			"fechaNacimiento",
-			"curp",
-			"telefono",
-			"correo",
-			"estadoCivil",
-			"genero",
-			"puestoActual",
-			"descripcionFunciones",
-			"perfilPuesto",
-			"condicionesLaborales",
-			"ubicacionOrganizacional",
-			"tipoContrato",
-			"turno",
-			"NSS",
-			"alergiasConocidas",
-			"contactoEmergencia",
-			"tipoDeSangre",
-			"banco",
-			"numeroCuenta",
-			"sueldo"
-	};
-	
-	public UserTableModel(List<User> users) {
-		this.users = users;
-	}
-	
-	@Override
-	public int getRowCount() {
-		return users.size();
-	}
+    private List<User> users;
+    
+    // CORRECCIÓN: Se eliminaron las 3 columnas y se formatearon los nombres para la vista (18 columnas en total)
+    private final String[] columns = {
+        "Nombre",
+        "Fecha de nacimiento",
+        "CURP",
+        "Teléfono",
+        "Correo",
+        "NSS",
+        "Estado civil",
+        "Género",
+        "Puesto actual",
+        "Descripción de funciones",
+        "Tipo de contrato",
+        "Turno",
+        "Alergias conocidas",
+        "Contacto de emergencia",
+        "Tipo de sangre",
+        "Banco",
+        "Número de cuenta",
+        "Sueldo"
+    };
+    
+    public UserTableModel(List<User> users) {
+        this.users = users;
+    }
+    
+    @Override
+    public int getRowCount() {
+        return users.size();
+    }
 
-	@Override
-	public int getColumnCount() {
-		return columns.length;
-	}
-	
-	@Override
-	public String getColumnName(int column) {
-		return columns[column];
-	}
+    @Override
+    public int getColumnCount() {
+        return columns.length;
+    }
+    
+    @Override
+    public String getColumnName(int column) {
+        return columns[column];
+    }
 
-	@Override
-	public Object getValueAt(int rowIndex, int columnIndex) {
-	    
-	    User user = users.get(rowIndex);
-	    
-	    switch(columnIndex) {
-	        case 0:
-	            return user.getNombre();
-	        case 1:
-	            return user.getFechaNacimiento();
-	        case 2:
-	            return user.getCurp();
-	        case 3:
-	            return user.getTelefono();
-	        case 4:
-	            return user.getCorreo();
-	        case 5:
-	            return user.getEstadoCivil();
-	        case 6:
-	            return user.getGenero();
-	        case 7:
-	            return user.getPuestoActual();
-	        case 8:
-	            return user.getDescripcionFunciones();
-	        case 9:
-	            return user.getPerfilPuesto();
-	        case 10:
-	            return user.getCondicionesLaborales();
-	        case 11:
-	            return user.getUbicacionOrganizacional();
-	        case 12:
-	            return user.getTipoContrato();
-	        case 13:
-	            return user.getTurno();
-	        case 14:
-	            return user.getNSS();
-	        case 15:
-	            return user.getAlergiasConocidas();
-	        case 16:
-	            return user.getContactoEmergencia();
-	        case 17:
-	            return user.getTipoDeSangre();
-	        case 18:
-	            return user.getBanco();
-	        case 19:
-	            return user.getNumeroCuenta();
-	        case 20:
-	            return user.getSueldo();
-	        default:
-	            return null;
-	    }
-	}
+    @Override
+    public Object getValueAt(int rowIndex, int columnIndex) {
+        User user = users.get(rowIndex);
+        
+        // CORRECCIÓN: Casos reestructurados para coincidir exactamente con el orden del array 'columns'
+        switch(columnIndex) {
+            case 0:
+                return user.getNombre();
+            case 1:
+                return user.getFechaNacimiento();
+            case 2:
+                return user.getCurp();
+            case 3:
+                return user.getTelefono();
+            case 4:
+                return user.getCorreo();
+            case 5:
+                return user.getNSS();
+            case 6:
+                return user.getEstadoCivil();
+            case 7:
+                return user.getGenero();
+            case 8:
+                return user.getRol();
+            case 9:
+                return user.getDescripcionFunciones();
+            case 10:
+                return user.getTipoContrato();
+            case 11:
+                return user.getTurno();
+            case 12:
+                return user.getAlergiasConocidas();
+            case 13:
+                return user.getContactoEmergencia();
+            case 14:
+                return user.getTipoDeSangre();
+            case 15:
+                return user.getBanco();
+            case 16:
+                return user.getNumeroCuenta();
+            case 17:
+                return user.getSueldo();
+            default:
+                return null;
+        }
+    }
 
-	public User getUserAt(int row) {
-		return users.get(row);
-	}
-	
-	public void setUsers(List<User> users) {
-		this.users = users;
-		fireTableDataChanged();
-	}
-	
+    public User getUserAt(int row) {
+        return users.get(row);
+    }
+    
+    public void setUsers(List<User> users) {
+        this.users = users;
+        fireTableDataChanged();
+    }
 }

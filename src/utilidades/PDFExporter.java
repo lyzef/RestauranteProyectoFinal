@@ -61,7 +61,7 @@ public class PDFExporter {
 
                 for (User usuario : listaUsuarios) {
                     tablaDatos.addCell(usuario.getNombre() != null ? usuario.getNombre() : "");
-                    tablaDatos.addCell(usuario.getPuestoActual() != null ? usuario.getPuestoActual() : "");
+                    tablaDatos.addCell(usuario.getRol() != null ? usuario.getRol() : "");
                     tablaDatos.addCell(usuario.getTelefono() != null ? usuario.getTelefono() : "");
                     tablaDatos.addCell(usuario.getCorreo() != null ? usuario.getCorreo() : "");
                     tablaDatos.addCell("$" + (usuario.getSueldo() != null ? usuario.getSueldo() : "0"));

@@ -5,9 +5,9 @@ import java.awt.event.KeyEvent;
 import excepciones.InvalidUser;
 import excepciones.invalidInput;
 
-public class comprobacionTipoCaracterEntradaUtil {
+public class ComprobacionTipoCaracterEntradaUtil {
 	
-	private comprobacionTipoCaracterEntradaUtil() {
+	private ComprobacionTipoCaracterEntradaUtil() {
 		
 	}
 	

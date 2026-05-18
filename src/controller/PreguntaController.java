@@ -7,7 +7,7 @@ import java.awt.event.KeyEvent;
 
 import excepciones.invalidInput;
 import utilidades.ValidadorCadena;
-import utilidades.comprobacionTipoCaracterEntradaUtil;
+import utilidades.ComprobacionTipoCaracterEntradaUtil;
 import utilidades.views.PanelTipoPreguntaUtil;
 
 public class PreguntaController {
@@ -30,7 +30,7 @@ public class PreguntaController {
     			char c = e.getKeyChar();
     			
     			try {
-    				if(!comprobacionTipoCaracterEntradaUtil.validarCaracterSegunTipo(c,panel.getTipoClasificacion())) {
+    				if(!ComprobacionTipoCaracterEntradaUtil.validarCaracterSegunTipo(c,panel.getTipoClasificacion())) {
     					e.consume();
     				}
     						

@@ -123,21 +123,21 @@ public class UserController {
         }
     }
     
-public void generatePdf() {
-		
-	List<User> listaParaExportar = repo.getAllUsers(); 
-    if (listaParaExportar.isEmpty()) {
-        JOptionPane.showMessageDialog(view, "No hay datos para exportar");
-        return;
-    }
-    new PDFExporter().exportUsers(null, listaParaExportar); // Exportar PDF, Crear PDF, Elegir ruta
+	public void generatePdf() {
+			
+		List<User> listaParaExportar = repo.getAllUsers(); 
+	    if (listaParaExportar.isEmpty()) {
+	        JOptionPane.showMessageDialog(view, "No hay datos para exportar");
+	    return;
+	}
+	new PDFExporter().exportUsers(null, listaParaExportar); // Exportar PDF, Crear PDF, Elegir ruta
 		
 		
 	}
-    
-    private void resetAdvertencias() {
-        if(view.getAdvertencias() != null) {
-            view.getAdvertencias().setText("");
-        }
-    }
-}
+	
+	private void resetAdvertencias() {
+	    if(view.getAdvertencias() != null) {
+	        view.getAdvertencias().setText("");
+	        }
+	    }
+	}

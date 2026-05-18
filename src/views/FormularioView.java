@@ -30,23 +30,20 @@ public class FormularioView extends JFrame{
 	PanelTipoPreguntaUtil curp;
 	PanelTipoPreguntaUtil telefono;
 	PanelTipoPreguntaUtil correo;
+	PanelTipoPreguntaUtil NSS;
 	List <PanelTipoPreguntaUtil> listaPreguntasParte1;
 	JComboBox<String> estadoCivil;
 	JComboBox<String> generos;
 	JButton botonSiguiente;
 	
 	//Formulario de datos del puesto -PARTE 2-
-	PanelTipoPreguntaUtil puestoActual;
+	PanelTipoPreguntaUtil rol;
 	PanelTipoPreguntaUtil descripcionFunciones;
-	PanelTipoPreguntaUtil perfilPuesto;
-	PanelTipoPreguntaUtil condicionesLaborales;
-	PanelTipoPreguntaUtil ubicacionOrganizacional;
 	PanelTipoPreguntaUtil tipoContrato;
 	List <PanelTipoPreguntaUtil> listaPreguntasParte2;
 	ButtonGroup radioTurno;
 	
 	//Formulario de datos extras-PARTE 3-
-	PanelTipoPreguntaUtil NSS;
 	PanelTipoPreguntaUtil alergiasConocidas;
 	PanelTipoPreguntaUtil contactoEmergencia;
 	PanelTipoPreguntaUtil banco;
@@ -67,20 +64,20 @@ public class FormularioView extends JFrame{
 		Image icono = tk.getImage("src/image/icono.jpg");
 		setIconImage(icono);
 		
-		InicializarComponentes();
+		inicializarComponentes();
 		
 		setVisible(true);
 		
 	}
 	
-	public void InicializarComponentes() {
+	public void inicializarComponentes() {
 		//Paneles
 		JPanel panelContenedorSuperior = new JPanel();
 		panelContenedorCentral = new JPanel();
 		JPanel panelContenedorInferior = new JPanel();
 		
 		//Panel superior
-		JLabel lblTitulo = new JLabel("Registro - Datos personales");
+		JLabel lblTitulo = new JLabel("Registro - Datos");
 		lblTitulo.setFont(new Font("Times", Font.PLAIN,17));
 		lblTitulo.setHorizontalAlignment(SwingConstants.CENTER);
 		panelContenedorSuperior.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
@@ -124,6 +121,7 @@ public class FormularioView extends JFrame{
 		curp = new PanelTipoPreguntaUtil("Curp", "ALFANUMERICO");
 		telefono = new PanelTipoPreguntaUtil("Telefono", "NUMERICO");
 		correo = new PanelTipoPreguntaUtil("Correo", "CORREO");
+        NSS = new PanelTipoPreguntaUtil("Numero seguro social: ", "ALFANUMERICO");
 		
 		//Inicializacion de array
 		listaPreguntasParte1 = new ArrayList<>();
@@ -133,6 +131,7 @@ public class FormularioView extends JFrame{
 		listaPreguntasParte1.add(curp);
 		listaPreguntasParte1.add(telefono);
 		listaPreguntasParte1.add(correo);
+		listaPreguntasParte1.add(NSS);
 		
 		for(PanelTipoPreguntaUtil pregunta : listaPreguntasParte1) {
 			panelCuestionarioParte1.add(pregunta);
@@ -167,19 +166,13 @@ public class FormularioView extends JFrame{
 	        Border emptyBorder = BorderFactory.createEmptyBorder(10, 20, 10, 20);
 	        panelCuestionarioParte2.setBorder(emptyBorder);
 
-	        puestoActual = new PanelTipoPreguntaUtil("Puesto actual:", "ALFANUMERICO");
+	        rol = new PanelTipoPreguntaUtil("Puesto actual:", "ALFANUMERICO");
 	    	descripcionFunciones = new PanelTipoPreguntaUtil("Funciones en la empresa", "ALFANUMERICO");
-	    	perfilPuesto = new PanelTipoPreguntaUtil("Perfil de puesto: ", "ALFANUMERICO");
-	    	condicionesLaborales = new PanelTipoPreguntaUtil("Condiciones laborales: ", "ALFANUMERICO");
-	    	ubicacionOrganizacional = new PanelTipoPreguntaUtil("Ubicacion organizacional", "ALFANUMERICO");
 	    	tipoContrato = new PanelTipoPreguntaUtil("Tipo de contrato: ", "ALFANUMERICO");
 	        
 	    	listaPreguntasParte2 = new ArrayList<>();
-	    	listaPreguntasParte2.add(puestoActual);
+	    	listaPreguntasParte2.add(rol);
 	    	listaPreguntasParte2.add(descripcionFunciones);
-	    	listaPreguntasParte2.add(perfilPuesto);
-	    	listaPreguntasParte2.add(condicionesLaborales);
-	    	listaPreguntasParte2.add(ubicacionOrganizacional);
 	    	listaPreguntasParte2.add(tipoContrato);
 	    	
 	    	for(PanelTipoPreguntaUtil pregunta : listaPreguntasParte2) {
@@ -211,15 +204,11 @@ public class FormularioView extends JFrame{
 	        panelCuestionarioParte3.setBorder(emptyBorder);
 	        
 	        listaPreguntasParte3 = new ArrayList<PanelTipoPreguntaUtil>();
-	        NSS = new PanelTipoPreguntaUtil("Numero seguro social: ", "ALFANUMERICO");
 	        alergiasConocidas = new PanelTipoPreguntaUtil("Alergias: ", "ALFANUMERICO");		        
 	        contactoEmergencia = new PanelTipoPreguntaUtil("Contacto emergencia", "ALFANUMERICO");
 	        
-	        panelCuestionarioParte3.add(NSS);
 	        panelCuestionarioParte3.add(alergiasConocidas);
 	        panelCuestionarioParte3.add(contactoEmergencia);
-	        
-	        listaPreguntasParte3.add(NSS);
 	        listaPreguntasParte3.add(alergiasConocidas);
 	        listaPreguntasParte3.add(contactoEmergencia);
 	        
@@ -362,12 +351,12 @@ public class FormularioView extends JFrame{
 		this.botonSiguiente = botonSiguiente;
 	}
 
-	public PanelTipoPreguntaUtil getPuestoActual() {
-		return puestoActual;
+	public PanelTipoPreguntaUtil getRol() {
+		return rol;
 	}
 
-	public void setPuestoActual(PanelTipoPreguntaUtil puestoActual) {
-		this.puestoActual = puestoActual;
+	public void setRol(PanelTipoPreguntaUtil rol) {
+		this.rol = rol;
 	}
 
 	public PanelTipoPreguntaUtil getDescripcionFunciones() {
@@ -376,30 +365,6 @@ public class FormularioView extends JFrame{
 
 	public void setDescripcionFunciones(PanelTipoPreguntaUtil descripcionFunciones) {
 		this.descripcionFunciones = descripcionFunciones;
-	}
-
-	public PanelTipoPreguntaUtil getPerfilPuesto() {
-		return perfilPuesto;
-	}
-
-	public void setPerfilPuesto(PanelTipoPreguntaUtil perfilPuesto) {
-		this.perfilPuesto = perfilPuesto;
-	}
-
-	public PanelTipoPreguntaUtil getCondicionesLaborales() {
-		return condicionesLaborales;
-	}
-
-	public void setCondicionesLaborales(PanelTipoPreguntaUtil condicionesLaborales) {
-		this.condicionesLaborales = condicionesLaborales;
-	}
-
-	public PanelTipoPreguntaUtil getUbicacionOrganizacional() {
-		return ubicacionOrganizacional;
-	}
-
-	public void setUbicacionOrganizacional(PanelTipoPreguntaUtil ubicacionOrganizacional) {
-		this.ubicacionOrganizacional = ubicacionOrganizacional;
 	}
 
 	public PanelTipoPreguntaUtil getTipoContrato() {
