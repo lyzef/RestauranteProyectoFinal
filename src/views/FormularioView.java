@@ -49,6 +49,7 @@ public class FormularioView extends JFrame{
 	PanelTipoPreguntaUtil banco;
 	PanelTipoPreguntaUtil numeroCuenta;
 	PanelTipoPreguntaUtil sueldo;
+	PanelTipoPreguntaUtil contrasena;
 	List <PanelTipoPreguntaUtil> listaPreguntasParte3;
 	JComboBox<String> tipoSangre;
 	
@@ -229,14 +230,17 @@ public class FormularioView extends JFrame{
 	        banco = new PanelTipoPreguntaUtil("Banco: ", "ALFANUMERICO");
 	        numeroCuenta = new PanelTipoPreguntaUtil("Clabe o numero de cuenta: ", "NUMERICO");		        
 	        sueldo = new PanelTipoPreguntaUtil("Sueldo", "NUMERICO");
+	        contrasena = new PanelTipoPreguntaUtil("CONTRASENA", "ALFANUMERICO");
 	        
 	        panelCuestionarioParte3.add(banco);
 	        panelCuestionarioParte3.add(numeroCuenta);
 	        panelCuestionarioParte3.add(sueldo);
+	        panelCuestionarioParte3.add(contrasena);
 	        
 	        listaPreguntasParte3.add(banco);
 	        listaPreguntasParte3.add(numeroCuenta);
 	        listaPreguntasParte3.add(sueldo);
+	        listaPreguntasParte3.add(contrasena);
 	        
 	        JScrollPane scroll = new JScrollPane(panelCuestionarioParte3);
 	    	return scroll;
@@ -466,6 +470,15 @@ public class FormularioView extends JFrame{
 	public static String getFormparte3() {
 		return FORMPARTE3;
 	}
+
+	public PanelTipoPreguntaUtil getContrasena() {
+		return contrasena;
+	}
+
+	public void setContrasena(PanelTipoPreguntaUtil contrasena) {
+		this.contrasena = contrasena;
+	}
+	
     
     
 	

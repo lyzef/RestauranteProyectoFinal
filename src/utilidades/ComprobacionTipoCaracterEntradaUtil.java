@@ -32,6 +32,9 @@ public class ComprobacionTipoCaracterEntradaUtil {
 		case "FECHA":{
 			return esTipoFecha(c);
 		}
+		case "CONTRASENA":{
+			return esContrasena(c);
+		}
 		default:
 			throw new IllegalArgumentException("Clasificacion de string desconocida: " + tipo);
 		}
@@ -68,6 +71,14 @@ public class ComprobacionTipoCaracterEntradaUtil {
     
     private static boolean esTipoFecha(char c){
 		if(c == '/' || Character.isDigit(c) || c == KeyEvent.VK_BACK_SPACE) {
+			return true;
+		}
+		
+		return false;
+    }
+    
+    private static boolean esContrasena(char c){
+		if(Character.isLetterOrDigit(c) || c == ' ' || c == KeyEvent.VK_BACK_SPACE || c == '.' || c == '_') {
 			return true;
 		}
 		

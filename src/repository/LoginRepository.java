@@ -8,32 +8,41 @@ import java.sql.Statement;
 
 import config.DatabaseConnection;
 import models.User;
+import utilidades.PasswordUtils;
 
 public class LoginRepository {
 
-	public User login(String email, String password) {
+public User login(String correo, String password) {
 		
 		/*String sql = "SELECT id, email, password FROM users WHERE email = '" 
 				+ email + "' AND password = '" + password + "'";*/
 		
-		String sql = "SELECT id, email, password FROM users WHERE email = ? AND password = ?";
+		String sql = "SELECT id, correo, password_hash, rol, nombre FROM usuarios WHERE correo = ?";
 		
 		try (
-			//Creando conexion
 			Connection conn = DatabaseConnection.getConnection();
-			//Envia la estructura de la consulta 
 			PreparedStatement stmt = conn.prepareStatement(sql);
 		){
-			stmt.setString(1, email); // Toma el primer '?' y coloca el email de forma segura.
-			stmt.setString(2, password); // Toma el segundo '?' y coloca la contraseña de forma segura.
 			
-			//Resultados de la busqueda en una tabla
+			stmt.setString(1, correo);
 			ResultSet rs = stmt.executeQuery();
 			
 			if(rs.next()) {
+				
+				String hashedPassword = rs.getString("password_hash");
+				System.out.println(hashedPassword);
+				
+				//la contrasena hash de la base de datos es la misma que la ingresada por el usuario
+				boolean correctPassword = PasswordUtils.checkPassword(password, hashedPassword);
+				
+				if(!correctPassword) 
+					return null;
+				
 				User user = new User();
 				user.setId(rs.getInt("id"));
-				user.setCorreo(rs.getString("email"));
+				user.setCorreo(correo);
+				user.setNombre(rs.getString("nombre"));
+				user.setRol(rs.getString("rol"));
 				
 				return user;
 			}

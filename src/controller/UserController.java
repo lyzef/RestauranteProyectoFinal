@@ -1,7 +1,7 @@
 package controller;
 
-import java.io.File;
 import java.util.List;
+
 import javax.swing.JOptionPane;
 
 import models.User;
@@ -52,18 +52,18 @@ public class UserController {
     }
     
     /**
-     * Carga los usuarios del archivo JSON y actualiza la tabla.
+     * Carga los usuarios 
      */
     public void loadUsers() {
         try {
-            List<User> users = repo.getAllUsers();
+            List<User> users = repo.getUsers();
             
             // Si el modelo no existe, se crea. Si existe, se actualiza la lista interna.
             if(model == null) {
                 model = new UserTableModel(users);
                 view.setTableModel(model);
             } else {
-                // Asegúrate de que UserTableModel tenga este método para actualizar su lista
+                // Actualizar lista
                 model.setUsers(users);
                 model.fireTableDataChanged(); 
             }
@@ -87,35 +87,31 @@ public class UserController {
             User savedUser = dialog.getUsuario();
             
             try {
-                List<User> actuales = repo.getAllUsers();
-                
-                if(user == null) {
-                    actuales.add(savedUser);
-                } else {
-                    int row = view.getSelectedRow();
-                    if (row != -1) {
-                        actuales.set(row, savedUser);
-                    }
-                }
-
-                repo.saveAll(actuales);
-                loadUsers(); 
-                
-            } catch(Exception e) {
-                e.printStackTrace();
-                JOptionPane.showMessageDialog(view, "Error al guardar: " + e.getMessage());
-            }
+				//Añadir nuevo
+				if(user == null) {
+					repo.save(savedUser);
+					model.addRow(savedUser); //Agrega el registro a la tabla
+				}else {
+					//Editar existente
+					int row = view.getSelectedRow();
+					boolean updated = repo.update( savedUser);
+					if(updated) {
+						model.updateRow(row, savedUser); //Actualiza el registro de la tabla
+					}
+				}
+			}catch(Exception e) {
+				e.printStackTrace();
+				JOptionPane.showMessageDialog(view, e.getMessage());
+			}
         }
     }
     
     private void deleteUser(int row) {
         try {
-            List<User> usuariosActuales = repo.getAllUsers();
-            if (row >= 0 && row < usuariosActuales.size()) {
-                usuariosActuales.remove(row);
-                repo.saveAll(usuariosActuales);
-                loadUsers();
-            }
+        	if(repo.delete(model.getUserAt(row).getId())) {
+        		model.removeRow(row);
+        	}
+            
         } catch (Exception e) {
             if(view.getAdvertencias() != null) {
                 view.getAdvertencias().setText("Error al eliminar: " + e.getMessage());
@@ -125,7 +121,7 @@ public class UserController {
     
 	public void generatePdf() {
 			
-		List<User> listaParaExportar = repo.getAllUsers(); 
+		List<User> listaParaExportar = repo.getUsers(); 
 	    if (listaParaExportar.isEmpty()) {
 	        JOptionPane.showMessageDialog(view, "No hay datos para exportar");
 	    return;

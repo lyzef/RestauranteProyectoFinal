@@ -8,8 +8,8 @@ import views.Login;
 public class Main {
     public static void main(String[] args) {
         
-        //new LoginController(new Login());
+        new LoginController(new Login());
         
-        new HubController(new Hub());
+        //new HubController(new Hub());
     }
 }

@@ -51,7 +51,7 @@ public class PanelTipoPreguntaUtil extends JPanel{
     
     /**
     * Constructor que genera un panel con pregunta, field y texto de error (jlabel)
-    * Se suele usar con los siguientes tipo de datos ALFANUMERICO, NUMERICO, ALFABETICO,CORREO,FECHA
+    * Se suele usar con los siguientes tipo de datos ALFANUMERICO, NUMERICO, ALFABETICO,CORREO,FECHA,CONTRASENA
     * @param pregunta String contenido de pregunta
     * 
     */

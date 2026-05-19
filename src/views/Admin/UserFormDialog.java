@@ -22,6 +22,7 @@ import javax.swing.JScrollPane;
 
 import controller.PreguntaController;
 import models.User;
+import utilidades.PasswordUtils;
 import utilidades.ValidadorCadena;
 import utilidades.views.PanelTipoPreguntaUtil;
 
@@ -37,7 +38,7 @@ public class UserFormDialog extends JDialog {
     private PanelTipoPreguntaUtil rol, descripcionFunciones, tipoContrato;
     
     // Parte 3: Datos médicos y bancarios
-    private PanelTipoPreguntaUtil nss, alergiasConocidas, contactoEmergencia, banco, numeroCuenta, sueldo;
+    private PanelTipoPreguntaUtil nss, alergiasConocidas, contactoEmergencia, banco, numeroCuenta, sueldo, contrasena;
 
     // Lista global de todas las preguntas de tipo PanelTipoPreguntaUtil
     private List<PanelTipoPreguntaUtil> listaPreguntas;
@@ -120,12 +121,13 @@ public class UserFormDialog extends JDialog {
         banco = new PanelTipoPreguntaUtil("Banco:", "ALFANUMERICO");
         numeroCuenta = new PanelTipoPreguntaUtil("Cuenta/CLABE:", "NUMERICO");
         sueldo = new PanelTipoPreguntaUtil("Sueldo:", "NUMERICO");
+        contrasena = new PanelTipoPreguntaUtil("CONTRASENA", "ALFANUMERICO");
 
         // Añadir campos válidos a la lista 
         Collections.addAll(listaPreguntas, 
             nombre, fechaNacimiento, curp, telefono, correo,
             rol, descripcionFunciones, tipoContrato,
-            nss, alergiasConocidas, contactoEmergencia, banco, numeroCuenta, sueldo
+            nss, alergiasConocidas, contactoEmergencia, banco, numeroCuenta, sueldo, contrasena
         );
 
         // Añadir todos los paneles dinámicos al contenedor visual
@@ -180,6 +182,8 @@ public class UserFormDialog extends JDialog {
         generos = new JComboBox<>(opcionesGenero);
         generos.setSelectedIndex(0);
         panelCuestionario.add(generos);
+        
+    
 
         return new JScrollPane(panelCuestionario);
     }
@@ -226,7 +230,6 @@ public class UserFormDialog extends JDialog {
             banco.getTxtEntrada().setText(usuario.getBanco());
             numeroCuenta.getTxtEntrada().setText(usuario.getNumeroCuenta());
             sueldo.getTxtEntrada().setText(usuario.getSueldo());
-            
             tipoSangre.setSelectedItem(usuario.getTipoDeSangre());
         }
     }
@@ -258,7 +261,8 @@ public class UserFormDialog extends JDialog {
                 (String) tipoSangre.getSelectedItem(),
                 banco.obtenerTextoEntrada(),
                 numeroCuenta.obtenerTextoEntrada(),
-                sueldo.obtenerTextoEntrada()
+                sueldo.obtenerTextoEntrada(),
+                PasswordUtils.hashPassword(contrasena.obtenerTextoEntrada())
             );
         } else {
             usuario.setNombre(nombre.obtenerTextoEntrada());

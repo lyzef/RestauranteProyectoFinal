@@ -6,6 +6,7 @@ import java.util.List;
 import javax.swing.JOptionPane;
 import models.User;
 import repository.UserRepository;
+import utilidades.PasswordUtils;
 import utilidades.ValidadorCadena;
 import utilidades.views.PanelTipoPreguntaUtil;
 import views.FormularioView;
@@ -105,6 +106,8 @@ public class FormularioController {
 	        String turnoSeleccionado = (formularioRegistro.getRadioTurno().getSelection() != null) 
 	                ? formularioRegistro.getRadioTurno().getSelection().getActionCommand() 
 	                : "";
+	        String contrasena = PasswordUtils.hashPassword(formularioRegistro.getContrasena().obtenerTextoEntrada());
+	        
 	        repositorio.save(new User(
 	            formularioRegistro.getNombre().obtenerTextoEntrada(),
 	            formularioRegistro.getFechaNacimiento().obtenerTextoEntrada(),
@@ -123,7 +126,8 @@ public class FormularioController {
 	            (String) formularioRegistro.getTipoSangre().getSelectedItem(), 
 	            formularioRegistro.getBanco().obtenerTextoEntrada(),
 	            formularioRegistro.getNumeroCuenta().obtenerTextoEntrada(),
-	            formularioRegistro.getSueldo().obtenerTextoEntrada()
+	            formularioRegistro.getSueldo().obtenerTextoEntrada(),
+	            contrasena
 	        ));
 	        
 	        formularioRegistro.mensajeConfirmacionFormularioCompleto();

@@ -8,6 +8,7 @@ import excepciones.InvalidUser;
 import models.User;
 import repository.LoginRepository;
 import repository.UserRepository;
+import utilidades.Session;
 
 import javax.swing.*;
 import java.awt.*;
@@ -57,23 +58,33 @@ public class LoginController {
 
     private void validarLogin() {
         reinicarMensajesError();
+        User user;
         try {
             validarCredenciales();
-            User user = repository.login(view.getEntradaCorreo().getText(),new String(view.getEntradaContrasena().getPassword()));
+            user = repository.login(view.getEntradaCorreo().getText(),new String(view.getEntradaContrasena().getPassword()));
+            
             if(user == null) {
-            	throw new InvalidContraseña("Credenciales incorrectas");
+            	throw new InvalidUser("Correo invalido");
     		}
             
-            JOptionPane.showMessageDialog(view, "Acceso concedido", "Bienvenido", JOptionPane.INFORMATION_MESSAGE);
-            new HubController(new Hub());
-            view.dispose();
         } catch (InvalidUser ex) {
             view.getLabelAdvertenciaCorreo().setText(ex.getMessage());
             view.getLabelAdvertenciaCorreo().setVisible(true);
+            return;
         } catch (InvalidContraseña ex) {
             view.getLabelAdvertenciaContrasena().setText(ex.getMessage());
             view.getLabelAdvertenciaContrasena().setVisible(true);
+            return;
         }
+        
+        Session.login(user);
+        JOptionPane.showMessageDialog(view, "Acceso concedido", "Bienvenido", JOptionPane.INFORMATION_MESSAGE);
+        
+        if(Session.getRol().equals("admin")) {
+        	new HubController(new Hub());
+            view.dispose();
+        }
+        
         
         
     }

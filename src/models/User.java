@@ -4,8 +4,8 @@ public class User {
     
     private int id;
     private String contrasena;
-    private String nombre, fechaNacimiento, curp, telefono, correo, NSS, estadoCivil, genero;
-    private String rol, descripcionFunciones, tipoContrato, turno;
+    private String nombre, fechaNacimiento, curp, telefono, correo, NSS,rol, estadoCivil, genero;
+    private String descripcionFunciones, tipoContrato, turno;
     private String alergiasConocidas, contactoEmergencia, tipoDeSangre, banco, numeroCuenta, sueldo;
 
     // Constructor vacío
@@ -17,18 +17,19 @@ public class User {
         this.correo = correo;
     }
     
-    // Constructor con ID
-    public User(int id, String correo, char[] contrasena) {
+    // Constructor principal
+    public User(int id, String correo, char[] contrasena,String rol) {
         this.id = id;
         this.contrasena = new String(contrasena);
         this.correo = correo;
+        this.rol = rol;
     }
     
-    // Constructor completo (Refactorizado sin las variables eliminadas)
+    // Constructor completo para formulario
     public User(String nombre, String fechaNacimiento, String curp, String telefono, String correo, String NSS,
                 String estadoCivil, String genero, String rol, String descripcionFunciones, 
                 String tipoContrato, String turno, String alergiasConocidas, 
-                String contactoEmergencia, String tipoDeSangre, String banco, String numeroCuenta, String sueldo) {
+                String contactoEmergencia, String tipoDeSangre, String banco, String numeroCuenta, String sueldo, String contrasena) {
         this.nombre = nombre;
         this.fechaNacimiento = fechaNacimiento;
         this.curp = curp;
@@ -47,6 +48,7 @@ public class User {
         this.banco = banco;
         this.numeroCuenta = numeroCuenta;
         this.sueldo = sueldo;
+        this.contrasena = contrasena;
     }
 
     // --- GETTERS Y SETTERS ---
