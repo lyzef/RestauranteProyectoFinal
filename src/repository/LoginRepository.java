@@ -12,7 +12,7 @@ import utilidades.PasswordUtils;
 
 public class LoginRepository {
 
-public User login(String correo, String password) {
+public User login(String correo, String password) throws SQLException {
 		
 		String sql = "SELECT id, correo, password_hash, rol, nombre FROM usuarios WHERE correo = ?";
 		
@@ -45,12 +45,11 @@ public User login(String correo, String password) {
 			}
 			
 			
-		}catch(SQLException ex) {
-			ex.printStackTrace();
 		}
 		
 		return null;
 	}
+	
 	
 }
 

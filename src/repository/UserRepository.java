@@ -94,6 +94,8 @@ public class UserRepository {
                 user.setCorreo(rs.getString("correo"));
                 user.setContrasena(rs.getString("password_hash"));
                 user.setRol(rs.getString("rol"));
+                user.setActivo(rs.getBoolean("activo"));
+                user.setUltimaSesion(rs.getString("fecha_ultima_sesion_activa"));
 
                 // Datos de la tabla 'usuarios_informacion'
                 user.setFechaNacimiento(rs.getString("fechaNacimiento"));

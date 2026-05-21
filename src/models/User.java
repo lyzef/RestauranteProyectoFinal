@@ -7,6 +7,10 @@ public class User {
     private String nombre, fechaNacimiento, curp, telefono, correo, NSS,rol, estadoCivil, genero;
     private String descripcionFunciones, tipoContrato, turno;
     private String alergiasConocidas, contactoEmergencia, tipoDeSangre, banco, numeroCuenta, sueldo;
+    
+    //De utilidad
+    private boolean activo;
+    private String ultimaSesion;
 
     // Constructor vacío
     public User() {}
@@ -28,7 +32,7 @@ public class User {
     public User(String nombre, String fechaNacimiento, String curp, String telefono, String correo, String NSS,
                 String estadoCivil, String genero, String rol, String descripcionFunciones, 
                 String tipoContrato, String turno, String alergiasConocidas, 
-                String contactoEmergencia, String tipoDeSangre, String banco, String numeroCuenta, String sueldo, String contrasena) {
+                String contactoEmergencia, String tipoDeSangre, String banco, String numeroCuenta, String sueldo, String contrasena,boolean activo,String ultimaSesion ) {
         this.nombre = nombre;
         this.fechaNacimiento = fechaNacimiento;
         this.curp = curp;
@@ -48,7 +52,9 @@ public class User {
         this.numeroCuenta = numeroCuenta;
         this.sueldo = sueldo;
         this.contrasena = contrasena;
-    }
+        this.activo = activo;
+        this.ultimaSesion = ultimaSesion;
+        }
 
     // --- GETTERS Y SETTERS ---
     
@@ -213,4 +219,24 @@ public class User {
     public void setSueldo(String sueldo) { 
         this.sueldo = sueldo;
     }
+
+	public boolean isActivo() {
+		return activo;
+	}
+
+	public void setActivo(boolean activo) {
+		this.activo = activo;
+	}
+
+	public String getUltimaSesion() {
+		return ultimaSesion;
+	}
+
+	public void setUltimaSesion(String ultimaSesion) {
+		this.ultimaSesion = ultimaSesion;
+	}
+	
+	
+    
+    
 }

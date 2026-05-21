@@ -12,6 +12,7 @@ import utilidades.Session;
 
 import javax.swing.*;
 import java.awt.*;
+import java.sql.SQLException;
 import java.util.List;
 
 public class LoginController {
@@ -72,7 +73,15 @@ public class LoginController {
             view.getLabelAdvertenciaContrasena().setText(ex.getMessage());
             view.getLabelAdvertenciaContrasena().setVisible(true);
             return;
-        }
+        } catch (SQLException e) {
+        	JOptionPane.showMessageDialog(
+                    view, 
+                    e.getMessage(), 
+                    "Error", 
+                    JOptionPane.WARNING_MESSAGE
+                );
+        	return;
+		}
         
         Session.login(user);
         JOptionPane.showMessageDialog(view, "Acceso concedido", "Bienvenido", JOptionPane.INFORMATION_MESSAGE);

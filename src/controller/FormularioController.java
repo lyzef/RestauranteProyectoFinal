@@ -188,36 +188,38 @@ public class FormularioController {
 	            formulario.getCurp().obtenerTextoEntrada(),
 	            formulario.getTelefono().obtenerTextoEntrada(),
 	            formulario.getCorreo().obtenerTextoEntrada(),
+	            formulario.getNSS().obtenerTextoEntrada(),
 	            (String) formulario.getEstadoCivil().getSelectedItem(),
 	            (String) formulario.getGeneros().getSelectedItem(),
 	            formulario.getRol().obtenerTextoEntrada(),
 	            formulario.getDescripcionFunciones().obtenerTextoEntrada(),
 	            formulario.getTipoContrato().obtenerTextoEntrada(),
 	            turnoSeleccionado,
-	            formulario.getNSS().obtenerTextoEntrada(),
 	            formulario.getAlergiasConocidas().obtenerTextoEntrada(),
 	            formulario.getContactoEmergencia().obtenerTextoEntrada(),
 	            (String) formulario.getTipoSangre().getSelectedItem(),
 	            formulario.getBanco().obtenerTextoEntrada(),
 	            formulario.getNumeroCuenta().obtenerTextoEntrada(),
 	            formulario.getSueldo().obtenerTextoEntrada(),
-	            PasswordUtils.hashPassword(formulario.getContrasena().obtenerTextoEntrada())
+	            PasswordUtils.hashPassword(formulario.getContrasena().obtenerTextoEntrada()),
+	            false, // Usuario inactivo por defecto (Se activa al logearse)
+	            " " // Ultima sesion se actualiza solo en db
 	        );
-	    } else {
+	    } else { //Solo se modifica lo modificable
 	        usuario.setNombre(formulario.getNombre().obtenerTextoEntrada());
 	        usuario.setFechaNacimiento(formulario.getFechaNacimiento().obtenerTextoEntrada());
 	        usuario.setCurp(formulario.getCurp().obtenerTextoEntrada());
 	        usuario.setTelefono(formulario.getTelefono().obtenerTextoEntrada());
 	        usuario.setCorreo(formulario.getCorreo().obtenerTextoEntrada());
+	        usuario.setNSS(formulario.getNSS().obtenerTextoEntrada());
+
 	        usuario.setEstadoCivil((String) formulario.getEstadoCivil().getSelectedItem());
 	        usuario.setGenero((String) formulario.getGeneros().getSelectedItem());
-
 	        usuario.setRol(formulario.getRol().obtenerTextoEntrada());
 	        usuario.setDescripcionFunciones(formulario.getDescripcionFunciones().obtenerTextoEntrada());
 	        usuario.setTipoContrato(formulario.getTipoContrato().obtenerTextoEntrada());
 	        usuario.setTurno(turnoSeleccionado);
 
-	        usuario.setNSS(formulario.getNSS().obtenerTextoEntrada());
 	        usuario.setAlergiasConocidas(formulario.getAlergiasConocidas().obtenerTextoEntrada());
 	        usuario.setContactoEmergencia(formulario.getContactoEmergencia().obtenerTextoEntrada());
 	        usuario.setTipoDeSangre((String) formulario.getTipoSangre().getSelectedItem());
