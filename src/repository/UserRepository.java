@@ -143,10 +143,10 @@ public class UserRepository {
         return false;
     }
 
-    // 4. ACTUALIZAR USUARIO (Modifica ambas tablas usando el ID del usuario)
+    // CTUALIZAR USUARIO (Modifica ambas tablas usando el ID del usuario)
     public boolean update(User updatedUser) {
     	boolean completado = false;
-        String sqlUsuario = "UPDATE usuarios SET nombre = ?, correo = ?, rol = ? WHERE id = ?";
+        String sqlUsuario = "UPDATE usuarios SET nombre = ?, correo = ?,password_hash = ?, rol = ? WHERE id = ?";
         String sqlInfo = "UPDATE usuarios_informacion SET fechaNacimiento = ?, curp = ?, telefono = ?, NSS = ?, "
                 + "estadoCivil = ?, genero = ?, descripcionFunciones = ?, tipoContrato = ?, turno = ?, "
                 + "alergiasConocidas = ?, contactoEmergencia = ?, tipoDeSangre = ?, banco = ?, numeroCuenta = ?, "
@@ -161,8 +161,9 @@ public class UserRepository {
             try (PreparedStatement pstUser = connection.prepareStatement(sqlUsuario)) {
                 pstUser.setString(1, updatedUser.getNombre());
                 pstUser.setString(2, updatedUser.getCorreo());
-                pstUser.setString(3, updatedUser.getRol());
-                pstUser.setInt(4, updatedUser.getId());
+                pstUser.setString(3, updatedUser.getContrasena());
+                pstUser.setString(4, updatedUser.getRol());
+                pstUser.setInt(5, updatedUser.getId());
                 pstUser.executeUpdate();
             }
 

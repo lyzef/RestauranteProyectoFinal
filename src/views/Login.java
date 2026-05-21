@@ -165,14 +165,15 @@ public class Login extends JFrame {
         panelButtons.add(botonEntrar);
 
         panelButtons.add(Box.createVerticalStrut(10));
-
+        
+        /*
         botonRegistrar = new JLabel("Registrar nuevo empleado");
         botonRegistrar.setAlignmentX(Component.CENTER_ALIGNMENT);
         botonRegistrar.setFont(miniFont);
         botonRegistrar.setForeground(Color.WHITE);
         botonRegistrar.setCursor(new Cursor(Cursor.HAND_CURSOR));
         panelButtons.add(botonRegistrar);
-
+        */
         panelButtons.setBorder(BorderFactory.createEmptyBorder(10, 20, 20, 20));
         panelLogin.add(panelButtons, BorderLayout.SOUTH);
     }

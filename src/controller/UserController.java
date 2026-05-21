@@ -8,7 +8,7 @@ import models.User;
 import repository.UserRepository;
 import tablemodels.UserTableModel;
 import utilidades.PDFExporter;
-import views.Admin.UserFormDialog;
+import views.FormularioDialog;
 import views.Admin.UsersView;
 
 public class UserController {
@@ -80,11 +80,11 @@ public class UserController {
     private void openForm(User user) {
         resetAdvertencias();
         // Nota: Asegúrate que UserFormDialog reciba los parámetros correctos
-        UserFormDialog dialog = new UserFormDialog(null, user);
+        FormularioDialog dialog = new FormularioDialog(null, user);
         dialog.setVisible(true);
         
         if(dialog.isSaved()) {
-            User savedUser = dialog.getUsuario();
+            User savedUser = dialog.getController().getUsuario();
             
             try {
 				//Añadir nuevo
@@ -96,7 +96,7 @@ public class UserController {
 					int row = view.getSelectedRow();
 					boolean updated = repo.update( savedUser);
 					if(updated) {
-						model.updateRow(row, savedUser); //Actualiza el registro de la tabla
+						model.updateRow(row, savedUser); //Si se actualizo db se actualiza tabla
 					}
 				}
 			}catch(Exception e) {

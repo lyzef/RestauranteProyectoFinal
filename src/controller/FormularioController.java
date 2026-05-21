@@ -2,28 +2,33 @@ package controller;
 
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.Enumeration;
 import java.util.List;
+
+import javax.swing.AbstractButton;
 import javax.swing.JOptionPane;
+import javax.swing.JRadioButton;
+
 import models.User;
 import repository.UserRepository;
 import utilidades.PasswordUtils;
-import utilidades.ValidadorCadena;
+import utilidades.ValidadorEntradasTexto;
 import utilidades.views.PanelTipoPreguntaUtil;
-import views.FormularioView;
+import views.FormularioDialog;
 import views.Login;
 
 public class FormularioController {
-	private FormularioView formularioRegistro;
-	private UserRepository repositorio;
+	private FormularioDialog formulario;
 	private String parteFormularioActual;	
 	
+	private User usuario;
 	/**
-	 * Controlador de las clases dentro del paquete formulario
+	 * Controlador de las clase formulario, guarda, edita y comprueba el formulario
 	 * @param formulario Primera parte del formulario
 	 */
-	public FormularioController(FormularioView formularioRegistro) {
-		this.formularioRegistro = formularioRegistro;
-		this.repositorio = new UserRepository();
+	public FormularioController(FormularioDialog formularioRegistro, User usuario) {
+		this.formulario = formularioRegistro;
+		this.usuario = usuario;
 		
 		//Conectando paneles pregunta a su controlador
 		conectarPreguntasAsuControlador(formularioRegistro.getListaPreguntasParte1());
@@ -31,58 +36,70 @@ public class FormularioController {
 		conectarPreguntasAsuControlador(formularioRegistro.getListaPreguntasParte3());
 		
 		//Iniciando vista formulario parte 1
-		parteFormularioActual = FormularioView.FORMPARTE1;
-		formularioRegistro.showView(parteFormularioActual);
+		parteFormularioActual = FormularioDialog.FORMPARTE1;
+		formulario.showView(parteFormularioActual);
 		
 		
-		//Boton siguiente listener
-		formularioRegistro.getBotonSiguiente().addActionListener(e -> {
+		//Boton siguiente/guardar listener
+		formulario.getBotonSiguiente().addActionListener(e -> {
 			controlFlujoFormulario();
 			
 		});
 		
-		//Cerrar formulario
-		formularioRegistro.addWindowListener(new WindowAdapter() {
+		formulario.getBotonCancelar().addActionListener(e -> {
+			cerrarFormularioConDialog();
+		});
+		
+		formulario.addWindowListener(new WindowAdapter() {
 		    @Override
 		    public void windowClosing(WindowEvent e) {
-		        int verif = formularioRegistro.confirmacionSalidaPanel();
-		        
-		        if (verif == JOptionPane.YES_OPTION) {
-		        	new LoginController( new Login());
-		            formularioRegistro.dispose();
-		        }
-		        
+		    	cerrarFormularioConDialog();
 		    }
 		});		
 		
+		formulario.getModificarContrasenaCheckBox().addActionListener(e -> {
+			if(formulario.getModificarContrasenaCheckBox().isSelected()) {
+				formulario.getContrasena().setVisible(true);
+			} else {
+
+				formulario.getContrasena().setVisible(false);
+			}
+		});
+		
+		cargarDatos();
+		
+		//Poner contrasena para usuarios nuevos
+		if(usuario == null) {
+			formulario.getModificarContrasenaCheckBox().setVisible(false);
+			formulario.getContrasena().setVisible(true);
+		}
 	}
 	
 	/**
 	 * Controla el flujo del formulario, cambia de ventana si la actual ya esta completa y validada
-	 * termina el formulario si ya esta completo
+	 * edita o inicializa la clase usuario 
 	 */
 	public void controlFlujoFormulario() {
 		switch (parteFormularioActual) {
-		case FormularioView.FORMPARTE1:{
+		case FormularioDialog.FORMPARTE1:{
 			if(validarFormularioParte1()) {
-				parteFormularioActual = formularioRegistro.FORMPARTE2;
-				formularioRegistro.showView(parteFormularioActual);
+				parteFormularioActual = formulario.FORMPARTE2;
+				formulario.showView(parteFormularioActual);
 			}
 			break;
 		}
-		case FormularioView.FORMPARTE2:{
+		case FormularioDialog.FORMPARTE2:{
 			if(validarFormularioParte2()) {
-				parteFormularioActual = formularioRegistro.FORMPARTE3;
-				formularioRegistro.showView(parteFormularioActual);
+				parteFormularioActual = formulario.FORMPARTE3;
+				formulario.showView(parteFormularioActual);
 			}
 			break;
 		}
-		case FormularioView.FORMPARTE3:{
+		case FormularioDialog.FORMPARTE3:{
 			if(validarFormularioParte3()) {
-				formularioRegistro.mensajeConfirmacionFormularioCompleto();
+				formulario.mensajeConfirmacionFormularioCompleto();
 				guardarUsuario();
-				new LoginController(new Login());
-				formularioRegistro.dispose();
+				formulario.dispose();
 			}
 			break;
 		}
@@ -91,6 +108,21 @@ public class FormularioController {
 		}
 	}
 	
+
+	/**
+	 * Cierra el formulario con dialog
+	 */
+	public void cerrarFormularioConDialog() {
+		int verif = formulario.confirmacionSalidaPanel();
+        
+        if (verif == JOptionPane.YES_OPTION) {
+        	formulario.dispose();
+        }
+	}
+	
+	/**
+	 * Conecta las clases preguntas con su controlador que se encarga de moderar los caracteres ingresados segun el contexto de la pregunta
+	 */
 	public void conectarPreguntasAsuControlador(List <PanelTipoPreguntaUtil> preguntas ) {
 		for(PanelTipoPreguntaUtil p : preguntas) {
 			PreguntaController.registrarPanel(p);
@@ -98,43 +130,111 @@ public class FormularioController {
 	}
 	
 	/**
+	 * Carga datos si no existe usuario
+	 */
+	private void cargarDatos() {
+        if (usuario != null) {
+            // --- Parte 1: Datos Personales ---
+        	formulario.getNombre().getTxtEntrada().setText(usuario.getNombre());
+        	formulario.getFechaNacimiento().getTxtEntrada().setText(usuario.getFechaNacimiento());
+        	formulario.getCurp().getTxtEntrada().setText(usuario.getCurp());
+        	formulario.getTelefono().getTxtEntrada().setText(usuario.getTelefono());
+        	formulario.getCorreo().getTxtEntrada().setText(usuario.getCorreo());
+            
+        	formulario.getGeneros().setSelectedItem(usuario.getGenero());
+        	formulario.getEstadoCivil().setSelectedItem(usuario.getEstadoCivil());
+
+            // --- Parte 2: Datos Laborales (CORREGIDO) ---
+        	formulario.getRol().getTxtEntrada().setText(usuario.getRol());
+        	formulario.getDescripcionFunciones().getTxtEntrada().setText(usuario.getDescripcionFunciones());
+        	formulario.getTipoContrato().getTxtEntrada().setText(usuario.getTipoContrato());
+
+            if (usuario.getTurno() != null) {
+                String turno = usuario.getTurno();
+                Enumeration<AbstractButton> buttons = formulario.getRadioTurno().getElements();
+                while (buttons.hasMoreElements()) {
+                    JRadioButton button = (JRadioButton) buttons.nextElement();
+                    if (button.getText().equals(turno)) {
+                        button.setSelected(true);
+                        break;
+                    }
+                }
+            }
+
+            // --- Parte 3: Datos Médicos y Bancarios ---
+            formulario.getNSS().getTxtEntrada().setText(usuario.getNSS());
+            formulario.getAlergiasConocidas().getTxtEntrada().setText(usuario.getAlergiasConocidas());
+            formulario.getContactoEmergencia().getTxtEntrada().setText(usuario.getContactoEmergencia());
+            formulario.getBanco().getTxtEntrada().setText(usuario.getBanco());
+            formulario.getNumeroCuenta().getTxtEntrada().setText(usuario.getNumeroCuenta());
+            formulario.getSueldo().getTxtEntrada().setText(usuario.getSueldo());
+            formulario.getTipoSangre().setSelectedItem(usuario.getTipoDeSangre());
+        }
+    }
+	
+	/**
 	 * Guarda todos las entradas del formulario a clase usuario
 	 */
-	public void guardarUsuario() {
-	    try {
-	        // Obtención del turno
-	        String turnoSeleccionado = (formularioRegistro.getRadioTurno().getSelection() != null) 
-	                ? formularioRegistro.getRadioTurno().getSelection().getActionCommand() 
-	                : "";
-	        String contrasena = PasswordUtils.hashPassword(formularioRegistro.getContrasena().obtenerTextoEntrada());
-	        
-	        repositorio.save(new User(
-	            formularioRegistro.getNombre().obtenerTextoEntrada(),
-	            formularioRegistro.getFechaNacimiento().obtenerTextoEntrada(),
-	            formularioRegistro.getCurp().obtenerTextoEntrada(),
-	            formularioRegistro.getTelefono().obtenerTextoEntrada(),
-	            formularioRegistro.getCorreo().obtenerTextoEntrada(),
-	            formularioRegistro.getNSS().obtenerTextoEntrada(),
-	            (String) formularioRegistro.getEstadoCivil().getSelectedItem(),
-	            (String) formularioRegistro.getGeneros().getSelectedItem(),
-	            formularioRegistro.getRol().obtenerTextoEntrada(),
-	            formularioRegistro.getDescripcionFunciones().obtenerTextoEntrada(),
-	            formularioRegistro.getTipoContrato().obtenerTextoEntrada(),
+	private void guardarUsuario() {
+	    // Obtener el comando del turno de forma segura
+	    String turnoSeleccionado = (formulario.getRadioTurno().getSelection() != null) 
+	        ? formulario.getRadioTurno().getSelection().getActionCommand() 
+	        : "";
+
+	    if (usuario == null) { //Usuario nuevo
+	        usuario = new User(
+	            formulario.getNombre().obtenerTextoEntrada(),
+	            formulario.getFechaNacimiento().obtenerTextoEntrada(),
+	            formulario.getCurp().obtenerTextoEntrada(),
+	            formulario.getTelefono().obtenerTextoEntrada(),
+	            formulario.getCorreo().obtenerTextoEntrada(),
+	            (String) formulario.getEstadoCivil().getSelectedItem(),
+	            (String) formulario.getGeneros().getSelectedItem(),
+	            formulario.getRol().obtenerTextoEntrada(),
+	            formulario.getDescripcionFunciones().obtenerTextoEntrada(),
+	            formulario.getTipoContrato().obtenerTextoEntrada(),
 	            turnoSeleccionado,
-	            formularioRegistro.getAlergiasConocidas().obtenerTextoEntrada(),
-	            formularioRegistro.getContactoEmergencia().obtenerTextoEntrada(),
-	            (String) formularioRegistro.getTipoSangre().getSelectedItem(), 
-	            formularioRegistro.getBanco().obtenerTextoEntrada(),
-	            formularioRegistro.getNumeroCuenta().obtenerTextoEntrada(),
-	            formularioRegistro.getSueldo().obtenerTextoEntrada(),
-	            contrasena
-	        ));
+	            formulario.getNSS().obtenerTextoEntrada(),
+	            formulario.getAlergiasConocidas().obtenerTextoEntrada(),
+	            formulario.getContactoEmergencia().obtenerTextoEntrada(),
+	            (String) formulario.getTipoSangre().getSelectedItem(),
+	            formulario.getBanco().obtenerTextoEntrada(),
+	            formulario.getNumeroCuenta().obtenerTextoEntrada(),
+	            formulario.getSueldo().obtenerTextoEntrada(),
+	            PasswordUtils.hashPassword(formulario.getContrasena().obtenerTextoEntrada())
+	        );
+	    } else {
+	        usuario.setNombre(formulario.getNombre().obtenerTextoEntrada());
+	        usuario.setFechaNacimiento(formulario.getFechaNacimiento().obtenerTextoEntrada());
+	        usuario.setCurp(formulario.getCurp().obtenerTextoEntrada());
+	        usuario.setTelefono(formulario.getTelefono().obtenerTextoEntrada());
+	        usuario.setCorreo(formulario.getCorreo().obtenerTextoEntrada());
+	        usuario.setEstadoCivil((String) formulario.getEstadoCivil().getSelectedItem());
+	        usuario.setGenero((String) formulario.getGeneros().getSelectedItem());
+
+	        usuario.setRol(formulario.getRol().obtenerTextoEntrada());
+	        usuario.setDescripcionFunciones(formulario.getDescripcionFunciones().obtenerTextoEntrada());
+	        usuario.setTipoContrato(formulario.getTipoContrato().obtenerTextoEntrada());
+	        usuario.setTurno(turnoSeleccionado);
+
+	        usuario.setNSS(formulario.getNSS().obtenerTextoEntrada());
+	        usuario.setAlergiasConocidas(formulario.getAlergiasConocidas().obtenerTextoEntrada());
+	        usuario.setContactoEmergencia(formulario.getContactoEmergencia().obtenerTextoEntrada());
+	        usuario.setTipoDeSangre((String) formulario.getTipoSangre().getSelectedItem());
+	        usuario.setBanco(formulario.getBanco().obtenerTextoEntrada());
+	        usuario.setNumeroCuenta(formulario.getNumeroCuenta().obtenerTextoEntrada());
+	        usuario.setSueldo(formulario.getSueldo().obtenerTextoEntrada());
 	        
-	        formularioRegistro.mensajeConfirmacionFormularioCompleto();
-	    } catch (Exception e) {
-	        JOptionPane.showMessageDialog(formularioRegistro, e.getMessage());
+	        //Comprobando si usuario quiere cambiar su contrasena
+	        if(formulario.getModificarContrasenaCheckBox().isSelected()) {
+	    	    usuario.setContrasena(PasswordUtils.hashPassword(formulario.getContrasena().obtenerTextoEntrada()));
+	        } 
+	        
 	    }
+
+	    formulario.setSaved(true);
 	}
+
 	
 	/**
 	 * Valida la primera parte del formulario
@@ -142,7 +242,7 @@ public class FormularioController {
 	public boolean validarFormularioParte1() {
 		boolean formularioListo = true; //Evita cambio con entradas vacias, incompletas o incorrectas
 		
-		for(PanelTipoPreguntaUtil pregunta: formularioRegistro.getListaPreguntasParte1()) {
+		for(PanelTipoPreguntaUtil pregunta: formulario.getListaPreguntasParte1()) {
 			if(pregunta.estaVacio()) {
 				pregunta.senalarEntradaVacia();
 				formularioListo = false;
@@ -150,14 +250,14 @@ public class FormularioController {
 		}
 		
 		//Comprueba checkbox
-		if(formularioRegistro.getEstadoCivil().getSelectedItem() == "Seleccionar" || formularioRegistro.getGeneros().getSelectedItem() == "Seleccionar" ) {
+		if(formulario.getEstadoCivil().getSelectedItem() == "Seleccionar" || formulario.getGeneros().getSelectedItem() == "Seleccionar" ) {
 			formularioListo = false;
 		}
 		
 		//Comprueba contenidos invalidos en textfields
-		for(PanelTipoPreguntaUtil pregunta: formularioRegistro.getListaPreguntasParte1()) {
+		for(PanelTipoPreguntaUtil pregunta: formulario.getListaPreguntasParte1()) {
 			try {
-				ValidadorCadena.validarContenido(pregunta);
+				ValidadorEntradasTexto.validarContenido(pregunta);
 			} catch (Exception e) {
 				formularioListo = false;
 			}	
@@ -171,7 +271,7 @@ public class FormularioController {
 		boolean formularioListo = true; //Evita cambio con entradas vacias, incompletas o incorrectas
 		
 		//Preguntas vacias
-		for(PanelTipoPreguntaUtil pregunta: formularioRegistro.getListaPreguntasParte2()) {
+		for(PanelTipoPreguntaUtil pregunta: formulario.getListaPreguntasParte2()) {
 			if(pregunta.estaVacio()) {
 				pregunta.senalarEntradaVacia();
 				formularioListo = false;
@@ -179,14 +279,14 @@ public class FormularioController {
 		}
 		
 		//Comprueba raddio button
-		if(formularioRegistro.getRadioTurno().getSelection() == null) {
+		if(formulario.getRadioTurno().getSelection() == null) {
 			formularioListo = false;
 		}
 		
 		//Comprueba contenidos invalidos en textfields
-		for(PanelTipoPreguntaUtil pregunta: formularioRegistro.getListaPreguntasParte2()) {
+		for(PanelTipoPreguntaUtil pregunta: formulario.getListaPreguntasParte2()) {
 			try {
-				ValidadorCadena.validarContenido(pregunta);
+				ValidadorEntradasTexto.validarContenido(pregunta);
 			} catch (Exception e) {
 				formularioListo = false;
 			}	
@@ -199,8 +299,14 @@ public class FormularioController {
 	public boolean validarFormularioParte3() {
 		boolean formularioListo = true; //Evita cambio con entradas vacias, incompletas o incorrectas
 		
+		//Evitar validacion de contrasena si el usuario no desea cambiarla
+		if(usuario != null && !formulario.getModificarContrasenaCheckBox().isSelected() ){
+			PanelTipoPreguntaUtil c = formulario.getListaPreguntasParte3().getLast();
+			formulario.getListaPreguntasParte3().removeLast();
+		}
+		
 		//Preguntas vacias
-		for(PanelTipoPreguntaUtil pregunta: formularioRegistro.getListaPreguntasParte3()) {
+		for(PanelTipoPreguntaUtil pregunta: formulario.getListaPreguntasParte3()) {
 			if(pregunta.estaVacio()) {
 				pregunta.senalarEntradaVacia();
 				formularioListo = false;
@@ -208,14 +314,14 @@ public class FormularioController {
 		}
 		
 		//Comprueba checkbox
-		if(formularioRegistro.getTipoSangre().getSelectedIndex() == 0) {
+		if(formulario.getTipoSangre().getSelectedIndex() == 0) {
 			formularioListo = false;
 		}
 		
 		//Comprueba contenidos invalidos en textfields
-		for(PanelTipoPreguntaUtil pregunta: formularioRegistro.getListaPreguntasParte3()) {
+		for(PanelTipoPreguntaUtil pregunta: formulario.getListaPreguntasParte3()) {
 			try {
-				ValidadorCadena.validarContenido(pregunta);
+				ValidadorEntradasTexto.validarContenido(pregunta);
 			} catch (Exception e) {
 				formularioListo = false;
 			}	
@@ -224,4 +330,14 @@ public class FormularioController {
 		return formularioListo;
 		
 	}
+
+	public User getUsuario() {
+		return usuario;
+	}
+
+	public void setUsuario(User usuario) {
+		this.usuario = usuario;
+	}
+	
+	
 }

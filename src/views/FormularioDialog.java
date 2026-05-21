@@ -10,19 +10,29 @@ import java.util.*;
 import javax.swing.*;
 import javax.swing.border.Border;
 
+import controller.FormularioController;
+import models.User;
 import utilidades.views.PanelTipoPreguntaUtil;
 
 /**
  *Crea la primera parte visual del formulario
  *Inicializa las preguntas y atributos del formulario, controladores de preguntas se crean desde controlador de este formulario
  */
-public class FormularioView extends JFrame{
+public class FormularioDialog extends JDialog{
 	public static final String FORMPARTE1 = "FORMPARTE1"; //Dato
 	public static final String FORMPARTE2 = "FORMPARTE2"; //Info puesto
 	public static final String FORMPARTE3 = "FORMPARTE3"; //Datos extra
 	
 	CardLayout cardLayout;
 	JPanel panelContenedorCentral;
+	//Accionables
+	
+	JButton botonSiguiente;
+	JButton botonCancelar;
+	
+	Boolean saved = false;
+	
+	FormularioController controller;
 	
 	//Formulario de datos -PARTE 1-
 	PanelTipoPreguntaUtil nombre;
@@ -34,7 +44,6 @@ public class FormularioView extends JFrame{
 	List <PanelTipoPreguntaUtil> listaPreguntasParte1;
 	JComboBox<String> estadoCivil;
 	JComboBox<String> generos;
-	JButton botonSiguiente;
 	
 	//Formulario de datos del puesto -PARTE 2-
 	PanelTipoPreguntaUtil rol;
@@ -49,11 +58,16 @@ public class FormularioView extends JFrame{
 	PanelTipoPreguntaUtil banco;
 	PanelTipoPreguntaUtil numeroCuenta;
 	PanelTipoPreguntaUtil sueldo;
-	PanelTipoPreguntaUtil contrasena;
 	List <PanelTipoPreguntaUtil> listaPreguntasParte3;
 	JComboBox<String> tipoSangre;
 	
-	public FormularioView() {
+	//Modificar contrasena
+	JCheckBox modificarContrasenaCheckBox;
+	PanelTipoPreguntaUtil contrasena;
+	
+	public FormularioDialog(JFrame jframe, User usuario) {
+		super(jframe,true); 
+		
 		setSize(400,400);
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		setResizable(true);
@@ -66,9 +80,8 @@ public class FormularioView extends JFrame{
 		setIconImage(icono);
 		
 		inicializarComponentes();
-		
-		setVisible(true);
-		
+	
+		controller = new FormularioController(this,usuario);
 	}
 	
 	public void inicializarComponentes() {
@@ -88,7 +101,12 @@ public class FormularioView extends JFrame{
 		botonSiguiente = new JButton("Siguiente");
 		botonSiguiente.setBackground(new Color(144, 224, 239));
 		panelContenedorInferior.add(botonSiguiente);
-	        
+
+		// Botón cancelar
+        botonCancelar = new JButton("Cancelar");
+        botonCancelar.setBackground(new Color(255, 25, 45));
+		panelContenedorInferior.add(botonCancelar);
+        
 		//Panel central
 		
 		cardLayout = new CardLayout();
@@ -230,11 +248,19 @@ public class FormularioView extends JFrame{
 	        banco = new PanelTipoPreguntaUtil("Banco: ", "ALFANUMERICO");
 	        numeroCuenta = new PanelTipoPreguntaUtil("Clabe o numero de cuenta: ", "NUMERICO");		        
 	        sueldo = new PanelTipoPreguntaUtil("Sueldo", "NUMERICO");
+	        
+	        //Modificar contrasena
+	        modificarContrasenaCheckBox = new JCheckBox("Modificar contrasena");
+	        
 	        contrasena = new PanelTipoPreguntaUtil("CONTRASENA", "ALFANUMERICO");
+	        contrasena.setVisible(false);
 	        
 	        panelCuestionarioParte3.add(banco);
 	        panelCuestionarioParte3.add(numeroCuenta);
 	        panelCuestionarioParte3.add(sueldo);
+	        
+	        //Modi contrasena
+	        panelCuestionarioParte3.add(modificarContrasenaCheckBox);
 	        panelCuestionarioParte3.add(contrasena);
 	        
 	        listaPreguntasParte3.add(banco);
@@ -249,24 +275,36 @@ public class FormularioView extends JFrame{
     public void showView(String view) {
 		cardLayout.show(panelContenedorCentral, view);
 	}
+
+	 public boolean isSaved() {
+		 return saved;
+	}
     
     public int confirmacionSalidaPanel() {
-	    	return JOptionPane.showConfirmDialog(null, 
+	    	return JOptionPane.showConfirmDialog(this, 
 		            "¿Seguro que quieres salir?", 
 		            "Confirmar salida", JOptionPane.YES_NO_OPTION);
 	}
 	
     public void mensajeConfirmacionFormularioCompleto() {
-    	JOptionPane.showMessageDialog(null, 
+    	JOptionPane.showMessageDialog(this, 
     		    "Formulario terminado", 
     		    "Información", 
     		    JOptionPane.INFORMATION_MESSAGE);
     }
 
+
+
     
     
-    
-    
+	public FormularioController getController() {
+		return controller;
+	}
+
+	public void setController(FormularioController controller) {
+		this.controller = controller;
+	}
+
 	public CardLayout getCardLayout() {
 		return cardLayout;
 	}
@@ -478,8 +516,27 @@ public class FormularioView extends JFrame{
 	public void setContrasena(PanelTipoPreguntaUtil contrasena) {
 		this.contrasena = contrasena;
 	}
-	
-    
+
+	public JButton getBotonCancelar() {
+		return botonCancelar;
+	}
+
+	public void setBotonCancelar(JButton botonCancelar) {
+		this.botonCancelar = botonCancelar;
+	}
+
+	 public void setSaved(Boolean saved) {
+		 this.saved = saved;
+	 }
+
+	 public JCheckBox getModificarContrasenaCheckBox() {
+		 return modificarContrasenaCheckBox;
+	 }
+
+	 public void setModificarContrasenaCheckBox(JCheckBox modificarContrasenaCheckBox) {
+		 this.modificarContrasenaCheckBox = modificarContrasenaCheckBox;
+	 }
+	    
     
 	
 }

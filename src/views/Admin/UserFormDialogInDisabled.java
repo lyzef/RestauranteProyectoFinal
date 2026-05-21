@@ -23,13 +23,13 @@ import javax.swing.JScrollPane;
 import controller.PreguntaController;
 import models.User;
 import utilidades.PasswordUtils;
-import utilidades.ValidadorCadena;
+import utilidades.ValidadorEntradasTexto;
 import utilidades.views.PanelTipoPreguntaUtil;
 
-public class UserFormDialog extends JDialog {
+public class UserFormDialogInDisabled extends JDialog {
     private JPanel panelContenedorCentral;
     private User usuario;
-    private boolean saved = false;
+    private boolean saved = false; 
     
     // Parte 1: Datos personales
     private PanelTipoPreguntaUtil nombre, fechaNacimiento, curp, telefono, correo;
@@ -43,12 +43,12 @@ public class UserFormDialog extends JDialog {
     // Lista global de todas las preguntas de tipo PanelTipoPreguntaUtil
     private List<PanelTipoPreguntaUtil> listaPreguntas;
 
-    // Selectores y botones
+    // Selectores y sbotones
     private JComboBox<String> estadoCivil, generos, tipoSangre;
     private ButtonGroup radioTurno;
     private JButton botonCancelar, botonGuardar;
 
-    public UserFormDialog(JFrame parent, User usuario) {
+    public UserFormDialogInDisabled(JFrame parent, User usuario) {
         super(parent, true);
         this.usuario = usuario;
         
@@ -327,7 +327,7 @@ public class UserFormDialog extends JDialog {
         // Validar tipos de contenidos usando tu validador de cadenas
         for (PanelTipoPreguntaUtil pregunta : listaPreguntas) {
             try {
-                ValidadorCadena.validarContenido(pregunta);
+                ValidadorEntradasTexto.validarContenido(pregunta);
             } catch (Exception e) {
                 formularioListo = false;
             }    

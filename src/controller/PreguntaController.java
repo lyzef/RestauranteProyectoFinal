@@ -6,7 +6,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
 import excepciones.invalidInput;
-import utilidades.ValidadorCadena;
+import utilidades.ValidadorEntradasTexto;
 import utilidades.ComprobacionTipoCaracterEntradaUtil;
 import utilidades.views.PanelTipoPreguntaUtil;
 
@@ -50,7 +50,7 @@ public class PreguntaController {
     			//Limpia el error anterior
     			panel.limpiarError();
     	        try {
-					ValidadorCadena.validarContenido(panel.getTxtEntrada().getText(), panel.getTipoClasificacion());
+					ValidadorEntradasTexto.validarContenido(panel.getTxtEntrada().getText(), panel.getTipoClasificacion());
 				} catch (invalidInput e1) {
 					//Mostrando a usuario el error en la entrada
 					panel.modificarLabelError(e1.getMessage());

@@ -1,6 +1,6 @@
 package controller;
 
-import views.FormularioView;
+import views.FormularioDialog;
 import views.Hub;
 import views.Login;
 import excepciones.InvalidContraseña;
@@ -29,7 +29,8 @@ public class LoginController {
         view.getBotonEntrar().addActionListener(e -> validarLogin()
         		
         );
-
+        
+        /*
         view.getBotonRegistrar().addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseExited(java.awt.event.MouseEvent e) {
@@ -44,11 +45,7 @@ public class LoginController {
                 registro();
             }
         });
-    }
-
-    private void registro() {
-        new FormularioController(new FormularioView());
-        view.dispose();
+        */
     }
 
     private void reinicarMensajesError() {

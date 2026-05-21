@@ -14,9 +14,6 @@ public class LoginRepository {
 
 public User login(String correo, String password) {
 		
-		/*String sql = "SELECT id, email, password FROM users WHERE email = '" 
-				+ email + "' AND password = '" + password + "'";*/
-		
 		String sql = "SELECT id, correo, password_hash, rol, nombre FROM usuarios WHERE correo = ?";
 		
 		try (

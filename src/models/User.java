@@ -11,13 +11,12 @@ public class User {
     // Constructor vacío
     public User() {}
 
-    // Constructor para Login
     public User(String correo, char[] contrasena) {
         this.contrasena = new String(contrasena);
         this.correo = correo;
     }
     
-    // Constructor principal
+    // Constructor session
     public User(int id, String correo, char[] contrasena,String rol) {
         this.id = id;
         this.contrasena = new String(contrasena);

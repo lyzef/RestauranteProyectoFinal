@@ -4,7 +4,7 @@ import excepciones.InvalidUser;
 import excepciones.invalidInput;
 import utilidades.views.PanelTipoPreguntaUtil;
 
-public class ValidadorCadena {
+public class ValidadorEntradasTexto {
 	 /**
      *Valida el contenido de una cadena segun su clasifiacion
      *@throws invalidInput Tira en caso que el contenido de la cadena no sea el esperado segun su clasificacion
