@@ -47,7 +47,7 @@ public class FormularioDialog extends JDialog{
 	JComboBox<String> generos;
 	
 	//Formulario de datos del puesto -PARTE 2-
-	PanelTipoPreguntaUtil rol;
+	JComboBox<String> rol;
 	PanelTipoPreguntaUtil descripcionFunciones;
 	PanelTipoPreguntaUtil tipoContrato;
 	List <PanelTipoPreguntaUtil> listaPreguntasParte2;
@@ -216,13 +216,18 @@ public class FormularioDialog extends JDialog{
 	    	panelCuestionarioParte2.setLayout(new BoxLayout(panelCuestionarioParte2, BoxLayout.Y_AXIS));
 	        Border emptyBorder = BorderFactory.createEmptyBorder(10, 20, 10, 20);
 	        panelCuestionarioParte2.setBorder(emptyBorder);
-
-	        rol = new PanelTipoPreguntaUtil("Puesto actual:", "ALFANUMERICO");
+	        
+	        JLabel lblrol = new JLabel("Rol ");
+			panelCuestionarioParte2.add(lblrol);
+			String[] opcionesRol = {"Seleccionar","admin","cocinero","cajero"};
+			rol = new JComboBox<String>(opcionesRol);
+			rol.setSelectedIndex(0);
+			panelCuestionarioParte2.add(rol);
+	        
 	    	descripcionFunciones = new PanelTipoPreguntaUtil("Funciones en la empresa", "ALFANUMERICO");
 	    	tipoContrato = new PanelTipoPreguntaUtil("Tipo de contrato: ", "ALFANUMERICO");
 	        
 	    	listaPreguntasParte2 = new ArrayList<>();
-	    	listaPreguntasParte2.add(rol);
 	    	listaPreguntasParte2.add(descripcionFunciones);
 	    	listaPreguntasParte2.add(tipoContrato);
 	    	
@@ -425,12 +430,22 @@ public class FormularioDialog extends JDialog{
 		this.botonSiguiente = botonSiguiente;
 	}
 
-	public PanelTipoPreguntaUtil getRol() {
+	
+
+	public JComboBox<String> getRol() {
 		return rol;
 	}
 
-	public void setRol(PanelTipoPreguntaUtil rol) {
+	public JLabel getLblTitulo() {
+		return lblTitulo;
+	}
+
+	public void setRol(JComboBox<String> rol) {
 		this.rol = rol;
+	}
+
+	public void setLblTitulo(JLabel lblTitulo) {
+		this.lblTitulo = lblTitulo;
 	}
 
 	public PanelTipoPreguntaUtil getDescripcionFunciones() {

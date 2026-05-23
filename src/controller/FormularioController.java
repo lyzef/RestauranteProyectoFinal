@@ -162,7 +162,7 @@ public class FormularioController {
         	formulario.getEstadoCivil().setSelectedItem(usuario.getEstadoCivil());
 
             // --- Parte 2: Datos Laborales (CORREGIDO) ---
-        	formulario.getRol().getTxtEntrada().setText(usuario.getRol());
+        	formulario.getRol().setSelectedItem(usuario.getRol());
         	formulario.getDescripcionFunciones().getTxtEntrada().setText(usuario.getDescripcionFunciones());
         	formulario.getTipoContrato().getTxtEntrada().setText(usuario.getTipoContrato());
 
@@ -208,7 +208,7 @@ public class FormularioController {
 	            formulario.getNSS().obtenerTextoEntrada(),
 	            (String) formulario.getEstadoCivil().getSelectedItem(),
 	            (String) formulario.getGeneros().getSelectedItem(),
-	            formulario.getRol().obtenerTextoEntrada(),
+	            (String) formulario.getRol().getSelectedItem(),
 	            formulario.getDescripcionFunciones().obtenerTextoEntrada(),
 	            formulario.getTipoContrato().obtenerTextoEntrada(),
 	            turnoSeleccionado,
@@ -232,7 +232,7 @@ public class FormularioController {
 
 	        usuario.setEstadoCivil((String) formulario.getEstadoCivil().getSelectedItem());
 	        usuario.setGenero((String) formulario.getGeneros().getSelectedItem());
-	        usuario.setRol(formulario.getRol().obtenerTextoEntrada());
+	        usuario.setRol((String) formulario.getRol().getSelectedItem());
 	        usuario.setDescripcionFunciones(formulario.getDescripcionFunciones().obtenerTextoEntrada());
 	        usuario.setTipoContrato(formulario.getTipoContrato().obtenerTextoEntrada());
 	        usuario.setTurno(turnoSeleccionado);
@@ -295,6 +295,11 @@ public class FormularioController {
 				pregunta.senalarEntradaVacia();
 				formularioListo = false;
 			}
+		}
+		
+		//Comprueba checkbox
+		if(formulario.getRol().getSelectedItem() == "Seleccionar" ) {
+			formularioListo = false;
 		}
 		
 		//Comprueba raddio button

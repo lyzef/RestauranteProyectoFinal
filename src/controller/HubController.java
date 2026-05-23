@@ -2,14 +2,18 @@ package controller;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.util.List;
 
 import javax.swing.JOptionPane;
 
 import models.User;
+import repository.LoginRepository;
 import repository.UserRepository;
 import tablemodels.UserTableFormat;
+import utilidades.Session;
 import views.*;
 
 public class HubController {
@@ -36,6 +40,16 @@ public class HubController {
 				showDashboard();
 		    }
 		});
+		
+		view.addWindowListener(new WindowAdapter() {
+		    @Override
+		    public void windowClosing(WindowEvent e) {
+		    	if(Session.isLoggedIn()) {
+			    	new LoginRepository().setSesionActiva(Session.getCurrentUser(), false);
+		    	}
+		    	view.dispose();
+		    }
+		});		
 	}
 	
 	private void showDashboard() {

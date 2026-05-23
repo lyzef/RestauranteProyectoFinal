@@ -47,7 +47,7 @@ public class Hub extends JFrame{
 
 	public Hub() {
 		setSize(1200,700);
-		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		setResizable(true);
 		setTitle("Formulario");
 		setLocationRelativeTo(null);

@@ -60,7 +60,7 @@ public class LoginController {
         try {
             validarCredenciales();
             user = repository.login(view.getEntradaCorreo().getText(),new String(view.getEntradaContrasena().getPassword()));
-            
+            repository.setSesionActiva(user, true);
             if(user == null) {
             	throw new InvalidUser("Correo invalido");
     		}

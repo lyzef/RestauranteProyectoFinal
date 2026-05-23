@@ -12,7 +12,7 @@ import utilidades.PasswordUtils;
 
 public class LoginRepository {
 
-public User login(String correo, String password) throws SQLException {
+	public User login(String correo, String password) throws SQLException {
 		
 		String sql = "SELECT id, correo, password_hash, rol, nombre FROM usuarios WHERE correo = ?";
 		
@@ -48,6 +48,27 @@ public User login(String correo, String password) throws SQLException {
 		}
 		
 		return null;
+	}
+	
+	
+	public boolean setSesionActiva(User user, boolean estado) {
+	    boolean completado = false;
+	    String sqlUsuario = "UPDATE usuarios SET activo = ? WHERE id = ?";
+	    
+	    try (Connection connection = DatabaseConnection.getConnection();
+	         PreparedStatement pstUser = connection.prepareStatement(sqlUsuario)) {
+	        
+	        pstUser.setBoolean(1, estado);
+	        pstUser.setInt(2, user.getId());
+	        
+	        int filasAfectadas = pstUser.executeUpdate();
+	        completado = (filasAfectadas > 0);
+	        
+	    } catch (SQLException ex) {
+	        ex.printStackTrace();
+	    }
+
+	    return completado;
 	}
 	
 	

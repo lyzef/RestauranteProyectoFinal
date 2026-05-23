@@ -13,8 +13,8 @@ public class Main {
         } catch (ClassNotFoundException e) {
             System.out.println("No se pudo inicializar la clase de conexión");
         }
-        //new LoginController(new Login());
+        new LoginController(new Login());
         
-        new HubController(new Hub());
+        //new HubController(new Hub());
     }
 }
