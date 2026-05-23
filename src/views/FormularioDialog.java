@@ -31,6 +31,7 @@ public class FormularioDialog extends JDialog{
 	JButton botonCancelar;
 	
 	Boolean saved = false;
+	Boolean soloVista = false;
 	
 	FormularioController controller;
 	
@@ -65,6 +66,9 @@ public class FormularioDialog extends JDialog{
 	JCheckBox modificarContrasenaCheckBox;
 	PanelTipoPreguntaUtil contrasena;
 	
+	//Elementos de uso
+	JLabel lblTitulo;
+	
 	public FormularioDialog(JFrame jframe, User usuario) {
 		super(jframe,true); 
 		
@@ -84,6 +88,34 @@ public class FormularioDialog extends JDialog{
 		controller = new FormularioController(this,usuario);
 	}
 	
+	public FormularioDialog(JFrame jframe, User usuario, boolean soloVista) {
+		super(jframe,true); 
+		
+		this.soloVista = true;
+		
+		setSize(400,400);
+		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		setResizable(true);
+		setTitle("Formulario");
+		setLocationRelativeTo(null);
+		
+		//Icono
+		Toolkit tk = Toolkit.getDefaultToolkit();
+		Image icono = tk.getImage("src/image/icono.jpg");
+		setIconImage(icono);
+		
+		inicializarComponentes();
+	
+		controller = new FormularioController(this,usuario);
+		
+		if(soloVista) {
+			modificarContrasenaCheckBox.setVisible(false);
+			contrasena.setVisible(false);
+			lblTitulo.setText("Usuario - Solo lectura");
+		}
+		
+	}
+	
 	public void inicializarComponentes() {
 		//Paneles
 		JPanel panelContenedorSuperior = new JPanel();
@@ -91,7 +123,7 @@ public class FormularioDialog extends JDialog{
 		JPanel panelContenedorInferior = new JPanel();
 		
 		//Panel superior
-		JLabel lblTitulo = new JLabel("Registro - Datos");
+		lblTitulo = new JLabel("Registro - Datos");
 		lblTitulo.setFont(new Font("Times", Font.PLAIN,17));
 		lblTitulo.setHorizontalAlignment(SwingConstants.CENTER);
 		panelContenedorSuperior.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
@@ -535,6 +567,14 @@ public class FormularioDialog extends JDialog{
 
 	 public void setModificarContrasenaCheckBox(JCheckBox modificarContrasenaCheckBox) {
 		 this.modificarContrasenaCheckBox = modificarContrasenaCheckBox;
+	 }
+
+	 public Boolean getSoloVista() {
+		 return soloVista;
+	 }
+
+	 public void setSoloVista(Boolean soloVista) {
+		 this.soloVista = soloVista;
 	 }
 	    
     

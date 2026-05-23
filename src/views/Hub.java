@@ -76,20 +76,27 @@ public class Hub extends JFrame{
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.fill = GridBagConstraints.BOTH; // Estirar en ambas direcciones
         gbc.weighty = 1.0;
-		
         gbc.gridx = 0;      // Columna 0
         gbc.gridy = 0;      // Fila 0
-        gbc.weightx = 0.10; // ESTA ES LA CLAVE: 15% del espacio horizontal
+        gbc.weightx = 0.15; 
+        gbc.gridheight = 2;
         contenedorPrincipal.add(crearBarraLateral(),gbc);
+        
         gbc.gridx = 1;      // Columna 1
         gbc.gridy = 0;      // Fila 0
-        gbc.weightx = 0.90; // ESTA ES LA CLAVE: 85% del espacio horizontal
-        contenedorPrincipal.add(panelPrincipal,gbc);
+        gbc.weightx = 0.90; 
+        gbc.weighty = 0;
+        gbc.gridheight = 1;
+        contenedorPrincipal.add(crearBarraSuperior(),gbc);
         
-		this.add(crearBarraSuperior(),BorderLayout.NORTH); //Barra superiore en el contenedor principal
-        this.add(contenedorPrincipal,BorderLayout.CENTER);
-		
-		
+        gbc.weightx = 0.85; 
+        gbc.weighty = 1;
+        gbc.gridx = 1;      // Columna 1
+        gbc.gridy = 1;      // Fila 1
+        gbc.gridheight = 1;
+        contenedorPrincipal.add(panelPrincipal,gbc);
+       
+        this.add(contenedorPrincipal);
 	}
 	
 	private JPanel crearBarraSuperior() {
@@ -114,7 +121,7 @@ public class Hub extends JFrame{
 	
 	private JPanel crearBarraLateral() {
 		JPanel panelLateral = new JPanel();
-		panelLateral.setBackground(Paleta_Colores.FONDO.getColor());
+		panelLateral.setBackground(Paleta_Colores.CONTENEDORES.getColor());
 		panelLateral.setLayout(new BoxLayout(panelLateral, BoxLayout.PAGE_AXIS));
 		
 		Border margenEntrePanel = BorderFactory.createEmptyBorder(15, 20, 15, 20);

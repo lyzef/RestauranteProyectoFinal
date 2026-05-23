@@ -3,6 +3,7 @@ package repository;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import config.DatabaseConnection;
 import models.User;
@@ -207,4 +208,142 @@ public class UserRepository {
 
         return completado;
     }
+    
+    public List<User> getUsersForColumn(String columna, Object busqueda) {
+        List<User> users = new ArrayList<>();
+
+        // Lista blanca de columnas permitidas
+        Set<String> columnasValidas = Set.of(
+             "rol", "activo"
+        );
+
+        if (!columnasValidas.contains(columna)) {
+            throw new IllegalArgumentException("Columna no válida: " + columna);
+        }
+
+        String sql = "SELECT * FROM usuarios u " +
+                     "INNER JOIN usuarios_informacion ui ON u.id = ui.usuarios_id " +
+                     "WHERE " + columna + " = ?";
+
+        try (Connection connection = DatabaseConnection.getConnection();
+             PreparedStatement ps = connection.prepareStatement(sql)) {
+
+            // Si la columna es texto casteamos a string
+            if (columna.equals("rol") ) {
+                ps.setString(1, "" + busqueda + "");
+            } 
+            // Si la columna es booleana, pasamos directamente el valor
+            else if (columna.equals("activo")) {
+                ps.setBoolean(1, (Boolean) busqueda);
+            } 
+            // Si es otro tipo de dato (ej. número)
+            else {
+                ps.setObject(1, busqueda);
+            }
+            
+            //Traer resultado y crear lista
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    User user = new User();
+                    user.setId(rs.getInt("id"));
+                    user.setNombre(rs.getString("nombre"));
+                    user.setCorreo(rs.getString("correo"));
+                    user.setContrasena(rs.getString("password_hash"));
+                    user.setRol(rs.getString("rol"));
+                    user.setActivo(rs.getBoolean("activo"));
+                    user.setUltimaSesion(rs.getString("fecha_ultima_sesion_activa"));
+
+                    // Datos de la tabla 'usuarios_informacion'
+                    user.setFechaNacimiento(rs.getString("fechaNacimiento"));
+                    user.setCurp(rs.getString("curp"));
+                    user.setTelefono(rs.getString("telefono"));
+                    user.setNSS(rs.getString("NSS"));
+                    user.setEstadoCivil(rs.getString("estadoCivil"));
+                    user.setGenero(rs.getString("genero"));
+                    user.setDescripcionFunciones(rs.getString("descripcionFunciones"));
+                    user.setTipoContrato(rs.getString("tipoContrato"));
+                    user.setTurno(rs.getString("turno"));
+                    user.setAlergiasConocidas(rs.getString("alergiasConocidas"));
+                    user.setContactoEmergencia(rs.getString("contactoEmergencia"));
+                    user.setTipoDeSangre(rs.getString("tipoDeSangre"));
+                    user.setBanco(rs.getString("banco"));
+                    user.setNumeroCuenta(rs.getString("numeroCuenta"));
+                    user.setSueldo(rs.getString("sueldo"));
+
+                    users.add(user);
+                }
+            }
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+
+        return users;
+    }
+    
+    public int countUsersForColumn(String columna, Object busqueda) {
+        int count = 0;
+
+        // Lista blanca de columnas permitidas
+        Set<String> columnasValidas = Set.of(
+                "rol", "activo"
+          );
+
+
+        if (!columnasValidas.contains(columna)) {
+            throw new IllegalArgumentException("Columna no válida: " + columna);
+        }
+
+        String sql = "SELECT COUNT(*) AS total FROM usuarios u " +
+                     "INNER JOIN usuarios_informacion ui ON u.id = ui.usuarios_id " +
+                     "WHERE " + columna +  "= ?"; // Busquedas parciales o co
+
+        try (Connection connection = DatabaseConnection.getConnection();
+             PreparedStatement ps = connection.prepareStatement(sql)) {
+
+            // Si la columna es texto casteamos a string
+            if (columna.equals("rol") ) {
+                ps.setString(1, "" + busqueda + "");
+            } 
+            // Si es booleano
+            else if (columna.equals("activo")) {
+                ps.setBoolean(1, (Boolean) busqueda);
+            } 
+            // Otros tipos 
+            else {
+                ps.setObject(1, busqueda);
+            }
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    count = rs.getInt("total");
+                }
+            }
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+
+        return count;
+    }
+
+    public int countAllUsers() {
+        int total = 0;
+        String sql = "SELECT COUNT(*) AS total FROM usuarios";
+
+        try (Connection connection = DatabaseConnection.getConnection();
+             PreparedStatement ps = connection.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            if (rs.next()) {
+                total = rs.getInt("total");
+            }
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+
+        return total;
+    }
+
 }

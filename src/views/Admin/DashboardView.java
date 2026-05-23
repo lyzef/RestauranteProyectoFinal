@@ -13,6 +13,8 @@ import org.jfree.chart.axis.ValueAxis;
 import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.category.DefaultCategoryDataset;
+
+import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
@@ -23,7 +25,7 @@ import javax.swing.JTable;
 import com.itextpdf.text.pdf.PdfStructTreeController.returnType;
 
 import tablemodels.LiveTransaccionTableModel;
-import tablemodels.UserTableModel;
+import tablemodels.UserTableFormat;
 import utilidades.AppFont;
 import utilidades.Paleta_Colores;
 import utilidades.views.PanelRedondeadoConMargen;
@@ -50,7 +52,7 @@ public class DashboardView extends JPanel{
 	public DashboardView() {
 		//Ajustes
 		this.setBackground(Paleta_Colores.FONDO.getColor());
-		
+        this.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
 		this.setLayout(new GridBagLayout());
 		GridBagConstraints gbc = new GridBagConstraints();
 		
@@ -89,7 +91,7 @@ public class DashboardView extends JPanel{
 	}
 	
 	private JPanel moduloTotalVenta() {
-		JPanel panelTotalVentas = new PanelRedondeadoConMargen(15, Paleta_Colores.CONTENEDORES.getColor(), 5);
+		JPanel panelTotalVentas = new PanelRedondeadoConMargen();
 		panelTotalVentas.setLayout(new GridBagLayout());
 		
 		JPanel panelPrincipal = new JPanel();
@@ -133,7 +135,7 @@ public class DashboardView extends JPanel{
 	}
 	
 	private JPanel moduloOrdenesHoy() {
-		JPanel panelTotalVentas = new PanelRedondeadoConMargen(15, Paleta_Colores.CONTENEDORES.getColor(), 5);
+		JPanel panelTotalVentas = new PanelRedondeadoConMargen();
 		panelTotalVentas.setLayout(new GridBagLayout());
 		
 		JPanel panelPrincipal = new JPanel();
@@ -177,7 +179,7 @@ public class DashboardView extends JPanel{
 	}
 	
 	private JPanel moduloTopVentas() {
-		JPanel panelTotalVentas = new PanelRedondeadoConMargen(15, Paleta_Colores.CONTENEDORES.getColor(), 5);
+		JPanel panelTotalVentas = new PanelRedondeadoConMargen();
 		panelTotalVentas.setLayout(new GridBagLayout());
 		
 		JPanel panelPrincipal = new JPanel();
@@ -274,7 +276,7 @@ public class DashboardView extends JPanel{
 	    ChartPanel chartPanel = new ChartPanel(chart);
 	    chartPanel.setOpaque(false);
 
-	    JPanel panelEstadisticas = new PanelRedondeadoConMargen(15, Paleta_Colores.CONTENEDORES.getColor(), 5);
+	    JPanel panelEstadisticas = new PanelRedondeadoConMargen();
 	    panelEstadisticas.setLayout(new BorderLayout());
 	    panelEstadisticas.add(chartPanel, BorderLayout.CENTER);
 	    
@@ -297,14 +299,14 @@ public class DashboardView extends JPanel{
 		tablaTransacciones = new JTable();
 		tablaTransacciones.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         
-		JPanel panelTransacciones = new PanelRedondeadoConMargen(15, Paleta_Colores.CONTENEDORES.getColor(), 5);
+		JPanel panelTransacciones = new PanelRedondeadoConMargen();
 		panelTransacciones.add(tablaTransacciones);
 		
 		
         return panelTransacciones;
 	}
 	
-	public void setTableModel(UserTableModel model) {
+	public void setTableModel(UserTableFormat model) {
 		tablaTransacciones.setModel(model);
     }
 	

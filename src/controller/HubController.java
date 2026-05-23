@@ -9,7 +9,7 @@ import javax.swing.JOptionPane;
 
 import models.User;
 import repository.UserRepository;
-import tablemodels.UserTableModel;
+import tablemodels.UserTableFormat;
 import views.*;
 
 public class HubController {

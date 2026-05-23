@@ -77,11 +77,17 @@ public class FormularioController {
 	
 	/**
 	 * Controla el flujo del formulario, cambia de ventana si la actual ya esta completa y validada
-	 * edita o inicializa la clase usuario 
+	 * edita o inicializa la clase usuario, activa el modo solo vista
 	 */
 	public void controlFlujoFormulario() {
 		switch (parteFormularioActual) {
 		case FormularioDialog.FORMPARTE1:{
+			if(formulario.getSoloVista()) {
+				parteFormularioActual = formulario.FORMPARTE2;
+				formulario.showView(parteFormularioActual);
+				break;
+			}
+			
 			if(validarFormularioParte1()) {
 				parteFormularioActual = formulario.FORMPARTE2;
 				formulario.showView(parteFormularioActual);
@@ -89,6 +95,12 @@ public class FormularioController {
 			break;
 		}
 		case FormularioDialog.FORMPARTE2:{
+			if(formulario.getSoloVista()) {
+				parteFormularioActual = formulario.FORMPARTE3;
+				formulario.showView(parteFormularioActual);
+				break;
+			}
+			
 			if(validarFormularioParte2()) {
 				parteFormularioActual = formulario.FORMPARTE3;
 				formulario.showView(parteFormularioActual);
@@ -96,6 +108,11 @@ public class FormularioController {
 			break;
 		}
 		case FormularioDialog.FORMPARTE3:{
+			if(formulario.getSoloVista()) {
+				formulario.dispose();
+				break;
+			}
+			
 			if(validarFormularioParte3()) {
 				formulario.mensajeConfirmacionFormularioCompleto();
 				guardarUsuario();

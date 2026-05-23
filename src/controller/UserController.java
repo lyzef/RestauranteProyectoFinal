@@ -3,10 +3,14 @@ package controller;
 import java.util.List;
 
 import javax.swing.JOptionPane;
-
+import ca.odell.glazedlists.*;
+import ca.odell.glazedlists.gui.TableFormat;
+import ca.odell.glazedlists.swing.AdvancedTableModel;
+import ca.odell.glazedlists.swing.EventTableModel;
+import ca.odell.glazedlists.swing.GlazedListsSwing;
 import models.User;
 import repository.UserRepository;
-import tablemodels.UserTableModel;
+import tablemodels.UserTableFormat;
 import utilidades.PDFExporter;
 import views.FormularioDialog;
 import views.Admin.UsersView;
@@ -15,7 +19,8 @@ public class UserController {
 
     private UsersView view;
     private UserRepository repo;
-    private UserTableModel model;
+    private AdvancedTableModel<User> tableModel;
+    EventList<User> eventListUsers;
     
     public UserController(UsersView view) {
         this.view = view;
@@ -30,7 +35,7 @@ public class UserController {
                 JOptionPane.showMessageDialog(view, "Selecciona un usuario");
                 return;
             }
-            openForm(model.getUserAt(row));
+            openForm(eventListUsers.get(view.getSelectedRow()));
         });
     
         this.view.getBtnDelete().addActionListener(e -> {
@@ -49,6 +54,27 @@ public class UserController {
         this.view.getBtnExportPDF().addActionListener(e -> {
             generatePdf();
         });
+        
+        this.view.getBtnRefresh().addActionListener(e -> {
+        	loadUsers();
+        });
+        
+        this.view.getBtnSee().addActionListener(e -> {
+        	 int row = view.getSelectedRow();
+             if(row == -1) {
+                 JOptionPane.showMessageDialog(view, "Selecciona un usuario");
+                 return;
+             }
+             resetAdvertencias();
+             FormularioDialog dialog = new FormularioDialog(null, eventListUsers.get(row),true); //Constructor para solo lectura
+             dialog.setVisible(true);
+        });
+        
+        //Cargar estadisticas
+        view.setTotalUsuarios(Integer.toString(repo.countAllUsers()));
+        view.setTotalUsuariosActivos(Integer.toString(repo.countUsersForColumn("activo",true)));
+        view.setTotalCajeros(Integer.toString(repo.countUsersForColumn("rol","cajero")));
+        view.setTotalCocineros(Integer.toString(repo.countUsersForColumn("rol","cocinero")));
     }
     
     /**
@@ -59,13 +85,13 @@ public class UserController {
             List<User> users = repo.getUsers();
             
             // Si el modelo no existe, se crea. Si existe, se actualiza la lista interna.
-            if(model == null) {
-                model = new UserTableModel(users);
-                view.setTableModel(model);
+            if(tableModel == null) {
+                view.setTableModel(crearTablaModel());
+                eventListUsers.addAll(users);
             } else {
                 // Actualizar lista
-                model.setUsers(users);
-                model.fireTableDataChanged(); 
+                eventListUsers.clear();
+                eventListUsers.addAll(users);
             }
             
             if(view.getAdvertencias() != null) {
@@ -83,6 +109,7 @@ public class UserController {
         FormularioDialog dialog = new FormularioDialog(null, user);
         dialog.setVisible(true);
         
+        //Como es dialog modal aqui sigue el codigo una vez cerrada la clase dialog
         if(dialog.isSaved()) {
             User savedUser = dialog.getController().getUsuario();
             
@@ -90,13 +117,13 @@ public class UserController {
 				//Añadir nuevo
 				if(user == null) {
 					repo.save(savedUser);
-					model.addRow(savedUser); //Agrega el registro a la tabla
+					eventListUsers.add(savedUser);
 				}else {
 					//Editar existente
 					int row = view.getSelectedRow();
 					boolean updated = repo.update( savedUser);
 					if(updated) {
-						model.updateRow(row, savedUser); //Si se actualizo db se actualiza tabla
+						eventListUsers.set(row, savedUser);
 					}
 				}
 			}catch(Exception e) {
@@ -106,10 +133,11 @@ public class UserController {
         }
     }
     
+    
     private void deleteUser(int row) {
         try {
-        	if(repo.delete(model.getUserAt(row).getId())) {
-        		model.removeRow(row);
+        	if(repo.delete(eventListUsers.get(row).getId())) {
+        		eventListUsers.remove(row);
         	}
             
         } catch (Exception e) {
@@ -119,13 +147,13 @@ public class UserController {
         }
     }
     
-	public void generatePdf() {
+	private void generatePdf() {
 			
 		List<User> listaParaExportar = repo.getUsers(); 
 	    if (listaParaExportar.isEmpty()) {
 	        JOptionPane.showMessageDialog(view, "No hay datos para exportar");
 	    return;
-	}
+	    }
 	new PDFExporter().exportUsers(null, listaParaExportar); // Exportar PDF, Crear PDF, Elegir ruta
 		
 		
@@ -134,6 +162,15 @@ public class UserController {
 	private void resetAdvertencias() {
 	    if(view.getAdvertencias() != null) {
 	        view.getAdvertencias().setText("");
-	        }
 	    }
 	}
+	
+	private AdvancedTableModel<User> crearTablaModel() {
+		eventListUsers = new BasicEventList<>();
+    	tableModel = GlazedListsSwing.eventTableModel(eventListUsers, new UserTableFormat());
+    	return tableModel;
+	}
+	
+
+}
+
