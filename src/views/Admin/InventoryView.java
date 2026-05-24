@@ -1,5 +1,7 @@
 package views.Admin;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -10,6 +12,7 @@ import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTable;
@@ -19,6 +22,7 @@ import utilidades.AppFont;
 import utilidades.GeneradorIconos;
 import utilidades.Paleta_Colores;
 import utilidades.views.BarraBusquedaFiltro;
+import utilidades.views.BotonPersonalizado;
 import utilidades.views.ModuloParaEstadistica;
 import utilidades.views.PanelRedondeadoConMargen;
 import utilidades.views.PanelPersonalizadoTabla;
@@ -33,6 +37,16 @@ public class InventoryView extends JPanel{
     
     //Barra de busqueda
     BarraBusquedaFiltro barraBusquedaConFiltro;
+    
+    //Modificadores de tabla
+    private JPanel btnMovimientoInventario;
+    
+    private JPanel btnSee;
+    private JPanel btnAdd;
+    private JPanel btnEdit;
+    private JPanel btnDelete;
+    private JPanel btnRefresh;
+    private JLabel ultimoMovimiento;
     
     //Tabla
     JTable tabla;
@@ -110,15 +124,35 @@ public class InventoryView extends JPanel{
 		
 		//Acciones
 		JPanel panelAcciones = new JPanel();
+		btnMovimientoInventario = new BotonPersonalizado("Nuevo movimiento de inventario", Paleta_Colores.HEADER_TABLA.getColor());
+		btnMovimientoInventario.setAlignmentX(RIGHT_ALIGNMENT);
+		panelAcciones.add(btnMovimientoInventario);
 		panelAcciones.setOpaque(false);
+        
+        
+	        
 		
 		//Busqueda
 		JPanel panelBusqueda = new JPanel();
+		panelBusqueda.setLayout(new BoxLayout(panelBusqueda, BoxLayout.X_AXIS));
 		panelBusqueda.setBackground(Paleta_Colores.CONTENEDORES.getColor());
 		String[] ejemplo = {"Nombre","Stock","Stock maximo"};
 		barraBusquedaConFiltro = new BarraBusquedaFiltro(ejemplo);
 		panelBusqueda.add(barraBusquedaConFiltro);
 		
+		JPanel panelBotones = new JPanel();
+		panelBotones.setOpaque(false);
+		btnSee = new BotonPersonalizado("Ver",Paleta_Colores.ACENTO_PRIMARIO.getColor());
+        btnAdd = new BotonPersonalizado("Añadir", Paleta_Colores.EXITO.getColor());
+        btnEdit = new BotonPersonalizado("Editar", Paleta_Colores.ATENCION.getColor());
+        btnDelete = new BotonPersonalizado("Borrar", Paleta_Colores.URGENTE.getColor());
+        
+        panelBotones.add(Box.createRigidArea(new Dimension(200, 0)));
+        panelBotones.add(btnAdd);
+        panelBotones.add(btnEdit);
+        panelBotones.add(btnDelete);
+        panelBotones.add(btnSee);
+        
 		JPanel panelPrincipal = new PanelRedondeadoConMargen();
         panelPrincipal.setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
@@ -131,6 +165,8 @@ public class InventoryView extends JPanel{
         gbc.gridheight = 1;
         panelPrincipal.add(panelTitulo, gbc);
         
+        gbc.fill = GridBagConstraints.NONE;
+        gbc.anchor = GridBagConstraints.EAST; 
         gbc.gridx = 1;      
         gbc.gridy = 0;      
         gbc.weightx = 0.5; 
@@ -142,13 +178,23 @@ public class InventoryView extends JPanel{
         gbc.gridy = 1;      
         gbc.weightx = 1; 
         gbc.weighty = 0;
-        gbc.gridwidth = 2; 
+        gbc.gridwidth = 1; 
         gbc.fill = GridBagConstraints.NONE; 
         gbc.anchor = GridBagConstraints.WEST; 
         panelPrincipal.add(panelBusqueda, gbc);
         
+        gbc.gridx = 1;      
+        gbc.gridy = 1;      
+        gbc.weightx = 1; 
+        gbc.weighty = 0;
+        gbc.gridwidth = 1; 
+        gbc.fill = GridBagConstraints.NONE; 
+        gbc.anchor = GridBagConstraints.EAST; 
+        panelPrincipal.add(panelBotones, gbc);
+        
         return panelPrincipal;
 	}
+
 	
 	private JPanel crearTabla() {
 		PanelPersonalizadoTabla panelTabla = new PanelPersonalizadoTabla();
@@ -156,14 +202,72 @@ public class InventoryView extends JPanel{
         return panelTabla;
 	}
 	
-	public JTextField getTextField() {
+	public JTextField getTextoBuscador() {
 		return barraBusquedaConFiltro.getTextFieldTabla();
 	}
 	
+	//Getters y setters
 	public void setListaFiltrosBusqueda(String[] listData) {
 		barraBusquedaConFiltro.setListaFiltros(listData);
 	}
+
+	public JPanel getBtnMovimientoInventario() {
+		return btnMovimientoInventario;
+	}
+
+	public JPanel getBtnSee() {
+		return btnSee;
+	}
+
+	public JPanel getBtnAdd() {
+		return btnAdd;
+	}
+
+	public JPanel getBtnEdit() {
+		return btnEdit;
+	}
+
+	public JPanel getBtnDelete() {
+		return btnDelete;
+	}
+
+	public JPanel getBtnRefresh() {
+		return btnRefresh;
+	}
+
+	public JLabel getUltimoMovimiento() {
+		return ultimoMovimiento;
+	}
+
+	public void setBtnMovimientoInventario(JPanel btnMovimientoInventario) {
+		this.btnMovimientoInventario = btnMovimientoInventario;
+	}
+
+	public void setBtnSee(JPanel btnSee) {
+		this.btnSee = btnSee;
+	}
+
+	public void setBtnAdd(JPanel btnAdd) {
+		this.btnAdd = btnAdd;
+	}
+
+	public void setBtnEdit(JPanel btnEdit) {
+		this.btnEdit = btnEdit;
+	}
+
+	public void setBtnDelete(JPanel btnDelete) {
+		this.btnDelete = btnDelete;
+	}
+
+	public void setBtnRefresh(JPanel btnRefresh) {
+		this.btnRefresh = btnRefresh;
+	}
+
+	public void setUltimoMovimiento(JLabel ultimoMovimiento) {
+		this.ultimoMovimiento = ultimoMovimiento;
+	}
     
+	
 	
 	
 }

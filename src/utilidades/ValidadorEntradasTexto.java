@@ -11,7 +11,10 @@ public class ValidadorEntradasTexto {
      */
 	
     public static void validarContenido(String texto, String tipo) throws invalidInput {
-        
+        if(texto.isBlank()) {
+        	throw new invalidInput("Entrada vacia");
+        }
+    	
         switch(tipo) { 
         case "CORREO":{
         	validarCorreo(texto);
@@ -24,30 +27,17 @@ public class ValidadorEntradasTexto {
         case "TELEFONO":{
         	// TODO terminar verificacion telefono y consiguientes clasificaciones
         	break;
-        } 
+        }
+        case "DECIMAL":{
+        	validarDouble(texto);
+        }
         default:
 			break;
         }
     }
     
     public static void validarContenido(PanelTipoPreguntaUtil panel) throws invalidInput {
-        String texto = panel.getTxtEntrada().getText();
-        switch(panel.getTipoClasificacion()) { 
-         case "CORREO":{
-        	validarCorreo(texto);
-        	break;
-        } 
-        case "FECHA":{
-        	validarFecha(texto);
-        	break;
-        } 
-        case "TELEFONO":{
-        	// TODO terminar verificacion telefono y consiguientes clasificaciones
-        	break;
-        } 
-        default:
-			break;
-        }
+        validarContenido(panel.obtenerTextoEntrada(), panel.getTipoClasificacion());
     }
     
     /**
@@ -134,6 +124,15 @@ public class ValidadorEntradasTexto {
         }
 
    
+    }
+    
+    private static void validarDouble(String texto) throws invalidInput {
+    	try {
+			Double.parseDouble(texto);
+		} catch (NumberFormatException e) {
+			throw new invalidInput("texto no valido como cadena");
+		}
+    	
     }
     
 

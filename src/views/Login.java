@@ -3,6 +3,7 @@ package views;
 import javax.swing.*;
 import java.awt.*;
 import controller.UserController;
+import utilidades.GeneradorIconos;
 import views.Admin.UsersView;
 
 public class Login extends JFrame {
@@ -32,13 +33,10 @@ public class Login extends JFrame {
     }
 
     private void loadIcon(){
-        try {
-            Toolkit tk = Toolkit.getDefaultToolkit();
-            Image icono = tk.getImage("src/image/IconoApliacionPrincipal.jpg"); 
-            setIconImage(icono);
-        } catch (Exception e) {
-            System.out.println("Icono no encontrado, continuando...");
-        }
+    	ImageIcon i = GeneradorIconos.cargarIcono("/assets/image/IconoApliacionPrincipal.jpg");
+		if(i != null) {
+			setIconImage(i.getImage());
+		}
     }
 
     private void initializeComponents() {

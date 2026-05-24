@@ -12,6 +12,7 @@ import javax.swing.border.Border;
 
 import controller.FormularioController;
 import models.User;
+import utilidades.GeneradorIconos;
 import utilidades.views.PanelTipoPreguntaUtil;
 
 /**
@@ -78,10 +79,10 @@ public class FormularioDialog extends JDialog{
 		setTitle("Formulario");
 		setLocationRelativeTo(null);
 		
-		//Icono
-		Toolkit tk = Toolkit.getDefaultToolkit();
-		Image icono = tk.getImage("src/image/icono.jpg");
-		setIconImage(icono);
+		ImageIcon i = GeneradorIconos.cargarIcono("/assets/image/IconoApliacionPrincipal.jpg");
+		if(i != null) {
+			setIconImage(i.getImage());
+		}
 		
 		inicializarComponentes();
 	

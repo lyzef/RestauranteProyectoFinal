@@ -16,6 +16,7 @@ import java.awt.GridBagLayout;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -24,6 +25,7 @@ import javax.swing.JScrollPane;
 import javax.swing.border.Border;
 import javax.swing.border.MatteBorder;
 
+import utilidades.GeneradorIconos;
 import utilidades.Paleta_Colores;
 import utilidades.views.BotonMenu;
 import views.Admin.DashboardView;
@@ -40,8 +42,8 @@ public class Hub extends JFrame{
 	private JPanel panelPrincipal;
 	
 	public UsersView userPanel;
-	public DashboardView dashboard;
-	public InventoryView inventario;
+	public DashboardView dashboardPanel;
+	public InventoryView inventarioPanel;
 
 	public JPanel botonUsuarios;
 	public JPanel botonInventario;
@@ -56,10 +58,10 @@ public class Hub extends JFrame{
 		setTitle("Formulario");
 		setLocationRelativeTo(null);
 		
-		//FOTO
-		Toolkit tk = Toolkit.getDefaultToolkit();
-		Image icono = tk.getImage("src/image/icono.jpg");
-		setIconImage(icono);
+		ImageIcon i = GeneradorIconos.cargarIcono("/assets/image/IconoApliacionPrincipal.jpg");
+		if(i != null) {
+			setIconImage(i.getImage());
+		}
 		
 		inicializarComponentes();
 		
@@ -164,13 +166,13 @@ public class Hub extends JFrame{
 	}
 	
 	private JPanel crearDashboard() {
-		dashboard = new DashboardView();
-		return dashboard;
+		dashboardPanel = new DashboardView();
+		return dashboardPanel;
 	}
 	
 	private JPanel crearInventario() {
-		inventario = new InventoryView();
-		return inventario;
+		inventarioPanel = new InventoryView();
+		return inventarioPanel;
 	}
 	
 	public void showView(String view) {
@@ -227,6 +229,26 @@ public class Hub extends JFrame{
 	public void setUserPanel(UsersView userPanel) {
 		this.userPanel = userPanel;
 	}
+
+	public DashboardView getDashboardPanel() {
+		return dashboardPanel;
+	}
+
+	public InventoryView getInventarioPanel() {
+		return inventarioPanel;
+	}
+
+	public void setDashboardPanel(DashboardView dashboardPanel) {
+		this.dashboardPanel = dashboardPanel;
+	}
+
+	public void setInventarioPanel(InventoryView inventarioPanel) {
+		this.inventarioPanel = inventarioPanel;
+	}
+
+	
+	
+	
 	
 	
 	

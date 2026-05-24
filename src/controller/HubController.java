@@ -19,6 +19,7 @@ import views.*;
 public class HubController {
 	Hub view;
 	private UserController userController;
+	private InventarioController inventarioController;
 	
 	public HubController(Hub hub) {
 		this.view = hub;
@@ -75,6 +76,11 @@ public class HubController {
 	}
 	
 	private void showInventory() {
+		if(inventarioController == null) {
+			inventarioController = new InventarioController(view.getInventarioPanel());
+		}
+		
+		//Cargar datos
 		view.showView(Hub.INVENTORY);
 		
 	}

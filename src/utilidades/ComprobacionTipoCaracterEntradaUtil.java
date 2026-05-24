@@ -35,6 +35,9 @@ public class ComprobacionTipoCaracterEntradaUtil {
 		case "CONTRASENA":{
 			return esContrasena(c);
 		}
+		case "DECIMAL":{
+			return esDecimal(c);
+		}
 		default:
 			throw new IllegalArgumentException("Clasificacion de string desconocida: " + tipo);
 		}
@@ -47,8 +50,15 @@ public class ComprobacionTipoCaracterEntradaUtil {
 		return false;
     }
     
+	private static boolean esDecimal(char c) {
+		if(Character.isDigit(c)|| c =='.' ||c == KeyEvent.VK_BACK_SPACE) {
+			return true;
+		}
+		return false;
+    }
+	
     private static boolean esNumerico(char c) {
-		if(Character.isDigit(c) || c == ' ' || c == KeyEvent.VK_BACK_SPACE) {
+		if(Character.isDigit(c)|| c == KeyEvent.VK_BACK_SPACE) {
 			return true;
 		}
 		return false;
