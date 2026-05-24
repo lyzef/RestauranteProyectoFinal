@@ -10,8 +10,8 @@ import ca.odell.glazedlists.swing.EventTableModel;
 import ca.odell.glazedlists.swing.GlazedListsSwing;
 import models.User;
 import repository.UserRepository;
+import services.PDFExporter;
 import tablemodels.UserTableFormat;
-import utilidades.PDFExporter;
 import views.FormularioDialog;
 import views.Admin.UsersView;
 

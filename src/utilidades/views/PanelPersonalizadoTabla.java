@@ -15,9 +15,9 @@ import javax.swing.table.JTableHeader;
 import utilidades.AppFont;
 import utilidades.Paleta_Colores;
 
-public class PanelRedondeadoConMargenYTabla extends PanelRedondeadoConMargen{
+public class PanelPersonalizadoTabla extends PanelRedondeadoConMargen{
 	JTable tabla;
-	public PanelRedondeadoConMargenYTabla() {
+	public PanelPersonalizadoTabla() {
 		super(RADIO_ESQUINA_ESTANDAR,Paleta_Colores.CONTENEDORES.getColor(),MARGEN_ESTANDAR,PADDING_INTERNO_TABLAS);
 		this.setLayout(new BorderLayout());
 		tabla = new JTable();

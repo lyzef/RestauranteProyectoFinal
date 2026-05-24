@@ -41,6 +41,13 @@ public class HubController {
 		    }
 		});
 		
+		view.getBotonInventario().addMouseListener( new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				showInventory();
+		    }
+		});
+		
 		view.addWindowListener(new WindowAdapter() {
 		    @Override
 		    public void windowClosing(WindowEvent e) {
@@ -64,6 +71,11 @@ public class HubController {
 			
 		userController.loadUsers();
 		view.showView(Hub.USERS);
+		
+	}
+	
+	private void showInventory() {
+		view.showView(Hub.INVENTORY);
 		
 	}
 

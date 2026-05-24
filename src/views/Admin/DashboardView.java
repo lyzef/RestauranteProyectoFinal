@@ -2,7 +2,6 @@ package views.Admin;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import org.jfree.chart.ChartFactory;
@@ -15,213 +14,82 @@ import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.category.DefaultCategoryDataset;
 
 import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
-import com.itextpdf.text.pdf.PdfStructTreeController.returnType;
-
-import tablemodels.LiveTransaccionTableModel;
-import tablemodels.UserTableFormat;
-import utilidades.AppFont;
+import ca.odell.glazedlists.swing.AdvancedTableModel;
+import models.User;
 import utilidades.Paleta_Colores;
 import utilidades.views.PanelRedondeadoConMargen;
+import utilidades.views.PanelPersonalizadoTabla;
+import utilidades.views.ModuloParaEstadistica;
 
-public class DashboardView extends JPanel{
-	//Modulo de total venta
-	JLabel VentasTotales;
-	JLabel AumentoEnVenta;
-	
-	//Modulo de total ordenes hoy
-	JLabel OrdenesTotales;
-	JLabel AumentoEnOrdenes;
-	
-	//Modulo de platillo TOP
-	JLabel platilloMasVendido;
-	JLabel UnidadesDePlatilloVendidas;
-	
-	//Data set de tabla
-	DefaultCategoryDataset dataset;
-	
-	//Modulo de transacciones
-	JTable tablaTransacciones;
-	
-	public DashboardView() {
-		//Ajustes
-		this.setBackground(Paleta_Colores.FONDO.getColor());
-        this.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
-		this.setLayout(new GridBagLayout());
-		GridBagConstraints gbc = new GridBagConstraints();
-		
-		gbc.fill = GridBagConstraints.BOTH;
-		gbc.weightx = 1.0;
-		gbc.weighty = 0.15;
-		
-		// Tres modulos superiores
-		gbc.gridx = 0;
-		this.add(moduloTotalVenta(),gbc);
-		gbc.gridx = 1;
-		this.add(moduloOrdenesHoy(),gbc);
-		gbc.gridx = 2;
-		this.add(moduloTopVentas(),gbc);
-		
-		// 2 modulos centrales
-		gbc.weighty = 1.0;
-		gbc.gridy = 1;
-		gbc.gridx = 0;
-		gbc.gridwidth = 2;
-		this.add(moduloGraficaVentas(),gbc);
-		
-		gbc.gridx = 2;
-		gbc.gridwidth = 1;
-		this.add(moduloTotalVenta(),gbc);
-		
-		// 1 Modulo de tabla
-		gbc.weighty = 0.75;
-		gbc.gridx = 0;
-		gbc.gridy = 2;
-		gbc.gridwidth = 3;
-		this.add(crearModuloTransacciones(), gbc);
-		
-		
-		
-	}
-	
-	private JPanel moduloTotalVenta() {
-		JPanel panelTotalVentas = new PanelRedondeadoConMargen();
-		panelTotalVentas.setLayout(new GridBagLayout());
-		
-		JPanel panelPrincipal = new JPanel();
-		panelPrincipal.setOpaque(false);
-        panelPrincipal.setLayout(new BoxLayout(panelPrincipal, BoxLayout.Y_AXIS));
-		
-		GridBagConstraints gbc = new GridBagConstraints();
-		
-		//JPanel principal
-		gbc.gridx = 0;          // columna 0
-        gbc.weightx = 0.75;     // 75% del espacio horizontal
-        gbc.fill = GridBagConstraints.BOTH;
-     
-        panelTotalVentas.add(panelPrincipal,gbc);
+public class DashboardView extends JPanel {
+    
+    // Modulos superiores
+    public ModuloParaEstadistica moduloVentas;
+    public ModuloParaEstadistica moduloOrdenes;
+    public ModuloParaEstadistica moduloTop;
+    
+    DefaultCategoryDataset dataset;
+    
+    JTable tablaTransacciones;
+    
+    public DashboardView() {
+        // Ajustes
+        this.setBackground(Paleta_Colores.FONDO.getColor());
+        this.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        this.setLayout(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
         
-        //JPanel principal
-  		gbc.gridx = 1;          // columna 0
-        gbc.weightx = 0.25;     // 25% del espacio horizontal
         gbc.fill = GridBagConstraints.BOTH;
-        panelTotalVentas.add(new JLabel("Imagen"),gbc);
-
+        gbc.weighty = 0.1;
         
-		JLabel titulo = new JLabel("Ventas totales", JLabel.LEFT);
-		titulo.setFont(AppFont.normal());
-		titulo.setForeground(Paleta_Colores.TEXTO_SECUNDARIO.getColor());
-		panelPrincipal.add(titulo);
-
-		panelPrincipal.add(Box.createRigidArea(new Dimension(0, 25)));
-		
-		VentasTotales = new JLabel("Sin datos");
-		VentasTotales.setFont(AppFont.normal());
-		VentasTotales.setForeground(Paleta_Colores.TEXTO_PRINCIPAL.getColor());
-		panelPrincipal.add(VentasTotales);
-		
-		AumentoEnVenta = new JLabel("Aumento en 15% desde ayer");
-		AumentoEnVenta.setFont(AppFont.small());
-		AumentoEnVenta.setForeground(Paleta_Colores.TEXTO_PRINCIPAL.getColor());
-		panelPrincipal.add(AumentoEnVenta);
-		
-		return panelTotalVentas;
-	}
-	
-	private JPanel moduloOrdenesHoy() {
-		JPanel panelTotalVentas = new PanelRedondeadoConMargen();
-		panelTotalVentas.setLayout(new GridBagLayout());
-		
-		JPanel panelPrincipal = new JPanel();
-		panelPrincipal.setOpaque(false);
-        panelPrincipal.setLayout(new BoxLayout(panelPrincipal, BoxLayout.Y_AXIS));
-		
-		GridBagConstraints gbc = new GridBagConstraints();
-		
-		//JPanel principal
-		gbc.gridx = 0;          // columna 0
-        gbc.weightx = 0.75;     // 75% del espacio horizontal
-        gbc.fill = GridBagConstraints.BOTH;
-     
-        panelTotalVentas.add(panelPrincipal,gbc);
+        // Modulks superiores
+        moduloVentas = new ModuloParaEstadistica(
+            "Ventas hoy", "Sin datos", "Aumento en 15% desde ayer", 
+            Paleta_Colores.ACENTO_PRIMARIO.getColor(), "/assets/image/dineroIcon.png"
+        );
         
-        //JPanel principal
-  		gbc.gridx = 1;          // columna 0
-        gbc.weightx = 0.25;     // 25% del espacio horizontal
-        gbc.fill = GridBagConstraints.BOTH;
-        panelTotalVentas.add(new JLabel("Imagen"),gbc);
-
+        moduloOrdenes = new ModuloParaEstadistica(
+            "Ordenes en el dia", "Sin datos", "25 % menos que el promedio", 
+            Paleta_Colores.ATENCION.getColor(), "/assets/image/receipt.png"
+        );
         
-		JLabel titulo = new JLabel("Ordenes en el dia", JLabel.LEFT);
-		titulo.setFont(AppFont.normal());
-		titulo.setForeground(Paleta_Colores.TEXTO_SECUNDARIO.getColor());
-		panelPrincipal.add(titulo);
+        moduloTop = new ModuloParaEstadistica(
+            "Platillo top", "Sin datos", "67 unidaes vendidas hoy", 
+            Paleta_Colores.EXITO.getColor(), "/assets/image/star.png"
+        );
 
-		panelPrincipal.add(Box.createRigidArea(new Dimension(0, 25)));
-		
-		OrdenesTotales = new JLabel("Sin datos");
-		OrdenesTotales.setFont(AppFont.normal());
-		OrdenesTotales.setForeground(Paleta_Colores.TEXTO_PRINCIPAL.getColor());
-		panelPrincipal.add(OrdenesTotales);
-		
-		AumentoEnOrdenes = new JLabel("25 % menos que el promedio");
-		AumentoEnOrdenes.setFont(AppFont.small());
-		AumentoEnOrdenes.setForeground(Paleta_Colores.TEXTO_PRINCIPAL.getColor());
-		panelPrincipal.add(AumentoEnOrdenes);
-	
-		return panelTotalVentas;
-	}
-	
-	private JPanel moduloTopVentas() {
-		JPanel panelTotalVentas = new PanelRedondeadoConMargen();
-		panelTotalVentas.setLayout(new GridBagLayout());
-		
-		JPanel panelPrincipal = new JPanel();
-		panelPrincipal.setOpaque(false);
-        panelPrincipal.setLayout(new BoxLayout(panelPrincipal, BoxLayout.Y_AXIS));
-		
-		GridBagConstraints gbc = new GridBagConstraints();
-		
-		//JPanel principal
-		gbc.gridx = 0;          // columna 0
-        gbc.weightx = 0.75;     // 75% del espacio horizontal
-        gbc.fill = GridBagConstraints.BOTH;
-     
-        panelTotalVentas.add(panelPrincipal,gbc);
+        gbc.gridx = 0;
+        gbc.weightx = 0.33; 
+        this.add(moduloVentas, gbc);
         
-        //JPanel principal
-  		gbc.gridx = 1;          // columna 0
-        gbc.weightx = 0.25;     // 25% del espacio horizontal
-        gbc.fill = GridBagConstraints.BOTH;
-        panelTotalVentas.add(new JLabel("Imagen"),gbc);
-
+        gbc.gridx = 1;
+        this.add(moduloOrdenes, gbc);
         
-		JLabel titulo = new JLabel("Platillo top", JLabel.LEFT);
-		titulo.setFont(AppFont.normal());
-		titulo.setForeground(Paleta_Colores.TEXTO_SECUNDARIO.getColor());
-		panelPrincipal.add(titulo);
-
-		panelPrincipal.add(Box.createRigidArea(new Dimension(0, 25)));
-		
-		platilloMasVendido = new JLabel("Sin datos");
-		platilloMasVendido.setFont(AppFont.normal());
-		platilloMasVendido.setForeground(Paleta_Colores.TEXTO_PRINCIPAL.getColor());
-		panelPrincipal.add(platilloMasVendido);
-		
-		JLabel UnidadesDePlatilloVendidas = new JLabel("67 unidaes vendidas hoy");
-		UnidadesDePlatilloVendidas.setFont(AppFont.small());
-		UnidadesDePlatilloVendidas.setForeground(Paleta_Colores.TEXTO_PRINCIPAL.getColor());
-		panelPrincipal.add(UnidadesDePlatilloVendidas);
-		
-		return panelTotalVentas;
-	}
-	
+        gbc.gridx = 2;
+        this.add(moduloTop, gbc);
+        
+        // Grafica y modulo central
+        gbc.weighty = 1.0;
+        gbc.gridy = 1;
+        gbc.gridx = 0;
+        gbc.gridwidth = 2;
+        this.add(moduloGraficaVentas(), gbc);
+        
+        gbc.gridx = 2;
+        gbc.gridwidth = 1;
+        this.add(new PanelRedondeadoConMargen(), gbc);
+        
+        // Módulo de tabla inferior
+        gbc.weighty = 0.75;
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        gbc.gridwidth = 3;
+        this.add(crearModuloTransacciones(), gbc);
+    }
+    
 	private JPanel moduloGraficaVentas() {
 		dataset = new DefaultCategoryDataset();
 
@@ -296,18 +164,13 @@ public class DashboardView extends JPanel{
 	}
 	
 	public JPanel crearModuloTransacciones() {
-		tablaTransacciones = new JTable();
-		tablaTransacciones.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-        
-		JPanel panelTransacciones = new PanelRedondeadoConMargen();
-		panelTransacciones.add(tablaTransacciones);
-		
-		
-        return panelTransacciones;
+		PanelPersonalizadoTabla panel = new PanelPersonalizadoTabla();
+        tablaTransacciones = panel.getTabla();
+        return panel;
 	}
 	
-	public void setTableModel(UserTableFormat model) {
-		tablaTransacciones.setModel(model);
+	public void setTableModel(AdvancedTableModel<User> tableModel){
+		tablaTransacciones.setModel(tableModel);
     }
 	
 }

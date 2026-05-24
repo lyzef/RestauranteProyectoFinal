@@ -20,9 +20,9 @@ import tablemodels.UserTableFormat;
 import utilidades.AppFont;
 import utilidades.Paleta_Colores;
 import utilidades.views.PanelRedondeadoConMargen;
-import utilidades.views.PanelRedondeadoConMargenYTabla;
+import utilidades.views.PanelPersonalizadoTabla;
+import utilidades.views.ModuloParaEstadistica;
 
-//Muestra la tabla, botones de edicion, eliminacion, añadido y exportacion de tablas a PDF
 public class UsersView extends JPanel {
 	
     private JTable table;
@@ -35,11 +35,10 @@ public class UsersView extends JPanel {
     private JButton btnRefresh;
     private JLabel advertencias;
     
-    //Modulos superiores
-    JLabel totalUsuarios;
-    JLabel totalUsuariosActivos;
-    JLabel totalCajeros;
-    JLabel totalCocineros;
+    private ModuloParaEstadistica modTotalUsuarios;
+    private ModuloParaEstadistica modTotalUsuariosActivos;
+    private ModuloParaEstadistica modTotalCajeros;
+    private ModuloParaEstadistica modTotalCocineros;
     
     public UsersView() {
         setBounds(100, 100, 900, 600);
@@ -54,115 +53,31 @@ public class UsersView extends JPanel {
 		gbc.weightx = 1.0;
 		gbc.weighty = 0.15;
 		
-		// Tres modulos superiores
+        modTotalUsuarios = new ModuloParaEstadistica("Total empleados", "Sin datos", "", Paleta_Colores.HEADER_TABLA.getColor(), "/assets/image/users.png");
+        modTotalUsuariosActivos = new ModuloParaEstadistica("Total usuarios activos", "Sin datos", "", Paleta_Colores.HEADER_TABLA.getColor(), "/assets/image/user-gear.png");
+        modTotalCocineros = new ModuloParaEstadistica("Total cocineros", "Sin datos", "", Paleta_Colores.HEADER_TABLA.getColor(), "/assets/image/dineroIcon.png");
+        modTotalCajeros = new ModuloParaEstadistica("Total cajeros", "Sin datos", "", Paleta_Colores.HEADER_TABLA.getColor(), "/assets/image/hat-chef.png");
+
 		gbc.gridx = 0;
-		this.add(totalEmpleados(),gbc);
+		this.add(modTotalUsuarios, gbc);
 		gbc.gridx = 1;
-		this.add(totalUsuariosActivos(),gbc);
+		this.add(modTotalUsuariosActivos, gbc);
 		gbc.gridx = 2;
-		this.add(totalCocineros(),gbc);
+		this.add(modTotalCocineros, gbc);
 		gbc.gridx = 3;
-		this.add(totalCajeros(),gbc);
+		this.add(modTotalCajeros, gbc);
 		
-		// 1 Modulo de opciones en tabla
 		gbc.weighty = 0;
 		gbc.gridy = 1;
 		gbc.gridx = 0;
 		gbc.gridwidth = 4;
-		this.add(crearPanelAcciones(),gbc);
+		this.add(crearPanelAcciones(), gbc);
 		
-		// 1 Modulo de tabla
 		gbc.weighty = 1;
 		gbc.gridx = 0;
 		gbc.gridy = 2;
 		gbc.gridwidth = 4;
 		this.add(crearTabla(), gbc);
-        
-        
-    }
-    
-    private JPanel totalEmpleados() {
-    	JPanel panelTotalEmpleados = new PanelRedondeadoConMargen();
-    	panelTotalEmpleados.setLayout(new BoxLayout(panelTotalEmpleados, BoxLayout.Y_AXIS));
-	
-    	JLabel icono = new JLabel("Icono");
-    	
-		JLabel titulo = new JLabel("Total empleados", JLabel.LEFT);
-		titulo.setFont(AppFont.normal());
-		titulo.setForeground(Paleta_Colores.TEXTO_SECUNDARIO.getColor());
-		panelTotalEmpleados.add(titulo);
-
-		panelTotalEmpleados.add(Box.createRigidArea(new Dimension(0, 25)));
-		
-		totalUsuarios = new JLabel("Sin datos",JLabel.LEFT);
-		totalUsuarios.setFont(AppFont.title());
-		totalUsuarios.setForeground(Paleta_Colores.TEXTO_PRINCIPAL.getColor());
-		panelTotalEmpleados.add(totalUsuarios);
-	
-		return panelTotalEmpleados;
-    }
-    
-    private JPanel totalUsuariosActivos() {
-    	JPanel panelTotalUsuarios = new PanelRedondeadoConMargen();
-    	panelTotalUsuarios.setLayout(new BoxLayout(panelTotalUsuarios, BoxLayout.Y_AXIS));
-	
-    	JLabel icono = new JLabel("Icono");
-    	
-		JLabel titulo = new JLabel("Total usuarios activos", JLabel.LEFT);
-		titulo.setFont(AppFont.normal());
-		titulo.setForeground(Paleta_Colores.TEXTO_SECUNDARIO.getColor());
-		panelTotalUsuarios.add(titulo);
-
-		panelTotalUsuarios.add(Box.createRigidArea(new Dimension(0, 25)));
-		
-		totalUsuariosActivos = new JLabel("Sin datos",JLabel.LEFT);
-		totalUsuariosActivos.setFont(AppFont.title());
-		totalUsuariosActivos.setForeground(Paleta_Colores.TEXTO_PRINCIPAL.getColor());
-		panelTotalUsuarios.add(totalUsuariosActivos);
-	
-		return panelTotalUsuarios;
-    }
-    
-    private JPanel totalCocineros() {
-    	JPanel panelTotalCocineros = new PanelRedondeadoConMargen();
-    	panelTotalCocineros.setLayout(new BoxLayout(panelTotalCocineros, BoxLayout.Y_AXIS));
-	
-    	JLabel icono = new JLabel("Icono");
-    	
-		JLabel titulo = new JLabel("Total cocineros", JLabel.LEFT);
-		titulo.setFont(AppFont.normal());
-		titulo.setForeground(Paleta_Colores.TEXTO_SECUNDARIO.getColor());
-		panelTotalCocineros.add(titulo);
-
-		panelTotalCocineros.add(Box.createRigidArea(new Dimension(0, 25)));
-		
-		totalCocineros = new JLabel("Sin datos",JLabel.LEFT);
-		totalCocineros.setFont(AppFont.title());
-		totalCocineros.setForeground(Paleta_Colores.TEXTO_PRINCIPAL.getColor());
-		panelTotalCocineros.add(totalCocineros);
-	
-		return panelTotalCocineros;
-    }
-    
-    private JPanel totalCajeros() {
-    	JPanel panelTotalCajeros = new PanelRedondeadoConMargen();
-    	panelTotalCajeros.setLayout(new BoxLayout(panelTotalCajeros, BoxLayout.Y_AXIS));
-	
-    	JLabel icono = new JLabel("Icono");
-    	
-		JLabel titulo = new JLabel("Total cajeros", JLabel.LEFT);
-		titulo.setFont(AppFont.normal());
-		titulo.setForeground(Paleta_Colores.TEXTO_SECUNDARIO.getColor());
-		panelTotalCajeros.add(titulo);
-
-		panelTotalCajeros.add(Box.createRigidArea(new Dimension(0, 25)));
-		
-		totalCajeros = new JLabel("Sin datos");
-		totalCajeros.setFont(AppFont.title());
-		totalCajeros.setForeground(Paleta_Colores.TEXTO_PRINCIPAL.getColor());
-		panelTotalCajeros.add(totalCajeros);
-	
-		return panelTotalCajeros;
     }
     
     private JPanel crearPanelAcciones() {
@@ -173,10 +88,10 @@ public class UsersView extends JPanel {
         btnEdit = new JButton("Editar");
         btnDelete = new JButton("Eliminar");
         
-        configurarBoton(btnSee, Paleta_Colores.ACENTO_PRIMARIO.getColor(),Paleta_Colores.TEXTO_PRINCIPAL.getColor());
-        configurarBoton(btnAdd, Paleta_Colores.EXITO.getColor(),Paleta_Colores.TEXTO_PRINCIPAL.getColor()); 
-        configurarBoton(btnEdit, Paleta_Colores.ATENCION.getColor(),Paleta_Colores.TEXTO_PRINCIPAL.getColor());
-        configurarBoton(btnDelete, Paleta_Colores.URGENTE.getColor(),Paleta_Colores.TEXTO_PRINCIPAL.getColor());
+        configurarBoton(btnSee, Paleta_Colores.ACENTO_PRIMARIO.getColor(), Paleta_Colores.TEXTO_PRINCIPAL.getColor());
+        configurarBoton(btnAdd, Paleta_Colores.EXITO.getColor(), Paleta_Colores.TEXTO_PRINCIPAL.getColor()); 
+        configurarBoton(btnEdit, Paleta_Colores.ATENCION.getColor(), Paleta_Colores.TEXTO_PRINCIPAL.getColor());
+        configurarBoton(btnDelete, Paleta_Colores.URGENTE.getColor(), Paleta_Colores.TEXTO_PRINCIPAL.getColor());
         
         panelAcciones.add(btnAdd);
         panelAcciones.add(btnEdit);
@@ -188,8 +103,8 @@ public class UsersView extends JPanel {
         btnExportPDF = new JButton("Exportar PDF"); 
         btnRefresh = new JButton("Refrescar tabla");
         
-        configurarBoton(btnExportPDF, Paleta_Colores.ACENTO_PRIMARIO.getColor(),Paleta_Colores.TEXTO_PRINCIPAL.getColor()); 
-        configurarBoton(btnRefresh, new Color(0, 0, 0),Paleta_Colores.TEXTO_PRINCIPAL.getColor()); 
+        configurarBoton(btnExportPDF, Paleta_Colores.ACENTO_PRIMARIO.getColor(), Paleta_Colores.TEXTO_PRINCIPAL.getColor()); 
+        configurarBoton(btnRefresh, new Color(0, 0, 0), Paleta_Colores.TEXTO_PRINCIPAL.getColor()); 
         
         panelAccionesRIGHT.add(btnExportPDF);
         panelAccionesRIGHT.add(btnRefresh);
@@ -197,7 +112,6 @@ public class UsersView extends JPanel {
         advertencias = new JLabel("Listo");
         advertencias.setOpaque(false);
         advertencias.setForeground(Paleta_Colores.TEXTO_PRINCIPAL.getColor());
-        
         
         JPanel panelPrincipal = new PanelRedondeadoConMargen();
         panelPrincipal.setLayout(new GridBagLayout());
@@ -232,12 +146,12 @@ public class UsersView extends JPanel {
     }
     
     private JPanel crearTabla() {
-    	PanelRedondeadoConMargenYTabla panelTabla = new PanelRedondeadoConMargenYTabla();
+    	PanelPersonalizadoTabla panelTabla = new PanelPersonalizadoTabla();
         table = panelTabla.getTabla();
         return panelTabla;
     }
     
-    private void configurarBoton(JButton boton, Color colorFondo,Color colorTexto) {
+    private void configurarBoton(JButton boton, Color colorFondo, Color colorTexto) {
         boton.setBackground(colorFondo);
         boton.setForeground(colorTexto);
         boton.setFocusPainted(false);
@@ -260,52 +174,36 @@ public class UsersView extends JPanel {
     public JButton getBtnExportPDF() { return btnExportPDF; }
     public JLabel getAdvertencias() { return advertencias; }
 
-
-
-	public JLabel getTotalUsuarios() {
-		return totalUsuarios;
+	public ModuloParaEstadistica getModTotalUsuarios() {
+		return modTotalUsuarios;
 	}
 
-
-
-	public JLabel getTotalUsuariosActivos() {
-		return totalUsuariosActivos;
+	public ModuloParaEstadistica getModTotalUsuariosActivos() {
+		return modTotalUsuariosActivos;
 	}
 
-
-
-	public JLabel getTotalCajeros() {
-		return totalCajeros;
+	public ModuloParaEstadistica getModTotalCajeros() {
+		return modTotalCajeros;
 	}
 
-
-
-	public JLabel getTotalCocineros() {
-		return totalCocineros;
+	public ModuloParaEstadistica getModTotalCocineros() {
+		return modTotalCocineros;
 	}
-
-
 
 	public void setTotalUsuarios(String totalUsuarios) {
-		this.totalUsuarios.setText(totalUsuarios);
+		this.modTotalUsuarios.setValor(totalUsuarios);
 	}
-
-
 
 	public void setTotalUsuariosActivos(String totalUsuariosActivos) {
-		this.totalUsuariosActivos.setText(totalUsuariosActivos);
+		this.modTotalUsuariosActivos.setValor(totalUsuariosActivos);
 	}
-
-
 
 	public void setTotalCajeros(String totalCajeros) {
-		this.totalCajeros.setText(totalCajeros);
+		this.modTotalCajeros.setValor(totalCajeros);
 	}
 
-
-
 	public void setTotalCocineros(String totalCocineros) {
-		this.totalCocineros.setText(totalCocineros);
+		this.modTotalCocineros.setValor(totalCocineros);
 	}
 
 	public JTable getTable() {
@@ -351,9 +249,4 @@ public class UsersView extends JPanel {
 	public void setAdvertencias(JLabel advertencias) {
 		this.advertencias = advertencias;
 	}
-	
-	
-    
-    
-    
 }

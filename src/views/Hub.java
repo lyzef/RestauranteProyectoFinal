@@ -27,17 +27,21 @@ import javax.swing.border.MatteBorder;
 import utilidades.Paleta_Colores;
 import utilidades.views.BotonMenu;
 import views.Admin.DashboardView;
+import views.Admin.InventoryView;
 import views.Admin.UsersView;
 
 public class Hub extends JFrame{
 	public static final String USERS = "USERS";
 	public static final String DASHBOARD = "DASHBOARD";
+	public static final String INVENTORY = "INVENTORY";
+	public static final String SELLS = "SELLS";
 	
 	private CardLayout cardLayout;
 	private JPanel panelPrincipal;
 	
 	public UsersView userPanel;
-	public JPanel dashboard;
+	public DashboardView dashboard;
+	public InventoryView inventario;
 
 	public JPanel botonUsuarios;
 	public JPanel botonInventario;
@@ -70,6 +74,7 @@ public class Hub extends JFrame{
 		panelPrincipal = new JPanel(cardLayout); //Contenido
 		panelPrincipal.add(crearAdministradorUsuarios(),USERS);
 		panelPrincipal.add(crearDashboard(), DASHBOARD);
+		panelPrincipal.add(crearInventario(),INVENTORY);
 		
 		//Layout en contenedor principal
 		contenedorPrincipal.setLayout(new GridBagLayout());
@@ -161,6 +166,11 @@ public class Hub extends JFrame{
 	private JPanel crearDashboard() {
 		dashboard = new DashboardView();
 		return dashboard;
+	}
+	
+	private JPanel crearInventario() {
+		inventario = new InventoryView();
+		return inventario;
 	}
 	
 	public void showView(String view) {
