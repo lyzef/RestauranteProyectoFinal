@@ -1,4 +1,4 @@
-package tablemodels;
+package tableFormat;
 
 import ca.odell.glazedlists.gui.TableFormat;
 import models.User;

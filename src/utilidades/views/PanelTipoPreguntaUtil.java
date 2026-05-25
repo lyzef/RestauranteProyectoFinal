@@ -12,7 +12,7 @@ import excepciones.InvalidUser;
 
 public class PanelTipoPreguntaUtil extends JPanel{
 	private JLabel lblPregunta;
-    private JTextField txtEntrada;
+    private JTextField JfieldEntrada;
     private JLabel lblError;
     private String tipoClasificacion;
     
@@ -24,16 +24,16 @@ public class PanelTipoPreguntaUtil extends JPanel{
 		this.lblPregunta = lblPregunta;
 	}
 
-	public JTextField getTxtEntrada() {
-		return txtEntrada;
-	}
-
-	public void setTxtEntrada(JTextField txtEntrada) {
-		this.txtEntrada = txtEntrada;
-	}
-
 	public JLabel getLblError() {
 		return lblError;
+	}
+	
+	public JTextField getJfieldEntrada() {
+		return JfieldEntrada;
+	}
+
+	public void setJfieldEntrada(JTextField txtEntrada) {
+		this.JfieldEntrada = txtEntrada;
 	}
 
 	public void setLblError(JLabel lblError) {
@@ -58,13 +58,13 @@ public class PanelTipoPreguntaUtil extends JPanel{
     public PanelTipoPreguntaUtil(String pregunta, String caracteresAceptados) {  	
     	setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
     	lblPregunta = new JLabel(pregunta);
-    	txtEntrada = new JTextField();
+    	JfieldEntrada = new JTextField();
     	lblError = new JLabel("");
     	lblError.setForeground(Color.RED);
     	tipoClasificacion = caracteresAceptados;
     	
     	add(lblPregunta);
-    	add(txtEntrada);
+    	add(JfieldEntrada);
     	add(lblError);
     	
     }
@@ -83,7 +83,7 @@ public class PanelTipoPreguntaUtil extends JPanel{
      */
     
     public boolean estaVacio() {
-    	if(txtEntrada.getText().isBlank()) {
+    	if(JfieldEntrada.getText().isBlank()) {
 			return true;
 		}
     	return false;
@@ -97,11 +97,16 @@ public class PanelTipoPreguntaUtil extends JPanel{
     	lblError.setText(null);
     }
     
-    public String obtenerTextoEntrada() {
-    	return txtEntrada.getText();
+    public String getTextoEntrada() {
+    	return JfieldEntrada.getText();
     }
     
+    public void setTextoEntrada(String texto) {
+    	JfieldEntrada.setText(texto);
+    }
+    
+    
     public void setEditable(boolean eleccion) {
-    	txtEntrada.setEditable(eleccion);
+    	JfieldEntrada.setEditable(eleccion);
     }
 }

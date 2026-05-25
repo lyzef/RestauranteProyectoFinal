@@ -5,13 +5,16 @@ import java.util.List;
 import javax.swing.JOptionPane;
 import ca.odell.glazedlists.*;
 import ca.odell.glazedlists.gui.TableFormat;
+import ca.odell.glazedlists.matchers.MatcherEditor;
 import ca.odell.glazedlists.swing.AdvancedTableModel;
 import ca.odell.glazedlists.swing.EventTableModel;
 import ca.odell.glazedlists.swing.GlazedListsSwing;
+import ca.odell.glazedlists.swing.TextComponentMatcherEditor;
+import models.ComponenteIngredienteReceta;
 import models.User;
 import repository.UserRepository;
 import services.PDFExporter;
-import tablemodels.UserTableFormat;
+import tableFormat.UserTableFormat;
 import views.FormularioDialog;
 import views.Admin.UsersView;
 

@@ -36,9 +36,6 @@ public class BarraBusquedaFiltro extends JPanel {
         );
         panelSearch.setLayout(new FlowLayout(FlowLayout.LEFT, 10, 5));
 
-        JLabel iconoBuscar = new JLabel("🔍");
-        iconoBuscar.setForeground(Paleta_Colores.TEXTO_SECUNDARIO.getColor());
-        panelSearch.add(iconoBuscar);
 
         textFieldTabla = new JTextField(placeholderTexto, 25);
         textFieldTabla.setOpaque(false);
@@ -123,6 +120,16 @@ public class BarraBusquedaFiltro extends JPanel {
 	public void setListaFiltros(String[] listData) {
 		listaFiltros.setListData(listData);
 	}
+
+	public JPopupMenu getPopupMenuFiltro() {
+		return popupMenuFiltro;
+	}
+
+	public JList<String> getListaFiltros() {
+		return listaFiltros;
+	}
+	
+	
     
     
 }

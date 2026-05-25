@@ -17,7 +17,7 @@ public class PreguntaController {
     public static void registrarPanel(PanelTipoPreguntaUtil panel) {
     	//Caracteres aceptados segun clasificacion de entrada
     	
-    	panel.getTxtEntrada().addKeyListener(new KeyAdapter() {
+    	panel.getJfieldEntrada().addKeyListener(new KeyAdapter() {
     		@Override
 		    public void keyTyped(KeyEvent e) {
     			//Valida el error anterior
@@ -44,13 +44,13 @@ public class PreguntaController {
 		});
     	
     	//Contenido de textField aceptado una vez perdido el foco segun su clasificacion de entrada
-    	panel.getTxtEntrada().addFocusListener(new FocusAdapter() {
+    	panel.getJfieldEntrada().addFocusListener(new FocusAdapter() {
     		@Override
     	    public void focusLost(FocusEvent e) {
     			//Limpia el error anterior
     			panel.limpiarError();
     	        try {
-					ValidadorEntradasTexto.validarContenido(panel.getTxtEntrada().getText(), panel.getTipoClasificacion());
+					ValidadorEntradasTexto.validarContenido(panel.getTextoEntrada(), panel.getTipoClasificacion());
 				} catch (invalidInput e1) {
 					//Mostrando a usuario el error en la entrada
 					panel.modificarLabelError(e1.getMessage());

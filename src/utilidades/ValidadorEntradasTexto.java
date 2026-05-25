@@ -37,7 +37,7 @@ public class ValidadorEntradasTexto {
     }
     
     public static void validarContenido(PanelTipoPreguntaUtil panel) throws invalidInput {
-        validarContenido(panel.obtenerTextoEntrada(), panel.getTipoClasificacion());
+        validarContenido(panel.getTextoEntrada(), panel.getTipoClasificacion());
     }
     
     /**
@@ -130,7 +130,7 @@ public class ValidadorEntradasTexto {
     	try {
 			Double.parseDouble(texto);
 		} catch (NumberFormatException e) {
-			throw new invalidInput("texto no valido como cadena");
+			throw new invalidInput("Texto no valido como numero");
 		}
     	
     }

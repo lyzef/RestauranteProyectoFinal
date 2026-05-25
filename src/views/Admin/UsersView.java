@@ -16,7 +16,7 @@ import ca.odell.glazedlists.swing.AdvancedTableModel;
 import ca.odell.glazedlists.swing.GlazedListsSwing;
 import config.Config;
 import models.User;
-import tablemodels.UserTableFormat;
+import tableFormat.UserTableFormat;
 import utilidades.AppFont;
 import utilidades.Paleta_Colores;
 import utilidades.views.PanelRedondeadoConMargen;

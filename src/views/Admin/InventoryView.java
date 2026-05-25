@@ -14,10 +14,18 @@ import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 
+import com.itextpdf.text.pdf.PdfStructTreeController.returnType;
+
+import ca.odell.glazedlists.swing.AdvancedTableModel;
+import models.ComponenteIngredienteReceta;
+import models.User;
 import utilidades.AppFont;
 import utilidades.GeneradorIconos;
 import utilidades.Paleta_Colores;
@@ -50,7 +58,6 @@ public class InventoryView extends JPanel{
     
     //Tabla
     JTable tabla;
-    JTextField textFieldTabla;
 	
 	public InventoryView() {
 		//Ajustes
@@ -136,8 +143,8 @@ public class InventoryView extends JPanel{
 		JPanel panelBusqueda = new JPanel();
 		panelBusqueda.setLayout(new BoxLayout(panelBusqueda, BoxLayout.X_AXIS));
 		panelBusqueda.setBackground(Paleta_Colores.CONTENEDORES.getColor());
-		String[] ejemplo = {"Nombre","Stock","Stock maximo"};
-		barraBusquedaConFiltro = new BarraBusquedaFiltro(ejemplo);
+		String[] ejemplo = {"Elegir","Nombre","Stock","Tipo"};
+		barraBusquedaConFiltro = new BarraBusquedaFiltro("",ejemplo);
 		panelBusqueda.add(barraBusquedaConFiltro);
 		
 		JPanel panelBotones = new JPanel();
@@ -147,7 +154,7 @@ public class InventoryView extends JPanel{
         btnEdit = new BotonPersonalizado("Editar", Paleta_Colores.ATENCION.getColor());
         btnDelete = new BotonPersonalizado("Borrar", Paleta_Colores.URGENTE.getColor());
         
-        panelBotones.add(Box.createRigidArea(new Dimension(200, 0)));
+        panelBotones.add(Box.createHorizontalGlue());
         panelBotones.add(btnAdd);
         panelBotones.add(btnEdit);
         panelBotones.add(btnDelete);
@@ -202,15 +209,37 @@ public class InventoryView extends JPanel{
         return panelTabla;
 	}
 	
+	public void setTableModel(AdvancedTableModel<ComponenteIngredienteReceta> tableModel){
+	    tabla.setModel(tableModel);
+	}
+	
 	public JTextField getTextoBuscador() {
 		return barraBusquedaConFiltro.getTextFieldTabla();
 	}
+	
+	//Usada para anadir listener y saber el filtro actual
+	public JList<String> getListaFiltros(){
+		return barraBusquedaConFiltro.getListaFiltros();
+	}
+	
+	public void setFiltrosBusqueda(String[] listData) {
+		barraBusquedaConFiltro.setListaFiltros(listData);
+	}
+	
+	public int getSelectedRow() {
+        return tabla.getSelectedRow();
+    }
+	
+	
 	
 	//Getters y setters
 	public void setListaFiltrosBusqueda(String[] listData) {
 		barraBusquedaConFiltro.setListaFiltros(listData);
 	}
-
+	
+	public String getFiltroSeleccionado() {
+		return barraBusquedaConFiltro.getFiltroSeleccionado();
+	}
 	public JPanel getBtnMovimientoInventario() {
 		return btnMovimientoInventario;
 	}
@@ -263,8 +292,12 @@ public class InventoryView extends JPanel{
 		this.btnRefresh = btnRefresh;
 	}
 
-	public void setUltimoMovimiento(JLabel ultimoMovimiento) {
-		this.ultimoMovimiento = ultimoMovimiento;
+	public void setUltimoMovimiento(String ultimoMovimiento) {
+		this.ultimoMovimiento.setText(ultimoMovimiento);
+	}
+
+	public JTextField getTextFieldTabla() {
+		return barraBusquedaConFiltro.getTextFieldTabla();
 	}
     
 	

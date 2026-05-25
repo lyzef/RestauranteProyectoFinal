@@ -152,19 +152,19 @@ public class FormularioController {
 	private void cargarDatos() {
         if (usuario != null) {
             // --- Parte 1: Datos Personales ---
-        	formulario.getNombre().getTxtEntrada().setText(usuario.getNombre());
-        	formulario.getFechaNacimiento().getTxtEntrada().setText(usuario.getFechaNacimiento());
-        	formulario.getCurp().getTxtEntrada().setText(usuario.getCurp());
-        	formulario.getTelefono().getTxtEntrada().setText(usuario.getTelefono());
-        	formulario.getCorreo().getTxtEntrada().setText(usuario.getCorreo());
+        	formulario.getNombre().setTextoEntrada(usuario.getNombre());
+        	formulario.getFechaNacimiento().setTextoEntrada(usuario.getFechaNacimiento());
+        	formulario.getCurp().setTextoEntrada(usuario.getCurp());
+        	formulario.getTelefono().setTextoEntrada(usuario.getTelefono());
+        	formulario.getCorreo().setTextoEntrada(usuario.getCorreo());
             
         	formulario.getGeneros().setSelectedItem(usuario.getGenero());
         	formulario.getEstadoCivil().setSelectedItem(usuario.getEstadoCivil());
 
             // --- Parte 2: Datos Laborales (CORREGIDO) ---
         	formulario.getRol().setSelectedItem(usuario.getRol());
-        	formulario.getDescripcionFunciones().getTxtEntrada().setText(usuario.getDescripcionFunciones());
-        	formulario.getTipoContrato().getTxtEntrada().setText(usuario.getTipoContrato());
+        	formulario.getDescripcionFunciones().setTextoEntrada(usuario.getDescripcionFunciones());
+        	formulario.getTipoContrato().setTextoEntrada(usuario.getTipoContrato());
 
             if (usuario.getTurno() != null) {
                 String turno = usuario.getTurno();
@@ -179,12 +179,12 @@ public class FormularioController {
             }
 
             // --- Parte 3: Datos Médicos y Bancarios ---
-            formulario.getNSS().getTxtEntrada().setText(usuario.getNSS());
-            formulario.getAlergiasConocidas().getTxtEntrada().setText(usuario.getAlergiasConocidas());
-            formulario.getContactoEmergencia().getTxtEntrada().setText(usuario.getContactoEmergencia());
-            formulario.getBanco().getTxtEntrada().setText(usuario.getBanco());
-            formulario.getNumeroCuenta().getTxtEntrada().setText(usuario.getNumeroCuenta());
-            formulario.getSueldo().getTxtEntrada().setText(usuario.getSueldo());
+            formulario.getNSS().setTextoEntrada(usuario.getNSS());
+            formulario.getAlergiasConocidas().setTextoEntrada(usuario.getAlergiasConocidas());
+            formulario.getContactoEmergencia().setTextoEntrada(usuario.getContactoEmergencia());
+            formulario.getBanco().setTextoEntrada(usuario.getBanco());
+            formulario.getNumeroCuenta().setTextoEntrada(usuario.getNumeroCuenta());
+            formulario.getSueldo().setTextoEntrada(usuario.getSueldo());
             formulario.getTipoSangre().setSelectedItem(usuario.getTipoDeSangre());
         }
     }
@@ -200,53 +200,53 @@ public class FormularioController {
 
 	    if (usuario == null) { //Usuario nuevo
 	        usuario = new User(
-	            formulario.getNombre().obtenerTextoEntrada(),
-	            formulario.getFechaNacimiento().obtenerTextoEntrada(),
-	            formulario.getCurp().obtenerTextoEntrada(),
-	            formulario.getTelefono().obtenerTextoEntrada(),
-	            formulario.getCorreo().obtenerTextoEntrada(),
-	            formulario.getNSS().obtenerTextoEntrada(),
+	            formulario.getNombre().getTextoEntrada(),
+	            formulario.getFechaNacimiento().getTextoEntrada(),
+	            formulario.getCurp().getTextoEntrada(),
+	            formulario.getTelefono().getTextoEntrada(),
+	            formulario.getCorreo().getTextoEntrada(),
+	            formulario.getNSS().getTextoEntrada(),
 	            (String) formulario.getEstadoCivil().getSelectedItem(),
 	            (String) formulario.getGeneros().getSelectedItem(),
 	            (String) formulario.getRol().getSelectedItem(),
-	            formulario.getDescripcionFunciones().obtenerTextoEntrada(),
-	            formulario.getTipoContrato().obtenerTextoEntrada(),
+	            formulario.getDescripcionFunciones().getTextoEntrada(),
+	            formulario.getTipoContrato().getTextoEntrada(),
 	            turnoSeleccionado,
-	            formulario.getAlergiasConocidas().obtenerTextoEntrada(),
-	            formulario.getContactoEmergencia().obtenerTextoEntrada(),
+	            formulario.getAlergiasConocidas().getTextoEntrada(),
+	            formulario.getContactoEmergencia().getTextoEntrada(),
 	            (String) formulario.getTipoSangre().getSelectedItem(),
-	            formulario.getBanco().obtenerTextoEntrada(),
-	            formulario.getNumeroCuenta().obtenerTextoEntrada(),
-	            formulario.getSueldo().obtenerTextoEntrada(),
-	            PasswordUtils.hashPassword(formulario.getContrasena().obtenerTextoEntrada()),
+	            formulario.getBanco().getTextoEntrada(),
+	            formulario.getNumeroCuenta().getTextoEntrada(),
+	            formulario.getSueldo().getTextoEntrada(),
+	            PasswordUtils.hashPassword(formulario.getContrasena().getTextoEntrada()),
 	            false, // Usuario inactivo por defecto (Se activa al logearse)
 	            " " // Ultima sesion se actualiza solo en db
 	        );
 	    } else { //Solo se modifica lo modificable
-	        usuario.setNombre(formulario.getNombre().obtenerTextoEntrada());
-	        usuario.setFechaNacimiento(formulario.getFechaNacimiento().obtenerTextoEntrada());
-	        usuario.setCurp(formulario.getCurp().obtenerTextoEntrada());
-	        usuario.setTelefono(formulario.getTelefono().obtenerTextoEntrada());
-	        usuario.setCorreo(formulario.getCorreo().obtenerTextoEntrada());
-	        usuario.setNSS(formulario.getNSS().obtenerTextoEntrada());
+	        usuario.setNombre(formulario.getNombre().getTextoEntrada());
+	        usuario.setFechaNacimiento(formulario.getFechaNacimiento().getTextoEntrada());
+	        usuario.setCurp(formulario.getCurp().getTextoEntrada());
+	        usuario.setTelefono(formulario.getTelefono().getTextoEntrada());
+	        usuario.setCorreo(formulario.getCorreo().getTextoEntrada());
+	        usuario.setNSS(formulario.getNSS().getTextoEntrada());
 
 	        usuario.setEstadoCivil((String) formulario.getEstadoCivil().getSelectedItem());
 	        usuario.setGenero((String) formulario.getGeneros().getSelectedItem());
 	        usuario.setRol((String) formulario.getRol().getSelectedItem());
-	        usuario.setDescripcionFunciones(formulario.getDescripcionFunciones().obtenerTextoEntrada());
-	        usuario.setTipoContrato(formulario.getTipoContrato().obtenerTextoEntrada());
+	        usuario.setDescripcionFunciones(formulario.getDescripcionFunciones().getTextoEntrada());
+	        usuario.setTipoContrato(formulario.getTipoContrato().getTextoEntrada());
 	        usuario.setTurno(turnoSeleccionado);
 
-	        usuario.setAlergiasConocidas(formulario.getAlergiasConocidas().obtenerTextoEntrada());
-	        usuario.setContactoEmergencia(formulario.getContactoEmergencia().obtenerTextoEntrada());
+	        usuario.setAlergiasConocidas(formulario.getAlergiasConocidas().getTextoEntrada());
+	        usuario.setContactoEmergencia(formulario.getContactoEmergencia().getTextoEntrada());
 	        usuario.setTipoDeSangre((String) formulario.getTipoSangre().getSelectedItem());
-	        usuario.setBanco(formulario.getBanco().obtenerTextoEntrada());
-	        usuario.setNumeroCuenta(formulario.getNumeroCuenta().obtenerTextoEntrada());
-	        usuario.setSueldo(formulario.getSueldo().obtenerTextoEntrada());
+	        usuario.setBanco(formulario.getBanco().getTextoEntrada());
+	        usuario.setNumeroCuenta(formulario.getNumeroCuenta().getTextoEntrada());
+	        usuario.setSueldo(formulario.getSueldo().getTextoEntrada());
 	        
 	        //Comprobando si usuario quiere cambiar su contrasena
 	        if(formulario.getModificarContrasenaCheckBox().isSelected()) {
-	    	    usuario.setContrasena(PasswordUtils.hashPassword(formulario.getContrasena().obtenerTextoEntrada()));
+	    	    usuario.setContrasena(PasswordUtils.hashPassword(formulario.getContrasena().getTextoEntrada()));
 	        } 
 	        
 	    }

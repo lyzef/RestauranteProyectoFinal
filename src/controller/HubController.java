@@ -12,7 +12,7 @@ import javax.swing.JOptionPane;
 import models.User;
 import repository.LoginRepository;
 import repository.UserRepository;
-import tablemodels.UserTableFormat;
+import tableFormat.UserTableFormat;
 import utilidades.Session;
 import views.*;
 
