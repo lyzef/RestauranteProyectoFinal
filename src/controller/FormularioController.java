@@ -14,8 +14,8 @@ import repository.UserRepository;
 import utilidades.PasswordUtils;
 import utilidades.ValidadorEntradasTexto;
 import utilidades.views.PanelTipoPreguntaUtil;
-import views.FormularioDialog;
 import views.Login;
+import views.Dialog.FormularioDialog;
 
 public class FormularioController {
 	private FormularioDialog formulario;

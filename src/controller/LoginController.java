@@ -1,8 +1,8 @@
 package controller;
 
-import views.FormularioDialog;
 import views.Hub;
 import views.Login;
+import views.Dialog.FormularioDialog;
 import excepciones.InvalidContraseña;
 import excepciones.InvalidUser;
 import models.User;

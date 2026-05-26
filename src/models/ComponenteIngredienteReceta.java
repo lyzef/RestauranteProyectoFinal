@@ -142,6 +142,11 @@ public class ComponenteIngredienteReceta {
         this.categoriaId = categoriaId;
     }
     
+    @Override
+    public String toString() {
+    	return nombre;
+    }
+    
     public enum Unidad {
         UNIDADES("Unidades"),
         KG("Kg"), 

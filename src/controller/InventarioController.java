@@ -3,9 +3,13 @@ package controller;
 import java.awt.Component;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JOptionPane;
+import javax.swing.JTextField;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
@@ -14,40 +18,85 @@ import ca.odell.glazedlists.EventList;
 import ca.odell.glazedlists.FilterList;
 import ca.odell.glazedlists.matchers.MatcherEditor;
 import ca.odell.glazedlists.swing.AdvancedTableModel;
+import ca.odell.glazedlists.swing.DefaultEventComboBoxModel;
 import ca.odell.glazedlists.swing.GlazedListsSwing;
 import ca.odell.glazedlists.swing.TextComponentMatcherEditor;
 import models.ComponenteIngredienteReceta;
+import models.MovimientoInventario;
+import models.MovimientoInventario.tipoMovimiento;
 import models.User;
 import repository.InventarioRepository;
 import tableFormat.ComponenteTableFormat;
+import tableFormat.MovimientoInventariotTableFormat;
 import tableFormat.UserTableFormat;
 import tableFormat.filtros.ComponenteTextFilterator;
-import tableFormat.filtros.ComponenteTextFilterator.TipoFiltro;
-import views.FormularioDialog;
-import views.Admin.InventarioDialog;
+import tableFormat.filtros.MovimientoTextFilterator;
+import tableFormat.filtros.MovimientoTextFilterator.TipoFiltroMovimiento;
+import tableFormat.filtros.ComponenteTextFilterator.TipoFiltroComponente;
 import views.Admin.InventoryView;
+import views.Dialog.FormularioDialog;
+import views.Dialog.InventarioDialog;
+import views.Dialog.NewMovementDialog;
 
 public class InventarioController {
 	private InventoryView view;
 	private InventarioRepository repo;
+		
+	boolean tablaInventarioDesplegada = true;
 	
+	// Componentes
 	private EventList<ComponenteIngredienteReceta> eventListComponentes;
-    private AdvancedTableModel<ComponenteIngredienteReceta> tableModel;
-    ComponenteTextFilterator TextFilterator;
+    private AdvancedTableModel<ComponenteIngredienteReceta> tableModelComponentes;
+    ComponenteTextFilterator textFilteratorComponentes;
+    private FilterList<ComponenteIngredienteReceta> listaFiltradaComponentes;
+    private MatcherEditor<ComponenteIngredienteReceta> editorFiltroComponentes;
+    
+    //Movimiento de inventario
+    private EventList<MovimientoInventario> eventListMovimientos;
+    private AdvancedTableModel<MovimientoInventario> tableModelMovimientos;
+    MovimientoTextFilterator TextFilteratorMovimientos;
+    private FilterList<MovimientoInventario> listaFiltradaMovimientos;
+    private MatcherEditor<MovimientoInventario> editorFiltroMovimientos;
+    
+    private JTextField campoFiltroCompartido;
     
 	public InventarioController(InventoryView view) {
 		this.view = view;
 		this.repo = new InventarioRepository();
+		
+		campoFiltroCompartido = view.getTextFieldTabla();
+		
+		// Inicializar ambos modelos de tabla con sus propios filtros
+		inicializarModelos();
+		
 		registrarListeners();
 		
 		loadComponenteTable();
+		
+		try {
+			view.moduloItemsBajoStock.setValor(Integer.toString(repo.getItemsConBajoStock()));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private void inicializarModelos() {
+		tableModelComponentes = crearTableModelComponente();
+		tableModelMovimientos = crearTableModelMovimientoInventario();
+		
+		// Mostrar tabla inicial (componentes)
+		view.setTableModel(tableModelComponentes);
 	}
 	
 	private void registrarListeners() {
 		view.getBtnAdd().addMouseListener(new MouseAdapter() {
 			@Override
 		    public void mousePressed(MouseEvent e) {
-		        openFormComponente(null);
+				if(tablaInventarioDesplegada) {
+					openFormComponente(null);
+				} else {
+					JOptionPane.showMessageDialog(view, "Use el botón de nuevo movimiento para agregar movimientos");
+				}
 		    }
 		});
 		
@@ -56,10 +105,15 @@ public class InventarioController {
 		    public void mousePressed(MouseEvent e) {
 				int row = view.getSelectedRow();
 	            if(row == -1) {
-	                JOptionPane.showMessageDialog(view, "Selecciona un usuario");
+	                JOptionPane.showMessageDialog(view, "Selecciona un elemento");
 	                return;
 	            }
-		        openFormComponente(eventListComponentes.get(row));
+	            
+	            if(tablaInventarioDesplegada) {
+	            	openFormComponente(listaFiltradaComponentes.get(row)); //MUY IMPORTANTE, la lista filtrada controla la tabla
+	            } else {
+	            	JOptionPane.showMessageDialog(view, "Los movimientos no se pueden editar");
+	            }
 		    }
 		});
 		
@@ -68,15 +122,20 @@ public class InventarioController {
 		    public void mousePressed(MouseEvent e) {
 				int row = view.getSelectedRow();
 	            if(row == -1) {
-	                JOptionPane.showMessageDialog(view, "Selecciona un usuario");
+	                JOptionPane.showMessageDialog(view, "Selecciona un elemento");
 	                return;
 	            }
-		        try {
-					repo.delete(eventListComponentes.get(row).getId());
-					eventListComponentes.remove(row);
-				} catch (Exception e1) {
-					System.out.println("Objeto no eliminado ... " + e);
-				}
+	            
+	            if(tablaInventarioDesplegada) {
+	            	try {
+						repo.deleteComponente(listaFiltradaComponentes.get(row).getId());
+						eventListComponentes.remove(row);
+					} catch (Exception e1) {
+						System.out.println("Objeto no eliminado ... " + e);
+					}
+	            } else {
+	            	JOptionPane.showMessageDialog(view, "Los movimientos no se pueden eliminar");
+	            }
 		    }
 		});
 		
@@ -85,46 +144,84 @@ public class InventarioController {
 		    public void mousePressed(MouseEvent e) {
 				int row = view.getSelectedRow();
 	            if(row == -1) {
-	                JOptionPane.showMessageDialog(view, "Selecciona un usuario");
+	                JOptionPane.showMessageDialog(view, "Selecciona un elemento");
 	                return;
 	            }
-	            new InventarioDialogController(new InventarioDialog(null),eventListComponentes.get(row) , false);
+	            
+	            if(tablaInventarioDesplegada) {
+	            	new InventarioDialogController(new InventarioDialog(null), listaFiltradaComponentes.get(row), false);
+	            }
 		    }
 		});
 		
+		// Listener para Jpop de filtros
 		view.getListaFiltros().addListSelectionListener(new ListSelectionListener() {
 		    @Override
 		    public void valueChanged(ListSelectionEvent e) {
 		        if (!e.getValueIsAdjusting()) {
-		        	TextFilterator.setFiltroActivo(TipoFiltro.fromString(view.getFiltroSeleccionado()) );
+		        	actualizarFiltroActivo();
 		        }
 		    }
 		});
-			
+		
+		// Listener para el campo de texto compartido
+		campoFiltroCompartido.getDocument().addDocumentListener(new DocumentListener() {
+		    public void changedUpdate(DocumentEvent e) { filtrar(); }
+		    public void removeUpdate(DocumentEvent e) { filtrar(); }
+		    public void insertUpdate(DocumentEvent e) { filtrar(); }
+		    
+		    private void filtrar() {
+		        view.actualizarTabla();
+		    }
+		});
+		
+		view.getBtnMovimientoInventario().addMouseListener(new MouseAdapter() {
+			@Override
+		    public void mousePressed(MouseEvent e) {
+		        newInventoryMovement();
+		    }
+		});
+		
+		view.getBtnCambiarTabla().addMouseListener(new MouseAdapter() {
+			@Override
+		    public void mousePressed(MouseEvent e) {
+		        cambiarTabla();
+		    }
+		});
 	}
 	
+	private void actualizarFiltroActivo() {
+		String filtroSeleccionado = view.getFiltroSeleccionado();
+		
+		if(tablaInventarioDesplegada) {
+			TipoFiltroComponente tipoFiltro = TipoFiltroComponente.fromString(filtroSeleccionado);
+			textFilteratorComponentes.setFiltroActivo(tipoFiltro);
+		} else {
+			TipoFiltroMovimiento tipoFiltro = TipoFiltroMovimiento.fromString(filtroSeleccionado);
+			TextFilteratorMovimientos.setFiltroActivo(tipoFiltro); 
+		}
+
+	}
+	
+	
 	private void openFormComponente(ComponenteIngredienteReceta componente) {
-		// Nota: Asegúrate que UserFormDialog reciba los parámetros correctos
         InventarioDialogController dialog = new InventarioDialogController(new InventarioDialog(null), componente, true);
         
-        //Como es dialog modal aqui sigue el codigo una vez cerrada la clase dialog
         if(dialog.saved) {
             ComponenteIngredienteReceta componenteSaved = dialog.getComponente();
             
             try {
-				//Añadir nuevo
 				if(componente == null) {
-					repo.save(componenteSaved);
+					repo.saveComponente(componenteSaved);
 					eventListComponentes.add(componenteSaved);
-				}else {
-					//Editar existente
+				} else {
 					int row = view.getSelectedRow();
-					boolean updated =  repo.update(componenteSaved);
+					boolean updated = repo.updateComponente(componenteSaved);
 					if(updated) {
 						eventListComponentes.set(row, componenteSaved);
 					}
 				}
-			}catch(Exception e) {
+			} catch(Exception e) {
 				e.printStackTrace();
 				JOptionPane.showMessageDialog(view, e.getMessage());
 			}
@@ -135,29 +232,94 @@ public class InventarioController {
 		try {
             List<ComponenteIngredienteReceta> componentes = repo.getComponentes();
             
-            // Si el modelo no existe, se crea. Si existe, se actualiza la lista interna.
-            if(tableModel == null) {
-                view.setTableModel(crearTablaModel());
-                eventListComponentes.addAll(componentes);
-            } else {
-                // Actualizar lista
-            	eventListComponentes.clear();
-            	eventListComponentes.addAll(componentes);
-            }
+            eventListComponentes.clear();
+            eventListComponentes.addAll(componentes);
                        
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(view, "Error al cargar componentes: " + ex.getMessage());
         }
 	}
 	
-	
-	private AdvancedTableModel<ComponenteIngredienteReceta> crearTablaModel() {
-		eventListComponentes = new BasicEventList<>();
-		TextFilterator =  new ComponenteTextFilterator();
-		MatcherEditor<ComponenteIngredienteReceta> editorFiltro = new TextComponentMatcherEditor<>(view.getTextFieldTabla(),TextFilterator );
-		FilterList<ComponenteIngredienteReceta> listaFiltrada = new FilterList<>(eventListComponentes, editorFiltro);
-    	tableModel = GlazedListsSwing.eventTableModelWithThreadProxyList(listaFiltrada, new ComponenteTableFormat());    	
-    	return tableModel;
+	private void loadMovimientoTable() {
+		try {
+            List<MovimientoInventario> movimientos = repo.getMovimientosInventario();
+            
+            eventListMovimientos.clear();
+            eventListMovimientos.addAll(movimientos);
+                       
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(view, "Error al cargar movimientos: " + ex.getMessage());
+        }
 	}
 	
+	private AdvancedTableModel<ComponenteIngredienteReceta> crearTableModelComponente() {
+		eventListComponentes = new BasicEventList<>();
+		textFilteratorComponentes = new ComponenteTextFilterator();
+		
+		// Crear editor de filtro específico para componentes
+		editorFiltroComponentes = new TextComponentMatcherEditor<>(
+			campoFiltroCompartido, 
+			textFilteratorComponentes
+		);
+		
+		listaFiltradaComponentes = new FilterList<>(eventListComponentes, editorFiltroComponentes);
+    	tableModelComponentes = GlazedListsSwing.eventTableModelWithThreadProxyList(
+    		listaFiltradaComponentes, 
+    		new ComponenteTableFormat()
+    	);    	
+    	return tableModelComponentes;
+	}
+	
+	private AdvancedTableModel<MovimientoInventario> crearTableModelMovimientoInventario() {
+		eventListMovimientos = new BasicEventList<>();
+		TextFilteratorMovimientos = new MovimientoTextFilterator();
+		
+		// Crear editor de filtro específico para movimientos
+		editorFiltroMovimientos = new TextComponentMatcherEditor<>(
+			campoFiltroCompartido, 
+			TextFilteratorMovimientos
+		);
+		
+		listaFiltradaMovimientos = new FilterList<>(eventListMovimientos, editorFiltroMovimientos);
+    	tableModelMovimientos = GlazedListsSwing.eventTableModelWithThreadProxyList(
+    		listaFiltradaMovimientos, 
+    		new MovimientoInventariotTableFormat()
+    	);    	
+    	return tableModelMovimientos;
+	}
+	  
+	private void newInventoryMovement() {
+		//Guarda solo el componente 
+		NewMovementDialog i = new NewMovementDialog(null, new DefaultEventComboBoxModel<ComponenteIngredienteReceta>(eventListComponentes));
+		if(i.isMovimientoGuardado()) {
+			eventListMovimientos.add(i.getMovimientoInventario());
+		}
+	}
+	
+	private void cambiarTabla() {
+		tablaInventarioDesplegada = !tablaInventarioDesplegada;
+		campoFiltroCompartido.setText("");
+		actualizarListaFiltrosDisponibles();
+		
+		if(tablaInventarioDesplegada) {
+			// Cambiar a tabla de componentes
+			view.setTableModel(tableModelComponentes);
+			view.setBtnCambiarTablaText("Ver movimientos");;
+			loadComponenteTable();
+		} else {
+			// Cambiar a tabla de movimientos
+			view.setTableModel(tableModelMovimientos);
+			view.setBtnCambiarTablaText("Ver Componentes");
+			loadMovimientoTable();
+		}
+		
+	}
+	
+	private void actualizarListaFiltrosDisponibles() {
+		if(tablaInventarioDesplegada) {
+			view.setFiltrosBusqueda(TipoFiltroComponente.getTodasLasColumnas());
+		} else {
+			view.setFiltrosBusqueda(TipoFiltroMovimiento.getTodasLasColumnas()); 
+		}
+	}
 }

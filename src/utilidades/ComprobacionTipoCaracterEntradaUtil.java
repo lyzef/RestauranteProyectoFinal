@@ -51,7 +51,7 @@ public class ComprobacionTipoCaracterEntradaUtil {
     }
     
 	private static boolean esDecimal(char c) {
-		if(Character.isDigit(c)|| c =='.' ||c == KeyEvent.VK_BACK_SPACE) {
+		if(Character.isDigit(c)|| c =='.' || c == '-' ||c == KeyEvent.VK_BACK_SPACE) {
 			return true;
 		}
 		return false;

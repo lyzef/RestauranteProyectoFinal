@@ -10,11 +10,13 @@ import java.util.List;
 
 import config.DatabaseConnection;
 import models.ComponenteIngredienteReceta;
+import models.MovimientoInventario;
+import models.MovimientoInventario.tipoMovimiento;
 import models.User;
 
 public class InventarioRepository {
 	
-	public void save(ComponenteIngredienteReceta componente) throws Exception {
+	public void saveComponente(ComponenteIngredienteReceta componente) throws Exception {
 	    String sqlComponente = "INSERT INTO componentes (nombre, es_receta, tipo_componente, unidad_medida, "
 	            + "costo_unitario, calorias_por_unidad, stock_minimo_bloqueo, stock_minimo_alerta, "
 	            + "disponibilidad_manual, es_inventariable) "
@@ -50,7 +52,7 @@ public class InventarioRepository {
 		return ejecutarConsultaComponentes(sql);
 	}
 	
-	public boolean update(ComponenteIngredienteReceta componente) throws Exception {
+	public boolean updateComponente(ComponenteIngredienteReceta componente) throws Exception {
 	    String sqlUpdate = "UPDATE componentes SET "
 	            + "nombre = ?, "
 	            + "es_receta = ?, "
@@ -91,7 +93,7 @@ public class InventarioRepository {
 	
 	}
 	
-	public void delete(int id) throws Exception {
+	public void deleteComponente(int id) throws Exception {
 	    String sqlDelete = "DELETE FROM componentes WHERE id = ?";
 
 	    try (Connection connection = DatabaseConnection.getConnection();
@@ -110,10 +112,52 @@ public class InventarioRepository {
 	    }
 	}
 	
-	 private int getItemsConBajoStock() throws Exception {
+	 public int getItemsConBajoStock() throws Exception {
 		 String sql = "SELECT * FROM componentes WHERE stock_actual < stock_minimo_alerta";
 		 return ejecutarConsultaComponentes(sql).size();
 	 }
+	 
+	 
+	 public void saveMovimientoInventario(MovimientoInventario movimiento) throws Exception {
+		    String sqlComponente = "INSERT INTO movimientos_inventario " +
+                    "(componente_id, tipo_movimiento, cantidad, costo_movimiento, motivo) " +
+                    "VALUES (?, ?, ?, ?, ?)";
+
+		    // Las conexiones y statements se declaran dentro de los paréntesis del try
+		    try (Connection connection = DatabaseConnection.getConnection();
+		         PreparedStatement ps = connection.prepareStatement(sqlComponente)) {
+		        
+		        ps.setInt(1, movimiento.getComponente_id());
+		        ps.setString(2,movimiento.getTipo_movimiento().toString());
+		        ps.setDouble(3, movimiento.getCantidad());
+		        ps.setDouble(4, movimiento.getCosto_movimiento()); 
+		        ps.setString(5, movimiento.getMotivo());
+
+		        ps.executeUpdate();
+		        
+		    } catch (SQLException e) {
+		        throw new Exception("Componente NO guardado en database ... " + e.getMessage(), e);
+		    }
+	}
+	 
+	 public List<MovimientoInventario> getMovimientosInventario() throws Exception {
+	        List<MovimientoInventario> lista = new ArrayList<>();
+	        String sql = "SELECT m.*, c.nombre FROM movimientos_inventario m LEFT JOIN "
+	                + "componentes c ON m.componente_id = c.id";
+	        
+	        try (Connection connection = DatabaseConnection.getConnection();
+	             PreparedStatement ps = connection.prepareStatement(sql);
+	             ResultSet rs = ps.executeQuery()) {
+
+	            while (rs.next()) {
+	                lista.add(crearMovimiento(rs));
+	            }
+	        } catch (SQLException e) {
+	            throw new Exception("Error al consultar movimiento: " + e.getMessage(), e);
+	        }
+	        
+	        return lista;
+	    }
 	
 	 private List<ComponenteIngredienteReceta> ejecutarConsultaComponentes(String sql) throws Exception {
 	        List<ComponenteIngredienteReceta> lista = new ArrayList<>();
@@ -184,6 +228,30 @@ public class InventarioRepository {
 	                comp.setUnidadMedida(null);
 	            }
 	        }
+	        
+	        return comp;
+	    }
+	    
+	    private MovimientoInventario crearMovimiento (ResultSet rs) throws SQLException {
+	    	MovimientoInventario comp = new MovimientoInventario();
+	        
+	        comp.setId(rs.getInt("id"));
+	        comp.setComponente_id(rs.getInt("componente_id"));
+	        comp.setComponente_nombre(rs.getString("nombre"));
+	        
+	        comp.setCantidad(rs.getDouble("cantidad"));
+	        comp.setCosto_movimiento(rs.getDouble("costo_movimiento"));
+	        comp.setMotivo(rs.getString("motivo"));
+	        comp.setFecha(rs.getString("fecha_hora"));
+	        
+	        
+            try {
+    	        comp.setTipo_movimiento(tipoMovimiento.fromString(rs.getString("tipo_movimiento")));
+            } catch (IllegalArgumentException e) {
+                System.err.println("Tipo de movimiento invalido " + rs.getString("tipo_movimiento") );
+                comp.setTipo_movimiento(null);
+            }
+	        
 	        
 	        return comp;
 	    }

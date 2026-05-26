@@ -5,7 +5,7 @@ import java.util.List;
 
 public class ComponenteTextFilterator implements TextFilterator<ComponenteIngredienteReceta> {
     
-	public enum TipoFiltro {
+	public enum TipoFiltroComponente {
         SIN_FILTRO("Elegir"),      
         NOMBRE("Nombre"),
         TIPO_COMPONENTE("Tipo"),
@@ -14,7 +14,7 @@ public class ComponenteTextFilterator implements TextFilterator<ComponenteIngred
         
         private final String nombre;
 
-        TipoFiltro(String nombre) {
+        TipoFiltroComponente(String nombre) {
             this.nombre = nombre;
         }
 
@@ -23,20 +23,30 @@ public class ComponenteTextFilterator implements TextFilterator<ComponenteIngred
             return nombre; 
         }
         
-        public static TipoFiltro fromString(String text) {
-            for (TipoFiltro t : TipoFiltro.values()) {
+        public static TipoFiltroComponente fromString(String text) {
+            for (TipoFiltroComponente t : TipoFiltroComponente.values()) {
                 if (t.nombre.equalsIgnoreCase(text)) {
                     return t;
                 }
             }
             return SIN_FILTRO; // O lanzar una excepción
         }
+        
+        public static String[] getTodasLasColumnas() {
+            TipoFiltroComponente[] valores = values();
+            String[] columnas = new String[valores.length];
+            for (int i = 0; i < valores.length; i++) {
+                columnas[i] = valores[i].nombre;
+            }
+            return columnas;
+        }
+
     }
     
-    private TipoFiltro filtroActivo = TipoFiltro.SIN_FILTRO;
+    private TipoFiltroComponente filtroActivo = TipoFiltroComponente.SIN_FILTRO;
     
     public ComponenteTextFilterator() {
-        this.filtroActivo = TipoFiltro.SIN_FILTRO;
+        this.filtroActivo = TipoFiltroComponente.SIN_FILTRO;
     }
     
     @Override
@@ -68,30 +78,30 @@ public class ComponenteTextFilterator implements TextFilterator<ComponenteIngred
     }
     
     public void sinFiltro() {
-        this.filtroActivo = TipoFiltro.SIN_FILTRO;
+        this.filtroActivo = TipoFiltroComponente.SIN_FILTRO;
     }
     
-    public void setFiltroActivo(TipoFiltro nuevoFiltro) {
+    public void setFiltroActivo(TipoFiltroComponente nuevoFiltro) {
         this.filtroActivo = nuevoFiltro;
     }
     
     public void filtrarPorNombre() {
-        this.filtroActivo = TipoFiltro.NOMBRE;
+        this.filtroActivo = TipoFiltroComponente.NOMBRE;
     }
     
     public void filtrarPorTipo() {
-        this.filtroActivo = TipoFiltro.TIPO_COMPONENTE;
+        this.filtroActivo = TipoFiltroComponente.TIPO_COMPONENTE;
     }
     
     public void filtrarPorStock() {
-        this.filtroActivo = TipoFiltro.STOCK;
+        this.filtroActivo = TipoFiltroComponente.STOCK;
     }
     
     public void filtrarPorId() {
-        this.filtroActivo = TipoFiltro.ID;
+        this.filtroActivo = TipoFiltroComponente.ID;
     }
     
-    public TipoFiltro getFiltroActivo() {
+    public TipoFiltroComponente getFiltroActivo() {
         return filtroActivo;
     }
 }

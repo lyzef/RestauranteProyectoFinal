@@ -9,7 +9,7 @@ import excepciones.invalidInput;
 import models.ComponenteIngredienteReceta;
 import utilidades.ValidadorEntradasTexto;
 import utilidades.views.PanelTipoPreguntaUtil;
-import views.Admin.InventarioDialog;
+import views.Dialog.InventarioDialog;
 
 public class InventarioDialogController {
 	private InventarioDialog view;

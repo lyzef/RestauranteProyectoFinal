@@ -15,18 +15,6 @@ public class PanelTipoPreguntaUtil extends JPanel{
     private JTextField JfieldEntrada;
     private JLabel lblError;
     private String tipoClasificacion;
-    
-    public JLabel getLblPregunta() {
-		return lblPregunta;
-	}
-
-	public void setLblPregunta(JLabel lblPregunta) {
-		this.lblPregunta = lblPregunta;
-	}
-
-	public JLabel getLblError() {
-		return lblError;
-	}
 	
 	public JTextField getJfieldEntrada() {
 		return JfieldEntrada;
@@ -34,10 +22,6 @@ public class PanelTipoPreguntaUtil extends JPanel{
 
 	public void setJfieldEntrada(JTextField txtEntrada) {
 		this.JfieldEntrada = txtEntrada;
-	}
-
-	public void setLblError(JLabel lblError) {
-		this.lblError = lblError;
 	}
 
 	public String getTipoClasificacion() {
@@ -105,6 +89,9 @@ public class PanelTipoPreguntaUtil extends JPanel{
     	JfieldEntrada.setText(texto);
     }
     
+    public void setPregunta(String texto) {
+    	lblPregunta.setText(texto);
+    }
     
     public void setEditable(boolean eleccion) {
     	JfieldEntrada.setEditable(eleccion);

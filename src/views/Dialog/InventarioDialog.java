@@ -1,4 +1,4 @@
-package views.Admin;
+package views.Dialog;
 
 import java.awt.BorderLayout;
 import java.awt.CardLayout;

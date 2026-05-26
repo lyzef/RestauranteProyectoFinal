@@ -48,6 +48,7 @@ public class InventoryView extends JPanel{
     
     //Modificadores de tabla
     private JPanel btnMovimientoInventario;
+    private JPanel btnCambiarTabla;
     
     private JPanel btnSee;
     private JPanel btnAdd;
@@ -131,6 +132,11 @@ public class InventoryView extends JPanel{
 		
 		//Acciones
 		JPanel panelAcciones = new JPanel();
+		
+		btnCambiarTabla = new BotonPersonalizado("Cambiar tabla", Paleta_Colores.HEADER_TABLA.getColor());
+		btnCambiarTabla.setAlignmentX(RIGHT_ALIGNMENT);
+		panelAcciones.add(btnCambiarTabla);
+		
 		btnMovimientoInventario = new BotonPersonalizado("Nuevo movimiento de inventario", Paleta_Colores.HEADER_TABLA.getColor());
 		btnMovimientoInventario.setAlignmentX(RIGHT_ALIGNMENT);
 		panelAcciones.add(btnMovimientoInventario);
@@ -209,8 +215,8 @@ public class InventoryView extends JPanel{
         return panelTabla;
 	}
 	
-	public void setTableModel(AdvancedTableModel<ComponenteIngredienteReceta> tableModel){
-	    tabla.setModel(tableModel);
+	public void setTableModel(AdvancedTableModel<?> e){
+	    tabla.setModel(e);
 	}
 	
 	public JTextField getTextoBuscador() {
@@ -230,7 +236,12 @@ public class InventoryView extends JPanel{
         return tabla.getSelectedRow();
     }
 	
-	
+	public void actualizarTabla() {
+	    if(tabla != null) {
+	    	tabla.repaint();
+	        tabla.revalidate();
+	    }
+	}
 	
 	//Getters y setters
 	public void setListaFiltrosBusqueda(String[] listData) {
@@ -267,6 +278,10 @@ public class InventoryView extends JPanel{
 	public JLabel getUltimoMovimiento() {
 		return ultimoMovimiento;
 	}
+	
+	public JPanel getBtnCambiarTabla() {
+		return btnCambiarTabla;
+	}
 
 	public void setBtnMovimientoInventario(JPanel btnMovimientoInventario) {
 		this.btnMovimientoInventario = btnMovimientoInventario;
@@ -298,6 +313,10 @@ public class InventoryView extends JPanel{
 
 	public JTextField getTextFieldTabla() {
 		return barraBusquedaConFiltro.getTextFieldTabla();
+	}
+	
+	public void setBtnCambiarTablaText (String t) {
+		((BotonPersonalizado) btnCambiarTabla).setTexto(t);;
 	}
     
 	

@@ -15,8 +15,8 @@ import models.User;
 import repository.UserRepository;
 import services.PDFExporter;
 import tableFormat.UserTableFormat;
-import views.FormularioDialog;
 import views.Admin.UsersView;
+import views.Dialog.FormularioDialog;
 
 public class UserController {
 

@@ -6,7 +6,6 @@ import javax.swing.event.ListSelectionListener;
 
 import utilidades.AppFont;
 import utilidades.Paleta_Colores;
-// Asegúrate de importar tu clase AppFont si está en otro paquete
 
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -18,24 +17,22 @@ public class BarraBusquedaFiltro extends JPanel {
     private JLabel lblFiltroActual;
     private JList<String> listaFiltros;
     private JPopupMenu popupMenuFiltro;
-
-
+    private String[] opcionesActuales; 
     public BarraBusquedaFiltro(String[] opcionesFiltro) {
         this("Buscar...", opcionesFiltro);
     }
 
     public BarraBusquedaFiltro(String placeholderTexto, String[] opcionesFiltro) {
+        this.opcionesActuales = opcionesFiltro; 
         setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
-        setOpaque(false); // Fondo transparente para no tapar el contenedor padre
+        setOpaque(false);
 
-        
         PanelRedondeadoConMargen panelSearch = new PanelRedondeadoConMargen(
                 PanelRedondeadoConMargen.RADIO_ESQUINA_ESTANDAR,
                 Paleta_Colores.HEADER_TABLA.getColor(), 
                 5, 2 
         );
         panelSearch.setLayout(new FlowLayout(FlowLayout.LEFT, 10, 5));
-
 
         textFieldTabla = new JTextField(placeholderTexto, 25);
         textFieldTabla.setOpaque(false);
@@ -44,7 +41,6 @@ public class BarraBusquedaFiltro extends JPanel {
         textFieldTabla.setForeground(Paleta_Colores.TEXTO_SECUNDARIO.getColor());
         panelSearch.add(textFieldTabla);
 
-        //Boton filtro
         PanelRedondeadoConMargen panelFiltro = new PanelRedondeadoConMargen(
                 PanelRedondeadoConMargen.RADIO_ESQUINA_ESTANDAR,
                 Paleta_Colores.HEADER_TABLA.getColor(),
@@ -59,25 +55,21 @@ public class BarraBusquedaFiltro extends JPanel {
         lblFiltroActual.setFont(AppFont.normal()); 
         lblFiltroActual.setForeground(Paleta_Colores.TEXTO_PRINCIPAL.getColor()); 
         panelFiltro.add(lblFiltroActual);
-
         popupMenuFiltro = new JPopupMenu();
         listaFiltros = new JList<>(opcionesFiltro);
         
-        //Estilizacion de JList
-        listaFiltros.setBackground(Paleta_Colores.HEADER_TABLA.getColor());
-        listaFiltros.setForeground(Color.WHITE);
-        listaFiltros.setSelectionBackground(Paleta_Colores.CONTENEDORES.getColor());
-        listaFiltros.setSelectionForeground(Color.WHITE);
-        listaFiltros.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
+        estilizarListaFiltros();
         
-        popupMenuFiltro.add(listaFiltros);
+        // Agregar la lista al popup
+        popupMenuFiltro.add(new JScrollPane(listaFiltros)); // Usar JScrollPane por si hay muchos items
         popupMenuFiltro.setBorder(BorderFactory.createLineBorder(Paleta_Colores.CONTENEDORES.getColor()));
 
         // Eventos para el menú desplegable
         panelFiltro.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                // Mostrar el popup justo debajo del panel de filtro
+                // Asegurar que la lista tenga el tamaño adecuado antes de mostrar
+                actualizarTamanoPopup();
                 popupMenuFiltro.show(panelFiltro, 0, panelFiltro.getHeight() - 5);
             }
         });
@@ -89,16 +81,31 @@ public class BarraBusquedaFiltro extends JPanel {
                     String seleccion = listaFiltros.getSelectedValue();
                     if (seleccion != null) {
                         lblFiltroActual.setText(seleccion + "  ˅");
-                        popupMenuFiltro.setVisible(false); // OCultar flechita
+                        popupMenuFiltro.setVisible(false);
                     }
                 }
             }
         });
 
-        
         add(panelSearch);
-        add(Box.createRigidArea(new Dimension(10, 0))); // Espacio entre barra y filtro
+        add(Box.createRigidArea(new Dimension(10, 0)));
         add(panelFiltro);
+    }
+
+    private void estilizarListaFiltros() {
+        listaFiltros.setBackground(Paleta_Colores.HEADER_TABLA.getColor());
+        listaFiltros.setForeground(Color.WHITE);
+        listaFiltros.setSelectionBackground(Paleta_Colores.CONTENEDORES.getColor());
+        listaFiltros.setSelectionForeground(Color.WHITE);
+        listaFiltros.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
+        listaFiltros.setVisibleRowCount(Math.min(opcionesActuales.length, 10)); // Mostrar máximo 10 items
+    }
+
+    private void actualizarTamanoPopup() {
+        int itemCount = listaFiltros.getModel().getSize();
+        int visibleRows = Math.min(itemCount, 10);
+        listaFiltros.setVisibleRowCount(visibleRows);
+        popupMenuFiltro.pack();
     }
 
     public String getTextoBusqueda() {
@@ -113,23 +120,92 @@ public class BarraBusquedaFiltro extends JPanel {
         return seleccion;
     } 
 
-	public JTextField getTextFieldTabla() {
-		return textFieldTabla;
-	}
-	
-	public void setListaFiltros(String[] listData) {
-		listaFiltros.setListData(listData);
-	}
-
-	public JPopupMenu getPopupMenuFiltro() {
-		return popupMenuFiltro;
-	}
-
-	public JList<String> getListaFiltros() {
-		return listaFiltros;
-	}
-	
-	
+    public JTextField getTextFieldTabla() {
+        return textFieldTabla;
+    }
     
+    public void setListaFiltros(String[] listData) {
+        this.opcionesActuales = listData;
+        
+        // Actualizar el modelo de la lista existente
+        listaFiltros.setListData(listData);
+        
+        // Actualizar el texto del label con el primer elemento
+        if (listData != null && listData.length > 0) {
+            listaFiltros.setSelectedIndex(0);
+            lblFiltroActual.setText(listData[0] + "  ˅");
+        } else {
+            lblFiltroActual.setText("Filtrar  ˅");
+        }
+        
+        // Re-estilizar si es necesario
+        estilizarListaFiltros();
+        
+        // Refrescar el popup
+        popupMenuFiltro.revalidate();
+        popupMenuFiltro.repaint();
+    }
     
+    /**
+     * Método alternativo para cambiar completamente el contenido del popup
+     */
+    public void actualizarPopupCompleto(String[] nuevasOpciones) {
+        this.opcionesActuales = nuevasOpciones;
+        
+        popupMenuFiltro.removeAll();
+        
+        listaFiltros = new JList<>(nuevasOpciones);
+        estilizarListaFiltros();
+        popupMenuFiltro.add(new JScrollPane(listaFiltros));
+        listaFiltros.addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                if (!e.getValueIsAdjusting()) {
+                    String seleccion = listaFiltros.getSelectedValue();
+                    if (seleccion != null) {
+                        lblFiltroActual.setText(seleccion + "  ˅");
+                        popupMenuFiltro.setVisible(false);
+                    }
+                }
+            }
+        });
+        
+        if (nuevasOpciones != null && nuevasOpciones.length > 0) {
+            listaFiltros.setSelectedIndex(0);
+            lblFiltroActual.setText(nuevasOpciones[0] + "  ˅");
+        }
+        
+        popupMenuFiltro.revalidate();
+        popupMenuFiltro.repaint();
+    }
+
+    public JPopupMenu getPopupMenuFiltro() {
+        return popupMenuFiltro;
+    }
+
+    public JList<String> getListaFiltros() {
+        return listaFiltros;
+    }
+    
+    /**
+     * Método para agregar un listener externo a la selección de filtros
+     */
+    public void addFiltroSelectionListener(ListSelectionListener listener) {
+        listaFiltros.addListSelectionListener(listener);
+    }
+    
+    /**
+     * Método para limpiar el campo de búsqueda
+     */
+    public void limpiarBusqueda() {
+        textFieldTabla.setText("");
+    }
+    
+    /**
+     * Método para establecer el placeholder del campo de texto
+     */
+    public void setPlaceholder(String placeholder) {
+        textFieldTabla.setText(placeholder);
+        textFieldTabla.setForeground(Paleta_Colores.TEXTO_SECUNDARIO.getColor());
+    }
 }
