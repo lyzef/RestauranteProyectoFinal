@@ -49,6 +49,30 @@ public class HubController {
 		    }
 		});
 		
+		view.getBotonRecipe().addMouseListener( new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				showRecipes();
+		    }
+		});
+		
+		view.getBarraNavegacion().addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				view.abrirBarra();
+		    }
+		});
+		
+		view.getBotonLogOut().addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if(Session.isLoggedIn()) {
+			    	new LoginRepository().setSesionActiva(Session.getCurrentUser(), false);
+		    	}
+		    	view.dispose();
+		    }
+		});
+		
 		view.addWindowListener(new WindowAdapter() {
 		    @Override
 		    public void windowClosing(WindowEvent e) {
@@ -83,6 +107,10 @@ public class HubController {
 		//Cargar datos
 		view.showView(Hub.INVENTORY);
 		
+	}
+	
+	private void showRecipes() {
+		view.showView(Hub.RECIPE);
 	}
 
 }

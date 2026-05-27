@@ -2,6 +2,7 @@ package utilidades.views;
 
 import javax.swing.*;
 
+import utilidades.GeneradorIconos;
 import utilidades.Paleta_Colores;
 
 import java.awt.*;
@@ -9,7 +10,7 @@ import java.awt.geom.RoundRectangle2D;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-public class BotonMenu extends JPanel {
+public class BotonHub extends JPanel {
     private JLabel lblIcono;
     private JLabel lblTexto;
     
@@ -20,12 +21,22 @@ public class BotonMenu extends JPanel {
 
     private boolean mouseEncima = false;
 
-    public BotonMenu(String texto, Icon icono) {
+    public BotonHub(String texto, String rutaIcono, Color color) {
         setOpaque(false);
         setLayout(new FlowLayout(FlowLayout.LEFT, 15, 12));
         setCursor(new Cursor(Cursor.HAND_CURSOR)); // Cambia el puntero a la mano
-
-        lblIcono = new JLabel(icono);
+        
+        lblIcono = new JLabel();
+        if(rutaIcono != null && !rutaIcono.isEmpty()) {
+        	if(color == null) {
+        		GeneradorIconos.aplicarIcono(rutaIcono, lblIcono);
+        	} else {
+        		GeneradorIconos.aplicarIcono(rutaIcono, lblIcono, color);
+        	}
+        	
+            
+        }
+       
         lblTexto = new JLabel(texto);
         lblTexto.setFont(new Font("Arial", Font.PLAIN, 14));
         
@@ -36,6 +47,10 @@ public class BotonMenu extends JPanel {
         add(lblTexto);
 
         efectorHover();
+    }
+    
+    public BotonHub(String texto, String rutaIcono) {
+        this(texto,rutaIcono,null);
     }
 
     private void efectorHover() {
@@ -71,5 +86,9 @@ public class BotonMenu extends JPanel {
 
         g2.dispose();
         super.paintComponent(g); // Dibuja los hijos (texto e icono) después
+    }
+    
+    public void setIcon(ImageIcon image) {
+    	lblIcono.setIcon(image);
     }
 }
