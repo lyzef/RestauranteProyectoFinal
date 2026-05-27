@@ -231,10 +231,10 @@ public class InventarioController {
 	private void loadComponenteTable() {
 		try {
             List<ComponenteIngredienteReceta> componentes = repo.getComponentes();
-            
+            System.out.println("Componente cargado");
             eventListComponentes.clear();
             eventListComponentes.addAll(componentes);
-                       
+            System.out.println("Componentes agregados");
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(view, "Error al cargar componentes: " + ex.getMessage());
         }
@@ -290,8 +290,10 @@ public class InventarioController {
 	  
 	private void newInventoryMovement() {
 		//Guarda solo el componente 
-		NewMovementDialog i = new NewMovementDialog(null, new DefaultEventComboBoxModel<ComponenteIngredienteReceta>(eventListComponentes));
-		if(i.isMovimientoGuardado()) {
+		EventList<ComponenteIngredienteReceta> lista = new BasicEventList<ComponenteIngredienteReceta>();
+		lista.addAll(eventListComponentes);
+		NewMovementDialog i = new NewMovementDialog(null, new DefaultEventComboBoxModel<ComponenteIngredienteReceta>(lista));
+		if(i.isMovimientoGuardado() == true) {
 			eventListMovimientos.add(i.getMovimientoInventario());
 		}
 	}
@@ -303,14 +305,14 @@ public class InventarioController {
 		
 		if(tablaInventarioDesplegada) {
 			// Cambiar a tabla de componentes
+			loadComponenteTable();
 			view.setTableModel(tableModelComponentes);
 			view.setBtnCambiarTablaText("Ver movimientos");;
-			loadComponenteTable();
 		} else {
 			// Cambiar a tabla de movimientos
+			loadMovimientoTable();
 			view.setTableModel(tableModelMovimientos);
 			view.setBtnCambiarTablaText("Ver Componentes");
-			loadMovimientoTable();
 		}
 		
 	}

@@ -32,9 +32,11 @@ import models.ComponenteIngredienteReceta;
 import models.MovimientoInventario;
 import models.MovimientoInventario.tipoMovimiento;
 import repository.InventarioRepository;
+import repository.LoginRepository;
 import utilidades.AppFont;
 import utilidades.GeneradorIconos;
 import utilidades.Paleta_Colores;
+import utilidades.Session;
 import utilidades.ValidadorEntradasTexto;
 import utilidades.views.PanelTipoPreguntaUtil;
 
@@ -64,7 +66,7 @@ public class NewMovementDialog extends JDialog{
 		this.comboComponentes = comboComponentes;
 		
 		setSize(400,400);
-		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		setResizable(true);
 		setTitle("Formulario");
 		setLocationRelativeTo(null);
@@ -143,6 +145,7 @@ public class NewMovementDialog extends JDialog{
 				
 				if(comprobarFormulario() && !movimientoGuardado) {
 					guardarMovimientoInventario();
+					comboComponentes.dispose();
 					dispose();
 				}
 				
@@ -153,8 +156,17 @@ public class NewMovementDialog extends JDialog{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				dispose();
+				comboComponentes.dispose();
 			}
 		});
+		
+		this.addWindowListener(new WindowAdapter() {
+		    @Override
+		    public void windowClosing(WindowEvent e) {
+		    	dispose();
+				comboComponentes.dispose();
+		    }
+		});		
 		
 		//Cambia la unidad de medida a mostrar
 		componenteNombre.addActionListener(e -> {

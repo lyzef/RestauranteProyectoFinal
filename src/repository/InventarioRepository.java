@@ -205,7 +205,6 @@ public class InventarioRepository {
 
 	    private ComponenteIngredienteReceta crearComponente(ResultSet rs) throws SQLException {
 	        ComponenteIngredienteReceta comp = new ComponenteIngredienteReceta();
-	        
 	        comp.setId(rs.getInt("id"));
 	        comp.setNombre(rs.getString("nombre"));
 	        comp.setEsReceta(rs.getBoolean("es_receta"));
