@@ -45,37 +45,22 @@ public class RecipeView extends JPanel{
         this.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         this.setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
+        
         gbc.fill = GridBagConstraints.BOTH;
+        gbc.weightx = 1;
         
         // Acciones
         gbc.weighty = 0.25;
         gbc.gridy = 0;
         gbc.gridx = 0;
-        gbc.gridwidth = 1;
         this.add(crearModuloAcciones(), gbc);
-        
-        // Form derecho
-        gbc.weighty = 1;
-        gbc.weightx = 0.35;
-        gbc.gridx = 1;
-        gbc.gridy = 0;
-        gbc.gridheight = 2;
-        this.add(crearModuloFormulario(), gbc);
         
         //Tabla
         gbc.weighty = 0.75;
-        gbc.weightx = 0.65;
         gbc.gridx = 0;
         gbc.gridy = 1;
-        gbc.gridheight = 1;
         this.add(crearModuloTabla(), gbc);
         
-        btnAdd.addMouseListener(new MouseAdapter() {
-			@Override
-		    public void mousePressed(MouseEvent e) {
-				abrirFormulario();
-		    }
-		});
     }
 	
 	public JPanel crearModuloAcciones() {
@@ -166,22 +151,6 @@ public class RecipeView extends JPanel{
 		return panelTabla;
 	}
 	
-	public JPanel crearModuloFormulario() {
-		panelFormulario = new PanelRedondeadoConMargen();
-		return panelFormulario;
-	}
-	
-	public void abrirFormulario() {
-		if(panelFormulario.isVisible()) {
-			panelFormulario.setVisible(false);
-			this.revalidate(); 
-			this.repaint();    
-		} else {
-			panelFormulario.setVisible(true);
-			this.revalidate();
-			this.repaint();
-		}
-	}
 		
 		
 	

@@ -16,15 +16,14 @@ import models.User;
 
 public class InventarioRepository {
 	
-	public void saveComponente(ComponenteIngredienteReceta componente) throws Exception {
+	public int saveComponente(ComponenteIngredienteReceta componente) throws Exception {
 	    String sqlComponente = "INSERT INTO componentes (nombre, es_receta, tipo_componente, unidad_medida, "
 	            + "costo_unitario, calorias_por_unidad, stock_minimo_bloqueo, stock_minimo_alerta, "
 	            + "disponibilidad_manual, es_inventariable) "
 	            + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-	    // Las conexiones y statements se declaran dentro de los paréntesis del try
 	    try (Connection connection = DatabaseConnection.getConnection();
-	         PreparedStatement ps = connection.prepareStatement(sqlComponente)) {
+	         PreparedStatement ps = connection.prepareStatement(sqlComponente, java.sql.Statement.RETURN_GENERATED_KEYS)) {
 	        
 	        ps.setString(1, componente.getNombre());
 	        ps.setBoolean(2, componente.isReceta());
@@ -39,6 +38,15 @@ public class InventarioRepository {
 
 	        ps.executeUpdate();
 	        
+	        try (java.sql.ResultSet generatedKeys = ps.getGeneratedKeys()) {
+	            if (generatedKeys.next()) {
+	                long idGenerado = generatedKeys.getLong(1);
+	                return (int) idGenerado; 
+	            } else {
+	                throw new SQLException("Error al guardar componente, no se obtuvo el ID generado.");
+	            }
+	        }
+	        
 	    } catch (SQLException e) {
 	        throw new Exception("Componente NO guardado en database ... " + e.getMessage(), e);
 	    }
@@ -47,12 +55,20 @@ public class InventarioRepository {
 	public List<ComponenteIngredienteReceta> getComponentes() throws Exception {
 		String sql = "SELECT id, nombre, es_receta, tipo_componente, unidad_medida, "
 	               + "costo_unitario, calorias_por_unidad, stock_actual, stock_minimo_bloqueo, "
-	               + "stock_minimo_alerta, disponibilidad_manual, es_inventariable, categoria_id "
+	               + "stock_minimo_alerta, disponibilidad_manual, es_inventariable "
 	               + "FROM componentes";
 		return ejecutarConsultaComponentes(sql);
 	}
 	
-	public boolean updateComponente(ComponenteIngredienteReceta componente) throws Exception {
+	public List<ComponenteIngredienteReceta> getRecetas() throws Exception {
+		String sql = "SELECT id, nombre, es_receta, tipo_componente, unidad_medida, "
+	               + "costo_unitario, calorias_por_unidad, stock_actual, stock_minimo_bloqueo, "
+	               + "stock_minimo_alerta, disponibilidad_manual, es_inventariable "
+	               + "FROM componentes";
+		return ejecutarConsultaComponentes(sql);
+	}
+	
+	public void  updateComponente(ComponenteIngredienteReceta componente) throws Exception {
 	    String sqlUpdate = "UPDATE componentes SET "
 	            + "nombre = ?, "
 	            + "es_receta = ?, "
@@ -86,7 +102,6 @@ public class InventarioRepository {
 	        if (filasAfectadas == 0) {
 	            throw new Exception("No se encontró el componente con ID: " + componente.getId());
 	        }
-	        return true;
 	    } catch (SQLException e) {
 	        throw new Exception("Error al actualizar el componente ... " + e.getMessage(), e);
 	    }		
@@ -158,7 +173,7 @@ public class InventarioRepository {
 	        
 	        return lista;
 	    }
-	
+	 
 	 private List<ComponenteIngredienteReceta> ejecutarConsultaComponentes(String sql) throws Exception {
 	        List<ComponenteIngredienteReceta> lista = new ArrayList<>();
 	        
@@ -216,7 +231,6 @@ public class InventarioRepository {
 	        comp.setStockMinimoAlerta(rs.getDouble("stock_minimo_alerta"));
 	        comp.setDisponibilidadManual(rs.getBoolean("disponibilidad_manual"));
 	        comp.setEsInventariable(rs.getBoolean("es_inventariable"));
-	        comp.setCategoriaId(rs.getInt("categoria_id"));
 	        
 	        String unidadStr = rs.getString("unidad_medida");
 	        if (unidadStr != null) {

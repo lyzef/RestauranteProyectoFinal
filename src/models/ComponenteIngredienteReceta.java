@@ -14,7 +14,6 @@ public class ComponenteIngredienteReceta {
     private double stockMinimoAlerta;
     private boolean disponibilidadManual;
     private boolean esInventariable;
-    private Integer categoriaId;
 
     public ComponenteIngredienteReceta() {
     }
@@ -22,7 +21,7 @@ public class ComponenteIngredienteReceta {
     public ComponenteIngredienteReceta(Integer id, String nombre, boolean esReceta, String tipoComponente, 
                       Unidad unidadMedida, double costoUnitario, double caloriasPorUnidad, 
                       double stockActual, double stockMinimoBloqueo, double stockMinimoAlerta, 
-                      boolean disponibilidadManual, boolean esInventariable, Integer categoriaId) {
+                      boolean disponibilidadManual, boolean esInventariable) {
         this.id = id;
         this.nombre = nombre;
         this.esReceta = esReceta;
@@ -35,7 +34,6 @@ public class ComponenteIngredienteReceta {
         this.stockMinimoAlerta = stockMinimoAlerta;
         this.disponibilidadManual = disponibilidadManual;
         this.esInventariable = esInventariable;
-        this.categoriaId = categoriaId;
     }
 
     public Integer getId() {
@@ -132,14 +130,6 @@ public class ComponenteIngredienteReceta {
 
     public void setEsInventariable(boolean esInventariable) {
         this.esInventariable = esInventariable;
-    }
-
-    public Integer getCategoriaId() {
-        return categoriaId;
-    }
-
-    public void setCategoriaId(Integer categoriaId) {
-        this.categoriaId = categoriaId;
     }
     
     @Override

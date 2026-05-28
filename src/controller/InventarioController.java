@@ -16,6 +16,8 @@ import javax.swing.event.ListSelectionListener;
 import ca.odell.glazedlists.BasicEventList;
 import ca.odell.glazedlists.EventList;
 import ca.odell.glazedlists.FilterList;
+import ca.odell.glazedlists.GlazedLists;
+import ca.odell.glazedlists.ObservableElementList;
 import ca.odell.glazedlists.matchers.MatcherEditor;
 import ca.odell.glazedlists.swing.AdvancedTableModel;
 import ca.odell.glazedlists.swing.DefaultEventComboBoxModel;
@@ -26,6 +28,7 @@ import models.MovimientoInventario;
 import models.MovimientoInventario.tipoMovimiento;
 import models.User;
 import repository.InventarioRepository;
+import services.ComponenteService;
 import tableFormat.ComponenteTableFormat;
 import tableFormat.MovimientoInventariotTableFormat;
 import tableFormat.UserTableFormat;
@@ -45,7 +48,6 @@ public class InventarioController {
 	boolean tablaInventarioDesplegada = true;
 	
 	// Componentes
-	private EventList<ComponenteIngredienteReceta> eventListComponentes;
     private AdvancedTableModel<ComponenteIngredienteReceta> tableModelComponentes;
     ComponenteTextFilterator textFilteratorComponentes;
     private FilterList<ComponenteIngredienteReceta> listaFiltradaComponentes;
@@ -60,9 +62,14 @@ public class InventarioController {
     
     private JTextField campoFiltroCompartido;
     
-	public InventarioController(InventoryView view) {
+    //Servicios 
+	private ComponenteService componenteService;
+    
+	public InventarioController(InventoryView view, ComponenteService componenteService) {
 		this.view = view;
 		this.repo = new InventarioRepository();
+		
+		this.componenteService = componenteService;
 		
 		campoFiltroCompartido = view.getTextFieldTabla();
 		
@@ -70,8 +77,6 @@ public class InventarioController {
 		inicializarModelos();
 		
 		registrarListeners();
-		
-		loadComponenteTable();
 		
 		try {
 			view.moduloItemsBajoStock.setValor(Integer.toString(repo.getItemsConBajoStock()));
@@ -128,8 +133,7 @@ public class InventarioController {
 	            
 	            if(tablaInventarioDesplegada) {
 	            	try {
-						repo.deleteComponente(listaFiltradaComponentes.get(row).getId());
-						eventListComponentes.remove(row);
+						componenteService.deleteComponente(listaFiltradaComponentes.get(row));
 					} catch (Exception e1) {
 						System.out.println("Objeto no eliminado ... " + e);
 					}
@@ -212,32 +216,15 @@ public class InventarioController {
             
             try {
 				if(componente == null) {
-					repo.saveComponente(componenteSaved);
-					eventListComponentes.add(componenteSaved);
+					componenteService.saveComponente(componenteSaved);
 				} else {
-					int row = view.getSelectedRow();
-					boolean updated = repo.updateComponente(componenteSaved);
-					if(updated) {
-						eventListComponentes.set(row, componenteSaved);
-					}
+					componenteService.updateComponente(componenteSaved);
 				}
 			} catch(Exception e) {
 				e.printStackTrace();
 				JOptionPane.showMessageDialog(view, e.getMessage());
 			}
-        }
-	}
-	
-	private void loadComponenteTable() {
-		try {
-            List<ComponenteIngredienteReceta> componentes = repo.getComponentes();
-            System.out.println("Componente cargado");
-            eventListComponentes.clear();
-            eventListComponentes.addAll(componentes);
-            System.out.println("Componentes agregados");
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(view, "Error al cargar componentes: " + ex.getMessage());
-        }
+		}	
 	}
 	
 	private void loadMovimientoTable() {
@@ -253,7 +240,6 @@ public class InventarioController {
 	}
 	
 	private AdvancedTableModel<ComponenteIngredienteReceta> crearTableModelComponente() {
-		eventListComponentes = new BasicEventList<>();
 		textFilteratorComponentes = new ComponenteTextFilterator();
 		
 		// Crear editor de filtro específico para componentes
@@ -262,7 +248,7 @@ public class InventarioController {
 			textFilteratorComponentes
 		);
 		
-		listaFiltradaComponentes = new FilterList<>(eventListComponentes, editorFiltroComponentes);
+		listaFiltradaComponentes = new FilterList<>(componenteService.getListaSoloLectura(), editorFiltroComponentes);
     	tableModelComponentes = GlazedListsSwing.eventTableModelWithThreadProxyList(
     		listaFiltradaComponentes, 
     		new ComponenteTableFormat()
@@ -289,9 +275,18 @@ public class InventarioController {
 	}
 	  
 	private void newInventoryMovement() {
-		//Guarda solo el componente 
-		EventList<ComponenteIngredienteReceta> lista = new BasicEventList<ComponenteIngredienteReceta>();
-		lista.addAll(eventListComponentes);
+		EventList<ComponenteIngredienteReceta> lista = new BasicEventList<>();
+		lista.addAll(componenteService.getListaSoloLectura());
+		
+		//Quita elementos no inventariables
+		for (int i = lista.size() - 1; i >= 0; i--) {
+		    System.out.println(lista.get(i).getNombre());
+		    System.out.println(lista.get(i).isInventariable());
+		    
+		    if (lista.get(i).isInventariable() == false) {
+		        lista.remove(i);
+		    }
+		}
 		NewMovementDialog i = new NewMovementDialog(null, new DefaultEventComboBoxModel<ComponenteIngredienteReceta>(lista));
 		if(i.isMovimientoGuardado() == true) {
 			eventListMovimientos.add(i.getMovimientoInventario());
@@ -305,7 +300,7 @@ public class InventarioController {
 		
 		if(tablaInventarioDesplegada) {
 			// Cambiar a tabla de componentes
-			loadComponenteTable();
+			componenteService.cargarDatosDesdeBD();
 			view.setTableModel(tableModelComponentes);
 			view.setBtnCambiarTablaText("Ver movimientos");;
 		} else {

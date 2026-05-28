@@ -12,6 +12,7 @@ import javax.swing.JOptionPane;
 import models.User;
 import repository.LoginRepository;
 import repository.UserRepository;
+import services.ComponenteService;
 import tableFormat.UserTableFormat;
 import utilidades.Session;
 import views.*;
@@ -21,10 +22,18 @@ public class HubController {
 	private UserController userController;
 	private InventarioController inventarioController;
 	
+	//Servicios
+	private ComponenteService componenteService;
+	
 	public HubController(Hub hub) {
 		this.view = hub;
 		addListeners();
+		crearServicios();
 		showDashboard();
+	}
+	
+	public void crearServicios() {
+		componenteService = new ComponenteService();
 	}
 	
 	public void addListeners() {
@@ -101,7 +110,7 @@ public class HubController {
 	
 	private void showInventory() {
 		if(inventarioController == null) {
-			inventarioController = new InventarioController(view.getInventarioPanel());
+			inventarioController = new InventarioController(view.getInventarioPanel(),componenteService);
 		}
 		
 		//Cargar datos
