@@ -267,6 +267,10 @@ public class Hub extends JFrame{
 	public DashboardView getDashboardPanel() {
 		return dashboardPanel;
 	}
+	
+	public RecipeView getRecipePanel() {
+		return recetasPanel;
+	}
 
 	public InventoryView getInventarioPanel() {
 		return inventarioPanel;

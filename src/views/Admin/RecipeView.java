@@ -9,10 +9,13 @@ import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 
+import ca.odell.glazedlists.swing.AdvancedTableModel;
 import controller.InventarioDialogController;
 import utilidades.AppFont;
 import utilidades.Paleta_Colores;
@@ -31,8 +34,6 @@ public class RecipeView extends JPanel{
 	//Boton tabla
 	BotonPersonalizado btnVer;
 	BotonPersonalizado btnEdit;
-	BotonPersonalizado btnDelete;
-	BotonPersonalizado btnAdd;
 	
 	
 	//Tabla
@@ -50,13 +51,13 @@ public class RecipeView extends JPanel{
         gbc.weightx = 1;
         
         // Acciones
-        gbc.weighty = 0.25;
+        gbc.weighty = 0.05;
         gbc.gridy = 0;
         gbc.gridx = 0;
         this.add(crearModuloAcciones(), gbc);
         
         //Tabla
-        gbc.weighty = 0.75;
+        gbc.weighty = 0.95;
         gbc.gridx = 0;
         gbc.gridy = 1;
         this.add(crearModuloTabla(), gbc);
@@ -93,14 +94,10 @@ public class RecipeView extends JPanel{
 		JPanel panelBotones = new JPanel();
 		panelBotones.setOpaque(false);
 		btnVer = new BotonPersonalizado("Ver",Paleta_Colores.ACENTO_PRIMARIO.getColor());
-        btnAdd = new BotonPersonalizado("Añadir", Paleta_Colores.EXITO.getColor());
-        btnEdit = new BotonPersonalizado("Editar", Paleta_Colores.ATENCION.getColor());
-        btnDelete = new BotonPersonalizado("Borrar", Paleta_Colores.URGENTE.getColor());
+        btnEdit = new BotonPersonalizado("Modificar ingredientes", Paleta_Colores.ATENCION.getColor());
         
         panelBotones.add(Box.createHorizontalGlue());
-        panelBotones.add(btnAdd);
         panelBotones.add(btnEdit);
-        panelBotones.add(btnDelete);
         panelBotones.add(btnVer);
         
 		JPanel panelPrincipal = new PanelRedondeadoConMargen();
@@ -151,7 +148,48 @@ public class RecipeView extends JPanel{
 		return panelTabla;
 	}
 	
+	public JList<String> getListaFiltros() {
+		return barraBusquedaConFiltro.getListaFiltros();
+	}
+	
+	public void setListaFiltrosBusqueda(String[] listData) {
+		barraBusquedaConFiltro.setListaFiltros(listData);
+	}
+	
+	public String getFiltroSeleccionado() {
+		return barraBusquedaConFiltro.getFiltroSeleccionado();
+	}
+	
+	public int getSelectedRow() {
+        return tabla.getSelectedRow();
+    }
 		
-		
+	public JTextField getTextoBuscador() {
+		return barraBusquedaConFiltro.getTextFieldTabla();
+	}	
+	
+	public void setTableModel(AdvancedTableModel<?> e){
+	    tabla.setModel(e);
+	}
+	
+
+	//Getters y setters
+	
+	public BotonPersonalizado getBtnVer() {
+		return btnVer;
+	}
+
+	public BotonPersonalizado getBtnEdit() {
+		return btnEdit;
+	}
+
+	public void setBtnVer(BotonPersonalizado btnVer) {
+		this.btnVer = btnVer;
+	}
+
+	public void setBtnEdit(BotonPersonalizado btnEdit) {
+		this.btnEdit = btnEdit;
+	}
+	
 	
 }

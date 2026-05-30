@@ -10,6 +10,7 @@ import java.util.List;
 
 import config.DatabaseConnection;
 import models.ComponenteIngredienteReceta;
+import models.Estructura_receta;
 import models.MovimientoInventario;
 import models.MovimientoInventario.tipoMovimiento;
 import models.User;
@@ -50,6 +51,96 @@ public class InventarioRepository {
 	    } catch (SQLException e) {
 	        throw new Exception("Componente NO guardado en database ... " + e.getMessage(), e);
 	    }
+	}
+	
+	public void saveEstructuraReceta(int parentId, List<Estructura_receta> ingredientes) throws Exception {
+	    
+	    String sqlDelete = "DELETE FROM estructura_receta WHERE parent_id = ?";
+	    String sqlInsert = "INSERT INTO estructura_receta (parent_id, child_id, cantidad, es_opcional) VALUES (?, ?, ?, ?)";
+	    
+	    try (Connection connection = DatabaseConnection.getConnection()) {
+	        
+	        connection.setAutoCommit(false);
+
+	        try (PreparedStatement stmtDelete = connection.prepareStatement(sqlDelete);
+	             PreparedStatement stmtInsert = connection.prepareStatement(sqlInsert)) {
+
+	            stmtDelete.setInt(1, parentId);
+	            stmtDelete.executeUpdate();
+
+	            for (Estructura_receta ingrediente : ingredientes) {
+	                stmtInsert.setInt(1, parentId); 
+	                stmtInsert.setInt(2, ingrediente.getChild_id());
+	                stmtInsert.setDouble(3, ingrediente.getCantidad());
+	                stmtInsert.setBoolean(4, ingrediente.isEs_opcional());
+	                
+	                stmtInsert.addBatch(); // Empaqueta el insert
+	            }
+	            
+	            stmtInsert.executeBatch();
+
+	            connection.commit();
+
+	        } catch (SQLException e) {
+	        	//Si no jalo se reinica los cambios
+
+	            connection.rollback(); 
+	            e.printStackTrace();
+	            throw new Exception("Error al ejecutar las consultas. Aplicando Rollback...");
+	            
+	        } finally {
+	            // Regresamos a estado original
+	            connection.setAutoCommit(true);
+	        }
+
+	    } catch (SQLException e) {
+	    	throw new Exception("Error al guardar el componente");
+	    }
+	}
+	
+	public void eliminarEstructuraReceta(int parentId) throws Exception {
+	    
+	    String sqlDelete = "DELETE FROM estructura_receta WHERE parent_id = ?";
+
+	    try (Connection connection = DatabaseConnection.getConnection();
+	         PreparedStatement stmtDelete = connection.prepareStatement(sqlDelete)) {
+
+	        stmtDelete.setInt(1, parentId);
+	        
+	        int filasAfectadas = stmtDelete.executeUpdate();
+	        
+	        System.out.println("Se eliminaron " + filasAfectadas + " ingredientes de la receta.");
+
+	    } catch (SQLException e) {
+	    	throw new Exception("Error al eliminar la estructura receta");
+	    }
+	}
+	
+	public List<Estructura_receta> getTodasLasEstructuras() {
+	    
+	    List<Estructura_receta> listaCompleta = new ArrayList<>();
+	    String sql = "SELECT parent_id, child_id, cantidad, es_opcional FROM estructura_receta";
+
+	    try (Connection connection = DatabaseConnection.getConnection();
+	         PreparedStatement stmt = connection.prepareStatement(sql);
+	         ResultSet rs = stmt.executeQuery()) {
+	        
+	        while (rs.next()) {
+	            int parent = rs.getInt("parent_id");
+	            int child = rs.getInt("child_id");
+	            double cantidad = rs.getDouble("cantidad");
+	            boolean opcional = rs.getBoolean("es_opcional");
+	            
+	            Estructura_receta ingrediente = new Estructura_receta(parent, child, cantidad, opcional);
+	            listaCompleta.add(ingrediente);
+	        }
+
+	    } catch (SQLException e) {
+	        System.err.println("Error al cargar la tabla completa de estructura_receta...");
+	        e.printStackTrace();
+	    }
+
+	    return listaCompleta;
 	}
 	
 	public List<ComponenteIngredienteReceta> getComponentes() throws Exception {

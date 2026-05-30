@@ -12,7 +12,9 @@ import javax.swing.JOptionPane;
 import models.User;
 import repository.LoginRepository;
 import repository.UserRepository;
+import services.CalculoRecetaService;
 import services.ComponenteService;
+import services.EstructuraRecetaService;
 import tableFormat.UserTableFormat;
 import utilidades.Session;
 import views.*;
@@ -21,9 +23,11 @@ public class HubController {
 	Hub view;
 	private UserController userController;
 	private InventarioController inventarioController;
-	
+	private RecipeController recipeController;
 	//Servicios
 	private ComponenteService componenteService;
+	private EstructuraRecetaService estructuraRecetaService;
+	private CalculoRecetaService calculoRecetaService;
 	
 	public HubController(Hub hub) {
 		this.view = hub;
@@ -34,6 +38,8 @@ public class HubController {
 	
 	public void crearServicios() {
 		componenteService = new ComponenteService();
+		estructuraRecetaService = new EstructuraRecetaService();
+		calculoRecetaService = new CalculoRecetaService(componenteService, estructuraRecetaService);
 	}
 	
 	public void addListeners() {
@@ -119,6 +125,9 @@ public class HubController {
 	}
 	
 	private void showRecipes() {
+		if(recipeController == null) {
+			recipeController = new RecipeController(view.getRecipePanel(),estructuraRecetaService,componenteService,calculoRecetaService);
+		}
 		view.showView(Hub.RECIPE);
 	}
 

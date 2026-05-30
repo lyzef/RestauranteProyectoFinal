@@ -243,10 +243,9 @@ public class InventoryView extends JPanel{
 	    }
 	}
 	
+	
 	//Getters y setters
-	public void setListaFiltrosBusqueda(String[] listData) {
-		barraBusquedaConFiltro.setListaFiltros(listData);
-	}
+	
 	
 	public String getFiltroSeleccionado() {
 		return barraBusquedaConFiltro.getFiltroSeleccionado();

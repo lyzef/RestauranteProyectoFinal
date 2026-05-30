@@ -48,7 +48,7 @@ public class InventarioController {
 	boolean tablaInventarioDesplegada = true;
 	
 	// Componentes
-    private AdvancedTableModel<ComponenteIngredienteReceta> tableModelComponentes;
+    private AdvancedTableModel<ComponenteIngredienteReceta> tableModelComponentes; // getElementAt(row) no falla
     ComponenteTextFilterator textFilteratorComponentes;
     private FilterList<ComponenteIngredienteReceta> listaFiltradaComponentes;
     private MatcherEditor<ComponenteIngredienteReceta> editorFiltroComponentes;
@@ -135,6 +135,7 @@ public class InventarioController {
 	            	try {
 						componenteService.deleteComponente(listaFiltradaComponentes.get(row));
 					} catch (Exception e1) {
+						JOptionPane.showMessageDialog(view, "Objeto no eliminado");
 						System.out.println("Objeto no eliminado ... " + e);
 					}
 	            } else {

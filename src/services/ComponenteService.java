@@ -30,12 +30,11 @@ public class ComponenteService {
     	listaComponentes.remove(c);
     }
     
-    //Guarda componentes y actualiza la tabla
-    public int saveComponente(ComponenteIngredienteReceta c) throws Exception {
+    //Guarda componentes, guarda id generada, actualiza tabla
+    public void saveComponente(ComponenteIngredienteReceta c) throws Exception {
     	int i = repo.saveComponente(c);
     	c.setId(i);
     	listaComponentes.add(c);
-    	return i;
     }
     
     //Encuentra el ID, actualiza la bd y actualiza la lista
@@ -45,13 +44,22 @@ public class ComponenteService {
             for (int i = 0; i < listaComponentes.size(); i++) {
                 if (listaComponentes.get(i).getId() == modificado.getId()) {
                     repo.updateComponente(modificado);
-                    listaComponentes.set(i, modificado);
+                    listaComponentes.set(i, modificado); //No es 100 necesario pero sirve para avisar a la UI
                     break;
                 }
             }
         } finally {
             this.listaComponentes.getReadWriteLock().writeLock().unlock();
         }
+    }
+    
+    public ComponenteIngredienteReceta getComponenteById(int id) {
+    	for (int i = 0; i < listaComponentes.size(); i++) {
+            if (listaComponentes.get(i).getId() == id) {
+                return listaComponentes.get(i);
+            }
+        }
+    	return null;
     }
     
     public void cargarDatosDesdeBD() {
