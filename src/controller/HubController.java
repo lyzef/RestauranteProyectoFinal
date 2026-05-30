@@ -15,19 +15,24 @@ import repository.UserRepository;
 import services.CalculoRecetaService;
 import services.ComponenteService;
 import services.EstructuraRecetaService;
+import services.InventarioService;
 import tableFormat.UserTableFormat;
 import utilidades.Session;
 import views.*;
+import views.Admin.MenuAdminView;
 
 public class HubController {
 	Hub view;
 	private UserController userController;
 	private InventarioController inventarioController;
 	private RecipeController recipeController;
+	private MenuAdminController menuController;
+	
 	//Servicios
 	private ComponenteService componenteService;
 	private EstructuraRecetaService estructuraRecetaService;
 	private CalculoRecetaService calculoRecetaService;
+	private InventarioService inventarioService;
 	
 	public HubController(Hub hub) {
 		this.view = hub;
@@ -40,6 +45,7 @@ public class HubController {
 		componenteService = new ComponenteService();
 		estructuraRecetaService = new EstructuraRecetaService();
 		calculoRecetaService = new CalculoRecetaService(componenteService, estructuraRecetaService);
+		inventarioService = new InventarioService(componenteService, estructuraRecetaService);
 	}
 	
 	public void addListeners() {
@@ -71,12 +77,20 @@ public class HubController {
 		    }
 		});
 		
+		view.getBotonMenu().addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				showMenu();
+		    }
+		});
+		
 		view.getBarraNavegacion().addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				view.abrirBarra();
 		    }
 		});
+		
 		
 		view.getBotonLogOut().addMouseListener(new MouseAdapter() {
 			@Override
@@ -108,15 +122,13 @@ public class HubController {
 		if(userController == null) {
 			userController = new UserController(view.getUserPanel());
 		}
-			
-		userController.loadUsers();
 		view.showView(Hub.USERS);
 		
 	}
 	
 	private void showInventory() {
 		if(inventarioController == null) {
-			inventarioController = new InventarioController(view.getInventarioPanel(),componenteService);
+			inventarioController = new InventarioController(view.getInventarioPanel(),componenteService,inventarioService);
 		}
 		
 		//Cargar datos
@@ -129,6 +141,13 @@ public class HubController {
 			recipeController = new RecipeController(view.getRecipePanel(),estructuraRecetaService,componenteService,calculoRecetaService);
 		}
 		view.showView(Hub.RECIPE);
+	}
+	
+	private void showMenu() {
+		if(menuController == null) {
+			menuController = new MenuAdminController(new MenuAdminView());
+		}
+		view.showView(Hub.MENU);
 	}
 
 }

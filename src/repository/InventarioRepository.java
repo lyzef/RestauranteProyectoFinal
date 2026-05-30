@@ -224,15 +224,16 @@ public class InventarioRepository {
 	 }
 	 
 	 
-	 public void saveMovimientoInventario(MovimientoInventario movimiento) throws Exception {
+	 public int saveMovimientoInventario(MovimientoInventario movimiento) throws Exception {
+		 	//System.out.println("Llamada al repo desde:");
+		    //Thread.dumpStack();
+		 
 		    String sqlComponente = "INSERT INTO movimientos_inventario " +
                     "(componente_id, tipo_movimiento, cantidad, costo_movimiento, motivo) " +
                     "VALUES (?, ?, ?, ?, ?)";
-
-		    // Las conexiones y statements se declaran dentro de los paréntesis del try
 		    try (Connection connection = DatabaseConnection.getConnection();
-		         PreparedStatement ps = connection.prepareStatement(sqlComponente)) {
-		        
+		         PreparedStatement ps = connection.prepareStatement(sqlComponente, Statement.RETURN_GENERATED_KEYS)) {
+		    	
 		        ps.setInt(1, movimiento.getComponente_id());
 		        ps.setString(2,movimiento.getTipo_movimiento().toString());
 		        ps.setDouble(3, movimiento.getCantidad());
@@ -240,6 +241,15 @@ public class InventarioRepository {
 		        ps.setString(5, movimiento.getMotivo());
 
 		        ps.executeUpdate();
+		        
+		        try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
+		            if (generatedKeys.next()) {
+		                long idGenerado = generatedKeys.getLong(1);
+		                return (int) idGenerado; 
+		            } else {
+		                throw new SQLException("Error al guardar componente, no se obtuvo el ID generado.");
+		            }
+		        }
 		        
 		    } catch (SQLException e) {
 		        throw new Exception("Componente NO guardado en database ... " + e.getMessage(), e);
@@ -264,6 +274,44 @@ public class InventarioRepository {
 	        
 	        return lista;
 	    }
+	 
+	 //Mandamos todo un lote de instruccion, en caso que de error por falta de stock o similar 
+	 //se retiran los cambios
+	 public void saveMovimientosDeInventario(List<MovimientoInventario> movimientos) throws Exception {
+		    String sql = "INSERT INTO movimientos_inventario (componente_id, tipo_movimiento, cantidad, costo_movimiento, motivo) VALUES (?, ?, ?, ?, ?)";
+		    
+		    Connection conn = DatabaseConnection.getConnection(); 
+		    
+		    try (PreparedStatement pstmt = conn.prepareStatement(sql)) {		        
+		        conn.setAutoCommit(false);
+		        
+		        try {
+		            for (MovimientoInventario mov : movimientos) {
+		                pstmt.setInt(1, mov.getComponente_id());
+		                pstmt.setString(2, mov.getTipo_movimiento().name()); 
+		                pstmt.setDouble(3, mov.getCantidad());
+		                pstmt.setDouble(4, mov.getCosto_movimiento());
+		                pstmt.setString(5, mov.getMotivo());
+		                
+		                pstmt.addBatch();
+		            }
+		            
+		            pstmt.executeBatch();
+		
+		            conn.commit();
+		            
+		        } catch (SQLException e) {
+		            // Deshacer
+		            conn.rollback();
+		            throw new Exception("Error en guardado de varios movimientos (Rollback): " + e.getMessage(), e);
+		        } finally {
+		            conn.setAutoCommit(true);
+		        }
+		        
+		    } catch (SQLException e) {
+		        throw new Exception("Error al preparar la conexión o la consulta: " + e.getMessage(), e);
+		    }
+		}
 	 
 	 private List<ComponenteIngredienteReceta> ejecutarConsultaComponentes(String sql) throws Exception {
 	        List<ComponenteIngredienteReceta> lista = new ArrayList<>();

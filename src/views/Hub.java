@@ -32,6 +32,7 @@ import utilidades.Paleta_Colores;
 import utilidades.views.BotonHub;
 import views.Admin.DashboardView;
 import views.Admin.InventoryView;
+import views.Admin.MenuAdminView;
 import views.Admin.RecipeView;
 import views.Admin.UsersView;
 
@@ -54,6 +55,7 @@ public class Hub extends JFrame{
 	public DashboardView dashboardPanel;
 	public InventoryView inventarioPanel;
 	public RecipeView recetasPanel; 
+	public MenuAdminView menuAdminPanel;
 
 	public BotonHub botonUsuarios;
 	public BotonHub botonInventario;
@@ -64,7 +66,7 @@ public class Hub extends JFrame{
 	public BotonHub botonRecipe;
 
 	public Hub() {
-		setSize(1200,700);
+		setSize(1400,900);
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		setResizable(true);
 		setTitle("Formulario");
@@ -90,6 +92,7 @@ public class Hub extends JFrame{
 		panelPrincipal.add(crearDashboard(), DASHBOARD);
 		panelPrincipal.add(crearInventario(),INVENTORY);
 		panelPrincipal.add(crearRecetas(),RECIPE);
+		panelPrincipal.add(crearMenu(),MENU);
 		
 		//Layout en contenedor principal
 		contenedorPrincipal.setLayout(new GridBagLayout());
@@ -226,7 +229,8 @@ public class Hub extends JFrame{
 	}
 	
 	public JPanel crearMenu() {
-		return null;
+		menuAdminPanel = new MenuAdminView();
+		return menuAdminPanel;
 	}
 	
 	public void showView(String view) {

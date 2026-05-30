@@ -28,7 +28,7 @@ public class UserController {
     public UserController(UsersView view) {
         this.view = view;
         this.repo = new UserRepository(); 
-        
+        loadUsers();
         // Listeners de botones
         this.view.getBtnAdd().addActionListener(e -> openForm(null));
         
@@ -39,6 +39,7 @@ public class UserController {
                 return;
             }
             openForm(eventListUsers.get(view.getSelectedRow()));
+            
         });
     
         this.view.getBtnDelete().addActionListener(e -> {

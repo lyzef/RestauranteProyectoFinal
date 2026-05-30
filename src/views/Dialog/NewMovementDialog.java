@@ -50,6 +50,7 @@ public class NewMovementDialog extends JDialog{
 	JButton botonFinalizar;
 	JButton botonCerrar;
 	
+	//Elementos visuales
 	JComboBox<ComponenteIngredienteReceta> componenteNombre;
 	JComboBox<tipoMovimiento> tipoMovimiento;
 	PanelTipoPreguntaUtil cantidad;
@@ -218,18 +219,7 @@ public class NewMovementDialog extends JDialog{
 		
 		// Solo para fines internos
 		movimientoInventario.setComponente_nombre(((ComponenteIngredienteReceta)componenteNombre.getSelectedItem()).getNombre());
-		
-		try {
-			new InventarioRepository().saveMovimientoInventario(movimientoInventario);
-			movimientoGuardado = true;
-		} catch (Exception e) {
-			JOptionPane.showMessageDialog(
-                    null, 
-                    e.getMessage(), 
-                    "Movimiento no guardado", 
-                    JOptionPane.WARNING_MESSAGE
-                );
-		}
+		movimientoGuardado = true;
 	}
 	
 	private boolean comprobarFormulario() {

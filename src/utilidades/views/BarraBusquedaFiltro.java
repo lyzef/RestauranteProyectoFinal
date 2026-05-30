@@ -34,7 +34,7 @@ public class BarraBusquedaFiltro extends JPanel {
         );
         panelSearch.setLayout(new FlowLayout(FlowLayout.LEFT, 10, 5));
 
-        textFieldTabla = new JTextField(placeholderTexto, 25);
+        textFieldTabla = new JTextField(placeholderTexto, 30);
         textFieldTabla.setOpaque(false);
         textFieldTabla.setFont(AppFont.normal());
         textFieldTabla.setBorder(null);

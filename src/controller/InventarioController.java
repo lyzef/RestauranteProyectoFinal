@@ -29,6 +29,7 @@ import models.MovimientoInventario.tipoMovimiento;
 import models.User;
 import repository.InventarioRepository;
 import services.ComponenteService;
+import services.InventarioService;
 import tableFormat.ComponenteTableFormat;
 import tableFormat.MovimientoInventariotTableFormat;
 import tableFormat.UserTableFormat;
@@ -54,7 +55,6 @@ public class InventarioController {
     private MatcherEditor<ComponenteIngredienteReceta> editorFiltroComponentes;
     
     //Movimiento de inventario
-    private EventList<MovimientoInventario> eventListMovimientos;
     private AdvancedTableModel<MovimientoInventario> tableModelMovimientos;
     MovimientoTextFilterator TextFilteratorMovimientos;
     private FilterList<MovimientoInventario> listaFiltradaMovimientos;
@@ -64,13 +64,13 @@ public class InventarioController {
     
     //Servicios 
 	private ComponenteService componenteService;
+	private InventarioService inventarioService;
     
-	public InventarioController(InventoryView view, ComponenteService componenteService) {
+	public InventarioController(InventoryView view, ComponenteService componenteService,InventarioService inventarioService) {
 		this.view = view;
 		this.repo = new InventarioRepository();
-		
+		this.inventarioService = inventarioService;
 		this.componenteService = componenteService;
-		
 		campoFiltroCompartido = view.getTextFieldTabla();
 		
 		// Inicializar ambos modelos de tabla con sus propios filtros
@@ -187,6 +187,13 @@ public class InventarioController {
 		    }
 		});
 		
+		view.getBtnRegistrarProduccion().addMouseListener(new MouseAdapter() {
+			@Override
+		    public void mousePressed(MouseEvent e) {
+				newProduccionMovement();
+		    }
+		});
+		
 		view.getBtnCambiarTabla().addMouseListener(new MouseAdapter() {
 			@Override
 		    public void mousePressed(MouseEvent e) {
@@ -230,10 +237,7 @@ public class InventarioController {
 	
 	private void loadMovimientoTable() {
 		try {
-            List<MovimientoInventario> movimientos = repo.getMovimientosInventario();
-            
-            eventListMovimientos.clear();
-            eventListMovimientos.addAll(movimientos);
+			inventarioService.cargarMovimientos();
                        
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(view, "Error al cargar movimientos: " + ex.getMessage());
@@ -258,7 +262,7 @@ public class InventarioController {
 	}
 	
 	private AdvancedTableModel<MovimientoInventario> crearTableModelMovimientoInventario() {
-		eventListMovimientos = new BasicEventList<>();
+		EventList<MovimientoInventario> eventListMovimientos = inventarioService.getListaSoloLectura();
 		TextFilteratorMovimientos = new MovimientoTextFilterator();
 		
 		// Crear editor de filtro específico para movimientos
@@ -281,16 +285,44 @@ public class InventarioController {
 		
 		//Quita elementos no inventariables
 		for (int i = lista.size() - 1; i >= 0; i--) {
-		    System.out.println(lista.get(i).getNombre());
-		    System.out.println(lista.get(i).isInventariable());
-		    
+			
 		    if (lista.get(i).isInventariable() == false) {
 		        lista.remove(i);
 		    }
 		}
 		NewMovementDialog i = new NewMovementDialog(null, new DefaultEventComboBoxModel<ComponenteIngredienteReceta>(lista));
 		if(i.isMovimientoGuardado() == true) {
-			eventListMovimientos.add(i.getMovimientoInventario());
+			boolean t = inventarioService.guardarMovimientoInventario(i.getMovimientoInventario());
+			if(t) {
+				JOptionPane.showMessageDialog(null, "Guardado");
+			} else {
+				JOptionPane.showMessageDialog(null, "ERROR: Movimiento no guardado, sin cambios");
+			}
+		}
+	}
+	
+	private void newProduccionMovement() {
+		EventList<ComponenteIngredienteReceta> lista = new BasicEventList<>();
+		lista.addAll(componenteService.getListaSoloLectura());
+		
+		//Mantiene recetas inventariables
+		for (int i = lista.size() - 1; i >= 0; i--) {
+		    System.out.println(lista.get(i).getNombre());
+		    System.out.println(lista.get(i).isInventariable());
+		    
+		    if (!lista.get(i).isReceta() || lista.get(i).isInventariable() == false) {
+		        lista.remove(i);
+		    }
+		}
+		NewMovementDialog i = new NewMovementDialog(null, new DefaultEventComboBoxModel<ComponenteIngredienteReceta>(lista));
+		if(i.isMovimientoGuardado() == true) {
+			MovimientoInventario m = i.getMovimientoInventario();
+			try {
+				inventarioService.guardarProduccion(m.getComponente_id(), m.getCantidad(), m.getMotivo());
+				JOptionPane.showMessageDialog(null, "Produccion exitosa");
+			} catch (Exception e) {
+				JOptionPane.showMessageDialog(null, "Produccion no guardada: " + e.getMessage());
+			}
 		}
 	}
 	

@@ -47,7 +47,8 @@ public class InventoryView extends JPanel{
     BarraBusquedaFiltro barraBusquedaConFiltro;
     
     //Modificadores de tabla
-    private JPanel btnMovimientoInventario;
+    private JPanel btnMovimientoInventariable;
+    private JPanel btnRegistrarProduccion;
     private JPanel btnCambiarTabla;
     
     private JPanel btnSee;
@@ -137,9 +138,14 @@ public class InventoryView extends JPanel{
 		btnCambiarTabla.setAlignmentX(RIGHT_ALIGNMENT);
 		panelAcciones.add(btnCambiarTabla);
 		
-		btnMovimientoInventario = new BotonPersonalizado("Nuevo movimiento de inventario", Paleta_Colores.HEADER_TABLA.getColor());
-		btnMovimientoInventario.setAlignmentX(RIGHT_ALIGNMENT);
-		panelAcciones.add(btnMovimientoInventario);
+		btnMovimientoInventariable = new BotonPersonalizado("Nuevo movimiento de ingrediente", Paleta_Colores.HEADER_TABLA.getColor());
+		btnMovimientoInventariable.setAlignmentX(RIGHT_ALIGNMENT);
+		
+		btnRegistrarProduccion = new BotonPersonalizado("Registrar produccion", Paleta_Colores.HEADER_TABLA.getColor());
+		btnRegistrarProduccion.setAlignmentX(RIGHT_ALIGNMENT);
+		
+		panelAcciones.add(btnRegistrarProduccion);
+		panelAcciones.add(btnMovimientoInventariable);
 		panelAcciones.setOpaque(false);
         
         
@@ -251,7 +257,11 @@ public class InventoryView extends JPanel{
 		return barraBusquedaConFiltro.getFiltroSeleccionado();
 	}
 	public JPanel getBtnMovimientoInventario() {
-		return btnMovimientoInventario;
+		return btnMovimientoInventariable;
+	}
+	
+	public JPanel getBtnRegistrarProduccion() {
+		return btnRegistrarProduccion;
 	}
 
 	public JPanel getBtnSee() {
@@ -283,7 +293,7 @@ public class InventoryView extends JPanel{
 	}
 
 	public void setBtnMovimientoInventario(JPanel btnMovimientoInventario) {
-		this.btnMovimientoInventario = btnMovimientoInventario;
+		this.btnMovimientoInventariable = btnMovimientoInventario;
 	}
 
 	public void setBtnSee(JPanel btnSee) {

@@ -30,14 +30,13 @@ public class MovimientoInventario {
     
     public MovimientoInventario(int componente_id, String componente_nombre, 
                                tipoMovimiento tipo_movimiento, double cantidad, 
-                               double costo_movimiento, String motivo, String fecha) {
+                               double costo_movimiento, String motivo) {
         this.componente_id = componente_id;
         this.componente_nombre = componente_nombre;
         this.tipo_movimiento = tipo_movimiento;
         this.cantidad = cantidad;
         this.costo_movimiento = costo_movimiento;
         this.motivo = motivo;
-        this.fecha = fecha;
     }
     
     // Getters y Setters
