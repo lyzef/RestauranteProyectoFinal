@@ -14,6 +14,7 @@ import ca.odell.glazedlists.matchers.MatcherEditor;
 import ca.odell.glazedlists.swing.AdvancedTableModel;
 import ca.odell.glazedlists.swing.GlazedListsSwing;
 import ca.odell.glazedlists.swing.TextComponentMatcherEditor;
+import controller.dialogs.RecetaFormController;
 import models.ComponenteIngredienteReceta;
 import services.CalculoRecetaService;
 import services.ComponenteService;
@@ -82,6 +83,19 @@ public class RecipeController {
             	verReceta(tableModelComponentes.getElementAt(row)); //MUY IMPORTANTE, la lista filtrada y table model controla la tabla
 	           
 		    }
+		});
+		
+		view.getLblRefrescarTabla().addMouseListener(new MouseAdapter() {
+			@Override
+			public void mousePressed(MouseEvent e) {
+				try {
+					estructuraRecetaService.cargarDatosDesdeBD();
+					JOptionPane.showMessageDialog(view, "Tablas cargadas");
+				} catch (Exception e1) {
+					System.err.println(e1);
+					JOptionPane.showMessageDialog(view, "Tablas no cargadas");
+				}
+			}
 		});
 	}
 	

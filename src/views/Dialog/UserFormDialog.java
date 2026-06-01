@@ -10,16 +10,18 @@ import java.util.*;
 import javax.swing.*;
 import javax.swing.border.Border;
 
-import controller.FormularioController;
+import controller.dialogs.UserFormController;
 import models.User;
+import utilidades.AppFont;
 import utilidades.GeneradorIconos;
+import utilidades.Paleta_Colores;
 import utilidades.views.PanelTipoPreguntaUtil;
 
 /**
  *Crea la primera parte visual del formulario
  *Inicializa las preguntas y atributos del formulario, controladores de preguntas se crean desde controlador de este formulario
  */
-public class FormularioDialog extends JDialog{
+public class UserFormDialog extends JDialog{
 	public static final String FORMPARTE1 = "FORMPARTE1"; //Dato
 	public static final String FORMPARTE2 = "FORMPARTE2"; //Info puesto
 	public static final String FORMPARTE3 = "FORMPARTE3"; //Datos extra
@@ -34,7 +36,7 @@ public class FormularioDialog extends JDialog{
 	Boolean saved = false;
 	Boolean soloVista = false;
 	
-	FormularioController controller;
+	UserFormController controller;
 	
 	//Formulario de datos -PARTE 1-
 	PanelTipoPreguntaUtil nombre;
@@ -70,7 +72,7 @@ public class FormularioDialog extends JDialog{
 	//Elementos de uso
 	JLabel lblTitulo;
 	
-	public FormularioDialog(JFrame jframe, User usuario) {
+	public UserFormDialog(JFrame jframe, User usuario) {
 		super(jframe,true); 
 		
 		setSize(400,400);
@@ -86,10 +88,10 @@ public class FormularioDialog extends JDialog{
 		
 		inicializarComponentes();
 	
-		controller = new FormularioController(this,usuario);
+		controller = new UserFormController(this,usuario);
 	}
 	
-	public FormularioDialog(JFrame jframe, User usuario, boolean soloVista) {
+	public UserFormDialog(JFrame jframe, User usuario, boolean soloVista) {
 		super(jframe,true); 
 		
 		this.soloVista = true;
@@ -107,7 +109,7 @@ public class FormularioDialog extends JDialog{
 		
 		inicializarComponentes();
 	
-		controller = new FormularioController(this,usuario);
+		controller = new UserFormController(this,usuario);
 		
 		if(soloVista) {
 			modificarContrasenaCheckBox.setVisible(false);
@@ -125,9 +127,11 @@ public class FormularioDialog extends JDialog{
 		
 		//Panel superior
 		lblTitulo = new JLabel("Registro - Datos");
-		lblTitulo.setFont(new Font("Times", Font.PLAIN,17));
+		lblTitulo.setForeground(Paleta_Colores.TEXTO_PRINCIPAL.getColor());
+		lblTitulo.setFont(AppFont.normal());
 		lblTitulo.setHorizontalAlignment(SwingConstants.CENTER);
 		panelContenedorSuperior.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
+		panelContenedorSuperior.setBackground(Paleta_Colores.FONDO.getColor());
 		panelContenedorSuperior.add(lblTitulo);
 		
 		//Panel inferior
@@ -140,6 +144,7 @@ public class FormularioDialog extends JDialog{
         botonCancelar.setBackground(new Color(255, 25, 45));
 		panelContenedorInferior.add(botonCancelar);
         
+		panelContenedorInferior.setBackground(Paleta_Colores.FONDO.getColor());
 		//Panel central
 		
 		cardLayout = new CardLayout();
@@ -335,11 +340,11 @@ public class FormularioDialog extends JDialog{
 
     
     
-	public FormularioController getController() {
+	public UserFormController getController() {
 		return controller;
 	}
 
-	public void setController(FormularioController controller) {
+	public void setController(UserFormController controller) {
 		this.controller = controller;
 	}
 

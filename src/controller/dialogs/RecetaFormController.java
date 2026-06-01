@@ -1,4 +1,4 @@
-package controller;
+package controller.dialogs;
 
 import java.awt.Container;
 import java.awt.event.MouseAdapter;

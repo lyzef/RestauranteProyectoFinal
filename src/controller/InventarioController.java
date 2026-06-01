@@ -23,6 +23,7 @@ import ca.odell.glazedlists.swing.AdvancedTableModel;
 import ca.odell.glazedlists.swing.DefaultEventComboBoxModel;
 import ca.odell.glazedlists.swing.GlazedListsSwing;
 import ca.odell.glazedlists.swing.TextComponentMatcherEditor;
+import controller.dialogs.InventarioFormController;
 import models.ComponenteIngredienteReceta;
 import models.MovimientoInventario;
 import models.MovimientoInventario.tipoMovimiento;
@@ -38,7 +39,7 @@ import tableFormat.filtros.MovimientoTextFilterator;
 import tableFormat.filtros.MovimientoTextFilterator.TipoFiltroMovimiento;
 import tableFormat.filtros.ComponenteTextFilterator.TipoFiltroComponente;
 import views.Admin.InventoryView;
-import views.Dialog.FormularioDialog;
+import views.Dialog.UserFormDialog;
 import views.Dialog.InventarioDialog;
 import views.Dialog.NewMovementDialog;
 
@@ -154,7 +155,7 @@ public class InventarioController {
 	            }
 	            
 	            if(tablaInventarioDesplegada) {
-	            	new InventarioDialogController(new InventarioDialog(null), listaFiltradaComponentes.get(row), false);
+	            	new InventarioFormController(new InventarioDialog(null), listaFiltradaComponentes.get(row), false);
 	            }
 		    }
 		});
@@ -217,7 +218,7 @@ public class InventarioController {
 	
 	
 	private void openFormComponente(ComponenteIngredienteReceta componente) {
-        InventarioDialogController dialog = new InventarioDialogController(new InventarioDialog(null), componente, true);
+        InventarioFormController dialog = new InventarioFormController(new InventarioDialog(null), componente, true);
         
         if(dialog.saved) {
             ComponenteIngredienteReceta componenteSaved = dialog.getComponente();
@@ -292,12 +293,13 @@ public class InventarioController {
 		}
 		NewMovementDialog i = new NewMovementDialog(null, new DefaultEventComboBoxModel<ComponenteIngredienteReceta>(lista));
 		if(i.isMovimientoGuardado() == true) {
-			boolean t = inventarioService.guardarMovimientoInventario(i.getMovimientoInventario());
-			if(t) {
+			try {
+				inventarioService.guardarMovimientoInventario(i.getMovimientoInventario());
 				JOptionPane.showMessageDialog(null, "Guardado");
-			} else {
+			} catch (Exception e) {
 				JOptionPane.showMessageDialog(null, "ERROR: Movimiento no guardado, sin cambios");
-			}
+			}	
+			
 		}
 	}
 	

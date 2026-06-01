@@ -38,6 +38,9 @@ public class ComprobacionTipoCaracterEntradaUtil {
 		case "DECIMAL":{
 			return esDecimal(c);
 		}
+		case "PRECIO":{
+			return esPrecio(c);
+		}
 		default:
 			throw new IllegalArgumentException("Clasificacion de string desconocida: " + tipo);
 		}
@@ -52,6 +55,13 @@ public class ComprobacionTipoCaracterEntradaUtil {
     
 	private static boolean esDecimal(char c) {
 		if(Character.isDigit(c)|| c =='.' || c == '-' ||c == KeyEvent.VK_BACK_SPACE) {
+			return true;
+		}
+		return false;
+    }
+	
+	private static boolean esPrecio(char c) {
+		if(Character.isDigit(c)|| c =='.' || c == KeyEvent.VK_BACK_SPACE) {
 			return true;
 		}
 		return false;

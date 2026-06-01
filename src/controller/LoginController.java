@@ -2,7 +2,7 @@ package controller;
 
 import views.Hub;
 import views.Login;
-import views.Dialog.FormularioDialog;
+import views.Dialog.UserFormDialog;
 import excepciones.InvalidContraseña;
 import excepciones.InvalidUser;
 import models.User;

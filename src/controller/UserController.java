@@ -16,7 +16,7 @@ import repository.UserRepository;
 import services.PDFExporter;
 import tableFormat.UserTableFormat;
 import views.Admin.UsersView;
-import views.Dialog.FormularioDialog;
+import views.Dialog.UserFormDialog;
 
 public class UserController {
 
@@ -70,7 +70,7 @@ public class UserController {
                  return;
              }
              resetAdvertencias();
-             FormularioDialog dialog = new FormularioDialog(null, eventListUsers.get(row),true); //Constructor para solo lectura
+             UserFormDialog dialog = new UserFormDialog(null, eventListUsers.get(row),true); //Constructor para solo lectura
              dialog.setVisible(true);
         });
         
@@ -101,7 +101,7 @@ public class UserController {
             if(view.getAdvertencias() != null) {
                 view.getAdvertencias().setText("Tabla cargada con " + users.size() + " usuarios.");
             }
-            
+            JOptionPane.showMessageDialog(view, "Tabla cargada");
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(view, "Error al cargar usuarios: " + ex.getMessage());
         }
@@ -110,7 +110,7 @@ public class UserController {
     private void openForm(User user) {
         resetAdvertencias();
         // Nota: Asegúrate que UserFormDialog reciba los parámetros correctos
-        FormularioDialog dialog = new FormularioDialog(null, user);
+        UserFormDialog dialog = new UserFormDialog(null, user);
         dialog.setVisible(true);
         
         //Como es dialog modal aqui sigue el codigo una vez cerrada la clase dialog

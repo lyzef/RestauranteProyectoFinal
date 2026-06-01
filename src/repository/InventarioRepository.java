@@ -53,6 +53,86 @@ public class InventarioRepository {
 	    }
 	}
 	
+	public List<ComponenteIngredienteReceta> getComponentes() throws Exception {
+		String sql = "SELECT id, nombre, es_receta, tipo_componente, unidad_medida, "
+	               + "costo_unitario, calorias_por_unidad, stock_actual, stock_minimo_bloqueo, "
+	               + "stock_minimo_alerta, disponibilidad_manual, es_inventariable "
+	               + "FROM componentes";
+		return ejecutarConsultaComponentes(sql);
+	}
+
+	public void  updateComponente(ComponenteIngredienteReceta componente) throws Exception {
+	    String sqlUpdate = "UPDATE componentes SET "
+	            + "nombre = ?, "
+	            + "es_receta = ?, "
+	            + "tipo_componente = ?, "
+	            + "unidad_medida = ?, "
+	            + "costo_unitario = ?, "
+	            + "calorias_por_unidad = ?, "
+	            + "stock_minimo_bloqueo = ?, "
+	            + "stock_minimo_alerta = ?, "
+	            + "disponibilidad_manual = ?, "
+	            + "es_inventariable = ? "
+	            + "WHERE id = ?";
+	
+	    try (Connection connection = DatabaseConnection.getConnection();
+	         PreparedStatement ps = connection.prepareStatement(sqlUpdate)) {
+	        
+	        ps.setString(1, componente.getNombre());
+	        ps.setBoolean(2, componente.isReceta());
+	        ps.setString(3, componente.getTipoComponente());
+	        ps.setString(4, componente.getUnidadMedida().name());
+	        ps.setDouble(5, componente.getCostoUnitario());
+	        ps.setDouble(6, componente.getCaloriasPorUnidad());
+	        ps.setDouble(7, componente.getStockMinimoBloqueo());
+	        ps.setDouble(8, componente.getStockMinimoAlerta());
+	        ps.setBoolean(9, componente.isDisponibilidadManual());
+	        ps.setBoolean(10, componente.isInventariable());
+	        ps.setInt(11, componente.getId());  // WHERE id = ?
+	
+	        int filasAfectadas = ps.executeUpdate();
+	        
+	        if (filasAfectadas == 0) {
+	            throw new Exception("No se encontró el componente con ID: " + componente.getId());
+	        }
+	    } catch (SQLException e) {
+	        throw new Exception("Error al actualizar el componente ... " + e.getMessage(), e);
+	    }		
+	
+	}
+
+	public List<ComponenteIngredienteReceta> getRecetas() throws Exception {
+		String sql = "SELECT id, nombre, es_receta, tipo_componente, unidad_medida, "
+	               + "costo_unitario, calorias_por_unidad, stock_actual, stock_minimo_bloqueo, "
+	               + "stock_minimo_alerta, disponibilidad_manual, es_inventariable "
+	               + "FROM componentes";
+		return ejecutarConsultaComponentes(sql);
+	}
+
+	public int getItemsConBajoStock() throws Exception {
+		 String sql = "SELECT * FROM componentes WHERE stock_actual < stock_minimo_alerta";
+		 return ejecutarConsultaComponentes(sql).size();
+	 }
+
+	public void deleteComponente(int id) throws Exception {
+	    String sqlDelete = "DELETE FROM componentes WHERE id = ?";
+	
+	    try (Connection connection = DatabaseConnection.getConnection();
+	         PreparedStatement ps = connection.prepareStatement(sqlDelete)) {
+	        
+	        ps.setInt(1, id);
+	        
+	        int filasAfectadas = ps.executeUpdate();
+	        
+	        if (filasAfectadas == 0) {
+	            throw new Exception("No se encontró el componente con ID: " + id);
+	        }
+	        
+	    } catch (SQLException e) {
+	        throw new Exception("Error al eliminar el componente ... " + e.getMessage(), e);
+	    }
+	}
+
 	public void saveEstructuraReceta(int parentId, List<Estructura_receta> ingredientes) throws Exception {
 	    
 	    String sqlDelete = "DELETE FROM estructura_receta WHERE parent_id = ?";
@@ -143,88 +223,7 @@ public class InventarioRepository {
 	    return listaCompleta;
 	}
 	
-	public List<ComponenteIngredienteReceta> getComponentes() throws Exception {
-		String sql = "SELECT id, nombre, es_receta, tipo_componente, unidad_medida, "
-	               + "costo_unitario, calorias_por_unidad, stock_actual, stock_minimo_bloqueo, "
-	               + "stock_minimo_alerta, disponibilidad_manual, es_inventariable "
-	               + "FROM componentes";
-		return ejecutarConsultaComponentes(sql);
-	}
-	
-	public List<ComponenteIngredienteReceta> getRecetas() throws Exception {
-		String sql = "SELECT id, nombre, es_receta, tipo_componente, unidad_medida, "
-	               + "costo_unitario, calorias_por_unidad, stock_actual, stock_minimo_bloqueo, "
-	               + "stock_minimo_alerta, disponibilidad_manual, es_inventariable "
-	               + "FROM componentes";
-		return ejecutarConsultaComponentes(sql);
-	}
-	
-	public void  updateComponente(ComponenteIngredienteReceta componente) throws Exception {
-	    String sqlUpdate = "UPDATE componentes SET "
-	            + "nombre = ?, "
-	            + "es_receta = ?, "
-	            + "tipo_componente = ?, "
-	            + "unidad_medida = ?, "
-	            + "costo_unitario = ?, "
-	            + "calorias_por_unidad = ?, "
-	            + "stock_minimo_bloqueo = ?, "
-	            + "stock_minimo_alerta = ?, "
-	            + "disponibilidad_manual = ?, "
-	            + "es_inventariable = ? "
-	            + "WHERE id = ?";
-
-	    try (Connection connection = DatabaseConnection.getConnection();
-	         PreparedStatement ps = connection.prepareStatement(sqlUpdate)) {
-	        
-	        ps.setString(1, componente.getNombre());
-	        ps.setBoolean(2, componente.isReceta());
-	        ps.setString(3, componente.getTipoComponente());
-	        ps.setString(4, componente.getUnidadMedida().name());
-	        ps.setDouble(5, componente.getCostoUnitario());
-	        ps.setDouble(6, componente.getCaloriasPorUnidad());
-	        ps.setDouble(7, componente.getStockMinimoBloqueo());
-	        ps.setDouble(8, componente.getStockMinimoAlerta());
-	        ps.setBoolean(9, componente.isDisponibilidadManual());
-	        ps.setBoolean(10, componente.isInventariable());
-	        ps.setInt(11, componente.getId());  // WHERE id = ?
-
-	        int filasAfectadas = ps.executeUpdate();
-	        
-	        if (filasAfectadas == 0) {
-	            throw new Exception("No se encontró el componente con ID: " + componente.getId());
-	        }
-	    } catch (SQLException e) {
-	        throw new Exception("Error al actualizar el componente ... " + e.getMessage(), e);
-	    }		
-	
-	}
-	
-	public void deleteComponente(int id) throws Exception {
-	    String sqlDelete = "DELETE FROM componentes WHERE id = ?";
-
-	    try (Connection connection = DatabaseConnection.getConnection();
-	         PreparedStatement ps = connection.prepareStatement(sqlDelete)) {
-	        
-	        ps.setInt(1, id);
-	        
-	        int filasAfectadas = ps.executeUpdate();
-	        
-	        if (filasAfectadas == 0) {
-	            throw new Exception("No se encontró el componente con ID: " + id);
-	        }
-	        
-	    } catch (SQLException e) {
-	        throw new Exception("Error al eliminar el componente ... " + e.getMessage(), e);
-	    }
-	}
-	
-	 public int getItemsConBajoStock() throws Exception {
-		 String sql = "SELECT * FROM componentes WHERE stock_actual < stock_minimo_alerta";
-		 return ejecutarConsultaComponentes(sql).size();
-	 }
-	 
-	 
-	 public int saveMovimientoInventario(MovimientoInventario movimiento) throws Exception {
+	public int saveMovimientoInventario(MovimientoInventario movimiento) throws Exception {
 		 	//System.out.println("Llamada al repo desde:");
 		    //Thread.dumpStack();
 		 
@@ -255,25 +254,6 @@ public class InventarioRepository {
 		        throw new Exception("Componente NO guardado en database ... " + e.getMessage(), e);
 		    }
 	}
-	 
-	 public List<MovimientoInventario> getMovimientosInventario() throws Exception {
-	        List<MovimientoInventario> lista = new ArrayList<>();
-	        String sql = "SELECT m.*, c.nombre FROM movimientos_inventario m LEFT JOIN "
-	                + "componentes c ON m.componente_id = c.id";
-	        
-	        try (Connection connection = DatabaseConnection.getConnection();
-	             PreparedStatement ps = connection.prepareStatement(sql);
-	             ResultSet rs = ps.executeQuery()) {
-
-	            while (rs.next()) {
-	                lista.add(crearMovimiento(rs));
-	            }
-	        } catch (SQLException e) {
-	            throw new Exception("Error al consultar movimiento: " + e.getMessage(), e);
-	        }
-	        
-	        return lista;
-	    }
 	 
 	 //Mandamos todo un lote de instruccion, en caso que de error por falta de stock o similar 
 	 //se retiran los cambios
@@ -312,6 +292,25 @@ public class InventarioRepository {
 		        throw new Exception("Error al preparar la conexión o la consulta: " + e.getMessage(), e);
 		    }
 		}
+
+	 public List<MovimientoInventario> getMovimientosInventario() throws Exception {
+	        List<MovimientoInventario> lista = new ArrayList<>();
+	        String sql = "SELECT m.*, c.nombre FROM movimientos_inventario m LEFT JOIN "
+	                + "componentes c ON m.componente_id = c.id";
+	        
+	        try (Connection connection = DatabaseConnection.getConnection();
+	             PreparedStatement ps = connection.prepareStatement(sql);
+	             ResultSet rs = ps.executeQuery()) {
+
+	            while (rs.next()) {
+	                lista.add(crearMovimiento(rs));
+	            }
+	        } catch (SQLException e) {
+	            throw new Exception("Error al consultar movimiento: " + e.getMessage(), e);
+	        }
+	        
+	        return lista;
+	    }
 	 
 	 private List<ComponenteIngredienteReceta> ejecutarConsultaComponentes(String sql) throws Exception {
 	        List<ComponenteIngredienteReceta> lista = new ArrayList<>();

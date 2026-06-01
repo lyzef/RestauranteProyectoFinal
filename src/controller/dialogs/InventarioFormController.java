@@ -1,23 +1,24 @@
-package controller;
+package controller.dialogs;
 
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 import javax.swing.JOptionPane;
 
+import controller.PreguntaController;
 import excepciones.invalidInput;
 import models.ComponenteIngredienteReceta;
 import utilidades.ValidadorEntradasTexto;
 import utilidades.views.PanelTipoPreguntaUtil;
 import views.Dialog.InventarioDialog;
 
-public class InventarioDialogController {
+public class InventarioFormController {
 	private InventarioDialog view;
 	private ComponenteIngredienteReceta componente;
 	private boolean editable;
-	protected boolean saved;
+	public boolean saved;
 	
-	public InventarioDialogController(InventarioDialog view , ComponenteIngredienteReceta componente, boolean editable) {
+	public InventarioFormController(InventarioDialog view , ComponenteIngredienteReceta componente, boolean editable) {
 		this.view = view;
 		this.componente = componente;
 		this.editable = editable;
@@ -95,7 +96,7 @@ public class InventarioDialogController {
 			view.dispose();
 		}
 		
-		saveUser();
+		saveComponente();
 		saved = true;
 	}
 	
@@ -127,7 +128,7 @@ public class InventarioDialogController {
 		return listo;
 	}
 	
-	private void saveUser() {
+	private void saveComponente() {
 		if(componente == null) {
 			componente = new ComponenteIngredienteReceta();
 			

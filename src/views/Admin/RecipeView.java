@@ -16,8 +16,9 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 
 import ca.odell.glazedlists.swing.AdvancedTableModel;
-import controller.InventarioDialogController;
+import controller.dialogs.InventarioFormController;
 import utilidades.AppFont;
+import utilidades.GeneradorIconos;
 import utilidades.Paleta_Colores;
 import utilidades.views.BarraBusquedaFiltro;
 import utilidades.views.BotonPersonalizado;
@@ -37,6 +38,7 @@ public class RecipeView extends JPanel{
 	
 	
 	//Tabla
+	JLabel lblRefrescarTabla;
 	BarraBusquedaFiltro	barraBusquedaConFiltro;
 	JTable tabla;
 	
@@ -70,11 +72,14 @@ public class RecipeView extends JPanel{
 		panelTitulo.setOpaque(false);
 		panelTitulo.setLayout(new BoxLayout(panelTitulo, BoxLayout.X_AXIS));
 		
-		JLabel titulo = new JLabel("Tabla de recetas");
+		JLabel titulo = new JLabel("Tabla de recetas  ");
 		titulo.setFont(AppFont.title());
 		titulo.setForeground(Paleta_Colores.TEXTO_PRINCIPAL.getColor());
+		lblRefrescarTabla = new JLabel();
+		new GeneradorIconos().aplicarIcono("/assets/image/actualizar.png", lblRefrescarTabla);
 		
 		panelTitulo.add(titulo);
+		panelTitulo.add(lblRefrescarTabla);
 		
 		//Acciones
 		JPanel panelAcciones = new JPanel();
@@ -189,6 +194,10 @@ public class RecipeView extends JPanel{
 
 	public void setBtnEdit(BotonPersonalizado btnEdit) {
 		this.btnEdit = btnEdit;
+	}
+
+	public JLabel getLblRefrescarTabla() {
+		return lblRefrescarTabla;
 	}
 	
 	

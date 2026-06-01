@@ -28,6 +28,7 @@ public class ValidadorEntradasTexto {
         	// TODO terminar verificacion telefono y consiguientes clasificaciones
         	break;
         }
+        case "PRECIO":
         case "DECIMAL":{
         	validarDouble(texto);
         }

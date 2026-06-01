@@ -43,7 +43,6 @@ public class InventarioDialog extends JDialog{
 	PanelTipoPreguntaUtil stockMinimoBloqueo;
 	PanelTipoPreguntaUtil stockMinimoAlerta;
 	
-	List <PanelTipoPreguntaUtil> listaDePreguntas;
 	//Boolean
 	JCheckBox esReceta;
 	JCheckBox disponibilidadManual;
@@ -53,6 +52,7 @@ public class InventarioDialog extends JDialog{
 	JPanel panelFormulario;
 	JLabel titulo;
 	JLabel subTitulo;
+	List <PanelTipoPreguntaUtil> listaDePreguntas;
 	
 	JButton botonFinalizar;
 	JButton botonCerrar;

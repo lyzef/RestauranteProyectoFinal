@@ -2,6 +2,7 @@ package views.Admin;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.util.Locale.Category;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -11,9 +12,18 @@ import javax.swing.JPanel;
 import javax.swing.JTable;
 import org.jfree.data.category.DefaultCategoryDataset;
 
+import ca.odell.glazedlists.BasicEventList;
+import ca.odell.glazedlists.EventList;
+import ca.odell.glazedlists.gui.TableFormat;
 import ca.odell.glazedlists.swing.AdvancedTableModel;
+import ca.odell.glazedlists.swing.EventTableModel;
+import ca.odell.glazedlists.swing.GlazedListsSwing;
+import models.Categoria;
+import models.Platillo;
 import models.User;
+import tableFormat.UserTableFormat;
 import utilidades.AppFont;
+import utilidades.GeneradorIconos;
 import utilidades.Paleta_Colores;
 import utilidades.views.BarraBusquedaFiltro;
 import utilidades.views.BotonPersonalizado;
@@ -31,6 +41,7 @@ public class MenuAdminView extends JPanel{
     BotonPersonalizado btnEditarPlatillo;
     BotonPersonalizado btnEliminarPlatillo;
     BotonPersonalizado btnVerPlatillo;
+    JLabel lblRefrescarTabla;
     
     BotonPersonalizado btnAgregarCategoria;
     BotonPersonalizado btnEditarCategoria;
@@ -103,16 +114,20 @@ public class MenuAdminView extends JPanel{
 		JPanel panelTitulo = new JPanel();
 		panelTitulo.setOpaque(false);
 		panelTitulo.setLayout(new BoxLayout(panelTitulo, BoxLayout.X_AXIS));
-		JLabel titulo = new JLabel("Platillos");
+		JLabel titulo = new JLabel("Platillos  ");
 		titulo.setFont(AppFont.title());
 		titulo.setForeground(Paleta_Colores.TEXTO_PRINCIPAL.getColor());
+		lblRefrescarTabla = new JLabel();
+		new GeneradorIconos().aplicarIcono("/assets/image/actualizar.png", lblRefrescarTabla);
+		
 		panelTitulo.add(titulo);
+		panelTitulo.add(lblRefrescarTabla);
 		
 		JPanel panelBusqueda = new JPanel();
 		panelBusqueda.setLayout(new BoxLayout(panelBusqueda, BoxLayout.X_AXIS));
 		panelBusqueda.setBackground(Paleta_Colores.CONTENEDORES.getColor());
 		String[] ejemplo = {"Elegir","Nombre","Stock","Tipo"};
-		barraBusquedaConFiltroPlatillos = new BarraBusquedaFiltro("AAAA",ejemplo);
+		barraBusquedaConFiltroPlatillos = new BarraBusquedaFiltro("",ejemplo);
 		panelBusqueda.add(barraBusquedaConFiltroPlatillos);
 		
 		JPanel panelBotones = new JPanel();
@@ -225,11 +240,82 @@ public class MenuAdminView extends JPanel{
         return panel;
 	}
 	
-	public void setTableModelPlatillos(AdvancedTableModel<User> tableModel){
+	public int getSelectedRowCategoria() {
+		return tablaCategorias.getSelectedRow();
+	}
+	
+	public int getSelectedRowPlatillo() {
+		return tablaPlatillos.getSelectedRow();
+	}
+	
+	public void setTableModelPlatillos(AdvancedTableModel<Platillo> tableModel){
 		tablaPlatillos.setModel(tableModel);
     }
 	
-	public void setTableModelCategorias(AdvancedTableModel<User> tableModel){
+	public void setTableModelCategorias(AdvancedTableModel<Categoria> tableModel){
 		tablaCategorias.setModel(tableModel);
     }
+
+	public JTable getTablaPlatillos() {
+		return tablaPlatillos;
+	}
+
+	public JTable getTablaCategorias() {
+		return tablaCategorias;
+	}
+	
+	public ModuloParaEstadistica getModuloVentas() {
+        return moduloVentas;
+    }
+
+    public ModuloParaEstadistica getModuloOrdenes() {
+        return moduloOrdenes;
+    }
+
+    public DefaultCategoryDataset getDataset() {
+        return dataset;
+    }
+    
+    public BotonPersonalizado getBtnAgregarPlatillo() {
+        return btnAgregarPlatillo;
+    }
+
+    public BotonPersonalizado getBtnEditarPlatillo() {
+        return btnEditarPlatillo;
+    }
+
+    public BotonPersonalizado getBtnEliminarPlatillo() {
+        return btnEliminarPlatillo;
+    }
+
+    public BotonPersonalizado getBtnVerPlatillo() {
+        return btnVerPlatillo;
+    }
+    
+    public BotonPersonalizado getBtnAgregarCategoria() {
+        return btnAgregarCategoria;
+    }
+
+    public BotonPersonalizado getBtnEditarCategoria() {
+        return btnEditarCategoria;
+    }
+
+    public BotonPersonalizado getBtnEliminarCategoria() {
+        return btnEliminarCategoria;
+    }
+
+    public BotonPersonalizado getBtnVerCategoria() {
+        return btnVerCategoria;
+    }
+    
+    public BarraBusquedaFiltro getBarraBusquedaConFiltroPlatillos() {
+        return barraBusquedaConFiltroPlatillos;
+    }
+
+	public JLabel getLblRefrescarTabla() {
+		return lblRefrescarTabla;
+	}
+    
+    
+	
 }

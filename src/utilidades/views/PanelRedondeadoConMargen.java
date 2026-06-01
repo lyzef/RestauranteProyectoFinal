@@ -43,7 +43,7 @@ public class PanelRedondeadoConMargen extends JPanel {
     public PanelRedondeadoConMargen() {
         this(RADIO_ESQUINA_ESTANDAR, COLOR_PANEL_ESTANDAR, MARGEN_ESTANDAR, PADDING_INTERNO);
     }
-
+    
     @Override
     public void paint(Graphics g) {
         Graphics2D g2 = (Graphics2D) g.create();

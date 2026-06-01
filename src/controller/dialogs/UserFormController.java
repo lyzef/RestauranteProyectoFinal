@@ -1,4 +1,4 @@
-package controller;
+package controller.dialogs;
 
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -9,16 +9,17 @@ import javax.swing.AbstractButton;
 import javax.swing.JOptionPane;
 import javax.swing.JRadioButton;
 
+import controller.PreguntaController;
 import models.User;
 import repository.UserRepository;
 import utilidades.PasswordUtils;
 import utilidades.ValidadorEntradasTexto;
 import utilidades.views.PanelTipoPreguntaUtil;
 import views.Login;
-import views.Dialog.FormularioDialog;
+import views.Dialog.UserFormDialog;
 
-public class FormularioController {
-	private FormularioDialog formulario;
+public class UserFormController {
+	private UserFormDialog formulario;
 	private String parteFormularioActual;	
 	
 	private User usuario;
@@ -26,7 +27,7 @@ public class FormularioController {
 	 * Controlador de las clase formulario, guarda, edita y comprueba el formulario
 	 * @param formulario Primera parte del formulario
 	 */
-	public FormularioController(FormularioDialog formularioRegistro, User usuario) {
+	public UserFormController(UserFormDialog formularioRegistro, User usuario) {
 		this.formulario = formularioRegistro;
 		this.usuario = usuario;
 		
@@ -36,7 +37,7 @@ public class FormularioController {
 		conectarPreguntasAsuControlador(formularioRegistro.getListaPreguntasParte3());
 		
 		//Iniciando vista formulario parte 1
-		parteFormularioActual = FormularioDialog.FORMPARTE1;
+		parteFormularioActual = UserFormDialog.FORMPARTE1;
 		formulario.showView(parteFormularioActual);
 		
 		
@@ -81,7 +82,7 @@ public class FormularioController {
 	 */
 	public void controlFlujoFormulario() {
 		switch (parteFormularioActual) {
-		case FormularioDialog.FORMPARTE1:{
+		case UserFormDialog.FORMPARTE1:{
 			if(formulario.getSoloVista()) {
 				parteFormularioActual = formulario.FORMPARTE2;
 				formulario.showView(parteFormularioActual);
@@ -94,7 +95,7 @@ public class FormularioController {
 			}
 			break;
 		}
-		case FormularioDialog.FORMPARTE2:{
+		case UserFormDialog.FORMPARTE2:{
 			if(formulario.getSoloVista()) {
 				parteFormularioActual = formulario.FORMPARTE3;
 				formulario.showView(parteFormularioActual);
@@ -107,7 +108,7 @@ public class FormularioController {
 			}
 			break;
 		}
-		case FormularioDialog.FORMPARTE3:{
+		case UserFormDialog.FORMPARTE3:{
 			if(formulario.getSoloVista()) {
 				formulario.dispose();
 				break;

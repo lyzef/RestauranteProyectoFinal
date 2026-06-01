@@ -4,6 +4,7 @@ import controller.HubController;
 import controller.LoginController;
 import views.Hub;
 import views.Login;
+import views.Dialog.PlatilloDialog;
 
 public class Main {
     public static void main(String[] args) {
@@ -14,7 +15,7 @@ public class Main {
             System.out.println("No se pudo inicializar la clase de conexión");
         }
     	//new LoginController(new Login());
-        
+        //new PlatilloDialog(null);
        	new HubController(new Hub());
     }
 }

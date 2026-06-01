@@ -17,7 +17,11 @@ public class EstructuraRecetaService {
 	public EstructuraRecetaService() {
 		repo = new InventarioRepository();
 		lista = new BasicEventList<Estructura_receta>();
-		cargarDatosDesdeBD();
+		try {
+			cargarDatosDesdeBD();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public EventList<Estructura_receta> getListaModificable() {
@@ -63,12 +67,12 @@ public class EstructuraRecetaService {
     	return hijos; 
     }
     
-    public void cargarDatosDesdeBD() {
+    public void cargarDatosDesdeBD() throws Exception {
     	try {
     		lista.clear();
 			lista.addAll(repo.getTodasLasEstructuras());
 		} catch (Exception e) {
-			System.out.println("Error : Lista estructura recetas no cargada , RAZON " + e.getMessage());
+			throw new Exception("Error : Lista estructura recetas no cargada , RAZON " + e.getMessage());
 		}
     }
     

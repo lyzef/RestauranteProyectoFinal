@@ -9,8 +9,9 @@ import java.awt.event.KeyEvent;
 import javax.swing.*;
 
 import excepciones.InvalidUser;
+import utilidades.Paleta_Colores;
 
-public class PanelTipoPreguntaUtil extends JPanel{
+public class PanelTipoPreguntaUtil extends PanelRedondeadoConMargen{
 	private JLabel lblPregunta;
     private JTextField JfieldEntrada;
     private JLabel lblError;
@@ -42,7 +43,10 @@ public class PanelTipoPreguntaUtil extends JPanel{
     public PanelTipoPreguntaUtil(String pregunta, String caracteresAceptados) {  	
     	setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
     	lblPregunta = new JLabel(pregunta);
+    	lblPregunta.setForeground(Paleta_Colores.TEXTO_PRINCIPAL.getColor());
+    	
     	JfieldEntrada = new JTextField();
+    	
     	lblError = new JLabel("");
     	lblError.setForeground(Color.RED);
     	tipoClasificacion = caracteresAceptados;

@@ -1,5 +1,8 @@
 package services;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import ca.odell.glazedlists.BasicEventList;
 import ca.odell.glazedlists.EventList;
 import ca.odell.glazedlists.GlazedLists;
@@ -60,6 +63,17 @@ public class ComponenteService {
             }
         }
     	return null;
+    }
+    
+    public List<ComponenteIngredienteReceta> getAllRecetas() {
+    	List<ComponenteIngredienteReceta> recetas = new ArrayList<ComponenteIngredienteReceta>();
+    	
+    	for (int i = 0; i < listaComponentes.size(); i++) {
+            if (listaComponentes.get(i).isReceta()) {
+                recetas.add(listaComponentes.get(i));
+            }
+        }
+    	return recetas;
     }
     
     public void cargarDatosDesdeBD() {

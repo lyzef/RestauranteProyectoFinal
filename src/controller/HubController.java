@@ -13,9 +13,11 @@ import models.User;
 import repository.LoginRepository;
 import repository.UserRepository;
 import services.CalculoRecetaService;
+import services.CategoriaService;
 import services.ComponenteService;
 import services.EstructuraRecetaService;
 import services.InventarioService;
+import services.PlatilloService;
 import tableFormat.UserTableFormat;
 import utilidades.Session;
 import views.*;
@@ -33,6 +35,8 @@ public class HubController {
 	private EstructuraRecetaService estructuraRecetaService;
 	private CalculoRecetaService calculoRecetaService;
 	private InventarioService inventarioService;
+	private CategoriaService categoriaService;
+	private PlatilloService menuService;
 	
 	public HubController(Hub hub) {
 		this.view = hub;
@@ -44,8 +48,11 @@ public class HubController {
 	public void crearServicios() {
 		componenteService = new ComponenteService();
 		estructuraRecetaService = new EstructuraRecetaService();
+		categoriaService = new CategoriaService();
+		
 		calculoRecetaService = new CalculoRecetaService(componenteService, estructuraRecetaService);
 		inventarioService = new InventarioService(componenteService, estructuraRecetaService);
+		menuService = new PlatilloService(categoriaService);
 	}
 	
 	public void addListeners() {
@@ -145,7 +152,8 @@ public class HubController {
 	
 	private void showMenu() {
 		if(menuController == null) {
-			menuController = new MenuAdminController(new MenuAdminView());
+			menuController = new MenuAdminController(view.getMenuAdminPanel(),categoriaService,menuService,
+					componenteService);
 		}
 		view.showView(Hub.MENU);
 	}

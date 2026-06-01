@@ -177,7 +177,7 @@ public class NewMovementDialog extends JDialog{
 		
 	}
 	
-	private JPanel crearFormulario() {
+	private JScrollPane crearFormulario() {
 		panelFormulario = new JPanel();
 		panelFormulario.setLayout(new BoxLayout(panelFormulario, BoxLayout.Y_AXIS));
 		panelFormulario.setBorder(BorderFactory.createEmptyBorder(10,20,10,20));
@@ -206,7 +206,7 @@ public class NewMovementDialog extends JDialog{
 			panelFormulario.add(pregunta);
 		}
 		
-		return (panelFormulario);
+		return new JScrollPane(panelFormulario);
 	}
 	
 	private void guardarMovimientoInventario() {

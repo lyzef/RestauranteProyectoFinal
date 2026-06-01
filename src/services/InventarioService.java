@@ -33,16 +33,12 @@ public class InventarioService {
 	}
 	
 	
-	public boolean guardarMovimientoInventario(MovimientoInventario mov) {
-		try {
-			int i = repo.saveMovimientoInventario(mov);
-			mov.setId(i);
-			listaMovimientos.add(mov);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return false;
-		}
-		return true;
+	public void guardarMovimientoInventario(MovimientoInventario mov) throws Exception {
+
+		int i = repo.saveMovimientoInventario(mov);
+		mov.setId(i);
+		listaMovimientos.add(mov);
+	
 	}
 	
     private List<MovimientoInventario> descontarHijosDeInventario(int idReceta, double cantidad, tipoMovimiento tipoMovimiento,String motivo) {
