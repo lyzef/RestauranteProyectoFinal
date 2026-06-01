@@ -6,11 +6,13 @@ import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import javax.swing.JOptionPane;
 import ca.odell.glazedlists.BasicEventList;
 import ca.odell.glazedlists.EventList;
+import ca.odell.glazedlists.SortedList;
 import ca.odell.glazedlists.swing.DefaultEventComboBoxModel;
 import excepciones.invalidInput;
 import models.ComponenteIngredienteReceta;
@@ -194,7 +196,12 @@ public class RecetaFormController {
 		listaTemp.addAll(listaComponentes);
 		listaTemp.remove(receta);
 		
-		modelComboBox = new DefaultEventComboBoxModel<ComponenteIngredienteReceta>(listaTemp);
+		SortedList<ComponenteIngredienteReceta> listaOrdenada = new SortedList<>(
+				listaTemp, 
+			    Comparator.comparing(ComponenteIngredienteReceta::getNombre) 
+			);
+		
+		modelComboBox = new DefaultEventComboBoxModel<ComponenteIngredienteReceta>(listaOrdenada);
 		view.setComboBoxModel(modelComboBox);
 	}
 	

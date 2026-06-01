@@ -5,7 +5,9 @@ import java.util.List;
 
 import ca.odell.glazedlists.BasicEventList;
 import ca.odell.glazedlists.EventList;
+import ca.odell.glazedlists.FilterList;
 import ca.odell.glazedlists.GlazedLists;
+import ca.odell.glazedlists.matchers.Matcher;
 import models.ComponenteIngredienteReceta;
 import repository.InventarioRepository;
 import views.Dialog.InventarioDialog;
@@ -65,15 +67,20 @@ public class ComponenteService {
     	return null;
     }
     
-    public List<ComponenteIngredienteReceta> getAllRecetas() {
-    	List<ComponenteIngredienteReceta> recetas = new ArrayList<ComponenteIngredienteReceta>();
-    	
-    	for (int i = 0; i < listaComponentes.size(); i++) {
-            if (listaComponentes.get(i).isReceta()) {
-                recetas.add(listaComponentes.get(i));
+    public FilterList<ComponenteIngredienteReceta> getAllRecetas() {
+        Matcher<ComponenteIngredienteReceta> matcherRecetas = new Matcher<ComponenteIngredienteReceta>() {
+            @Override
+            public boolean matches(ComponenteIngredienteReceta item) {
+                return item.isReceta();
             }
-        }
-    	return recetas;
+        };
+        
+        return new FilterList<>(this.listaComponentes, matcherRecetas);
+    }
+    
+    public FilterList<ComponenteIngredienteReceta> getAllInventariables() {
+        Matcher<ComponenteIngredienteReceta> matcherInventariables = item -> item.isInventariable();
+        return new FilterList<>(this.listaComponentes, matcherInventariables);
     }
     
     public void cargarDatosDesdeBD() {

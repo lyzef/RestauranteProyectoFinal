@@ -206,8 +206,8 @@ public class PlatilloDialog extends JDialog{
 		}
 		
 		public void asignarComboBoxs(DefaultEventComboBoxModel<ImageIcon> imagenesModel,
-				DefaultComboBoxModel<Categoria> categoriaModel,
-				DefaultComboBoxModel<ComponenteIngredienteReceta> componentesModel) {
+				DefaultEventComboBoxModel<Categoria> categoriaModel,
+				DefaultEventComboBoxModel<ComponenteIngredienteReceta> componentesModel) {
 			imagenComboBox.setModel(imagenesModel);
 			categoriasComboBox.setModel(categoriaModel);
 			recetaComboBox.setModel(componentesModel);

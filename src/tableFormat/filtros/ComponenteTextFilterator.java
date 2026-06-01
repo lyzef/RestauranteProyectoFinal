@@ -8,7 +8,7 @@ public class ComponenteTextFilterator implements TextFilterator<ComponenteIngred
 	public enum TipoFiltroComponente {
         SIN_FILTRO("Elegir"),      
         NOMBRE("Nombre"),
-        TIPO_COMPONENTE("Tipo"),
+        CLASIFICACION("Clasificacion"),
         STOCK("Stock"),
         ID("ID");
         
@@ -61,7 +61,7 @@ public class ComponenteTextFilterator implements TextFilterator<ComponenteIngred
                 }
                 break;
                 
-            case TIPO_COMPONENTE:
+            case CLASIFICACION:
                 if (componente.getTipoComponente() != null) {
                     listaStrings.add(componente.getTipoComponente());
                 }
@@ -89,8 +89,8 @@ public class ComponenteTextFilterator implements TextFilterator<ComponenteIngred
         this.filtroActivo = TipoFiltroComponente.NOMBRE;
     }
     
-    public void filtrarPorTipo() {
-        this.filtroActivo = TipoFiltroComponente.TIPO_COMPONENTE;
+    public void filtrarPorClasificacion() {
+        this.filtroActivo = TipoFiltroComponente.CLASIFICACION;
     }
     
     public void filtrarPorStock() {

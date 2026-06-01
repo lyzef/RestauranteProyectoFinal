@@ -21,7 +21,7 @@ public class PreguntaController {
     		@Override
 		    public void keyTyped(KeyEvent e) {
     			//Valida el error anterior
-    			panel.limpiarError();
+    			panel.cleanError();
     			//Evita entrada de enter al sistema
     			if (e.getKeyChar() == KeyEvent.VK_ENTER) {
     	            return;
@@ -48,12 +48,12 @@ public class PreguntaController {
     		@Override
     	    public void focusLost(FocusEvent e) {
     			//Limpia el error anterior
-    			panel.limpiarError();
+    			panel.cleanError();
     	        try {
 					ValidadorEntradasTexto.validarContenido(panel.getTextoEntrada(), panel.getTipoClasificacion());
 				} catch (invalidInput e1) {
 					//Mostrando a usuario el error en la entrada
-					panel.modificarLabelError(e1.getMessage());
+					panel.setTextoError(e1.getMessage());
 				}
     	    }
 		});

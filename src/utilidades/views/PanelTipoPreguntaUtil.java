@@ -77,11 +77,11 @@ public class PanelTipoPreguntaUtil extends PanelRedondeadoConMargen{
     	return false;
     }
     
-    public void modificarLabelError(String t) {
+    public void setTextoError(String t) {
     	lblError.setText(t);
     }
     
-    public void limpiarError() {
+    public void cleanError() {
     	lblError.setText(null);
     }
     

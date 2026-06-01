@@ -9,6 +9,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 
 import javax.swing.DefaultComboBoxModel;
@@ -17,6 +18,7 @@ import javax.swing.JOptionPane;
 
 import ca.odell.glazedlists.BasicEventList;
 import ca.odell.glazedlists.EventList;
+import ca.odell.glazedlists.SortedList;
 import ca.odell.glazedlists.swing.DefaultEventComboBoxModel;
 import controller.PreguntaController;
 import excepciones.invalidInput;
@@ -124,11 +126,20 @@ public class PlatilloDialogControlador {
 		eventListImagenes = new BasicEventList<ImageIcon>();
 		eventListImagenes.addAll(Arrays.asList(imagenes));
 		
-		DefaultComboBoxModel<Categoria> categoriaModel = new DefaultComboBoxModel<Categoria>(
-		        categoriaService.getListaSoloLectura().toArray(new Categoria[0])); 
-
-		DefaultComboBoxModel<ComponenteIngredienteReceta> recetaModel = new DefaultComboBoxModel<ComponenteIngredienteReceta>(
-		        componenteService.getAllRecetas().toArray(new ComponenteIngredienteReceta[0])); 
+		
+		SortedList<Categoria> listaCategoria = new SortedList<>(
+				 categoriaService.getListaSoloLectura(), 
+			    Comparator.comparing(Categoria::getNombre) 
+			);
+		
+		DefaultEventComboBoxModel<Categoria> categoriaModel = new DefaultEventComboBoxModel<Categoria>(listaCategoria); 
+		
+		SortedList<ComponenteIngredienteReceta> listaComponentes = new SortedList<>(
+				componenteService.getAllRecetas(), 
+			    Comparator.comparing(ComponenteIngredienteReceta::getNombre) 
+			);
+		DefaultEventComboBoxModel<ComponenteIngredienteReceta> recetaModel = new DefaultEventComboBoxModel<ComponenteIngredienteReceta>(
+				listaComponentes); 
 		
 		view.asignarComboBoxs(new DefaultEventComboBoxModel<ImageIcon>(eventListImagenes), categoriaModel, recetaModel);
 	}
@@ -177,7 +188,7 @@ public class PlatilloDialogControlador {
 			} catch (invalidInput e) {
 				listo = false;
 				view.setSubTitulo("Espacios sin rellenar");
-				p.modificarLabelError(e.getMessage());
+				p.setTextoError(e.getMessage());
 			}
 		}
 		return listo;

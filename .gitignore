@@ -1,2 +1,10 @@
-bin/
+﻿
 .metadata/
+bin/
+datos_restaurante/
+.settings/
+.recommenders/
+Thumbs.db
+desktop.ini
+src/config/database.properties
+

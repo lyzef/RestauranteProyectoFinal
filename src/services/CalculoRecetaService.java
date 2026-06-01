@@ -77,7 +77,7 @@ public class CalculoRecetaService {
         return costoTotal;
     }
     
-    //Para hijos en memoria
+    //Para estructuras de recetas aun no declaradas (HIJOS EN MEMORIA)
     public double calcularCostoTotal(List<Estructura_receta> hijos) {
     	double costoTotal = 0.0;
     	for (Estructura_receta hijo : hijos) {

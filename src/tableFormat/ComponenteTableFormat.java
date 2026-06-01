@@ -13,12 +13,11 @@ public class ComponenteTableFormat implements AdvancedTableFormat<ComponenteIngr
 	
 	private final String[] columns = {
 	        "Nombre",
-	        "Tipo",
+	        "Clasificacion",
 	        "Estado",
 	        "Stock",
-	        "Stock para bloqueo",
-	        "Receta",
-	        "Inventariable",
+	        "Stock para advertencia",
+	        "Tipo de insumo",
 	    };
 	
 	@Override
@@ -38,25 +37,42 @@ public class ComponenteTableFormat implements AdvancedTableFormat<ComponenteIngr
             case 1: return c.getTipoComponente();
             case 2: return estadoComponente(c);
             case 3: return c.getStockActual() + " " + c.getUnidadMedida();
-            case 4: return c.getStockMinimoBloqueo() + " " + c.getUnidadMedida();
-            case 5: return c.isReceta() ? "Verdadero" : "Falso";
-            case 6: return c.isInventariable() ? "Verdadero" : "Falso";
+            case 4: return c.getStockMinimoAlerta() + " " + c.getUnidadMedida();
+            case 5:{
+            	if(c.isInventariable() && c.isReceta()) {
+            		return "Produccion por lotes";
+            	}else if(c.isReceta()){
+            		return "Receta";
+            	}else if(c.isInventariable()) {
+            		return "Insumo";
+            	}else if(c.isInventariable() == false) {
+            		return "Insumo no contable";
+            	} else {
+            		return "NA";
+            	}
+            }
             default: return null;
         }
     }
 	
 	private String estadoComponente(ComponenteIngredienteReceta c) {
-		if(c.isDisponibilidadManual() == false) {
-			return "Bloqueado";
+		if(c.isInventariable()) {
+			if(c.isDisponibilidadManual() == false) {
+				return "Bloqueado por admin";
+			}
+			
+			if(c.getStockActual() < c.getStockMinimoBloqueo()) {
+				return "-> Bloqueado <-";
+			}
+			
+			if(c.getStockActual() < c.getStockMinimoAlerta()) {
+				return "-- Bajo stock --";
+			}
+		} else if(c.isReceta()){
+			return "NA";
 		}
 		
-		if(c.getStockActual() < c.getStockMinimoBloqueo()) {
-			return "Bloqueado";
-		}
 		
-		if(c.getStockActual() < c.getStockMinimoAlerta()) {
-			return "Bajo stock";
-		}
 		
 		return "Activo";
 	}

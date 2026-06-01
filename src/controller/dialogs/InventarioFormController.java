@@ -122,7 +122,7 @@ public class InventarioFormController {
 				ValidadorEntradasTexto.validarContenido(p);
 			} catch (invalidInput e) {
 				listo = false;
-				p.modificarLabelError(e.getMessage());
+				p.setTextoError(e.getMessage());
 			}
 		}
 		return listo;

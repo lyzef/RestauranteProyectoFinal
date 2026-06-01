@@ -1,29 +1,23 @@
 package controller;
 
-import java.awt.Component;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-
 import ca.odell.glazedlists.BasicEventList;
 import ca.odell.glazedlists.EventList;
 import ca.odell.glazedlists.FilterList;
-import ca.odell.glazedlists.GlazedLists;
-import ca.odell.glazedlists.ObservableElementList;
 import ca.odell.glazedlists.matchers.MatcherEditor;
 import ca.odell.glazedlists.swing.AdvancedTableModel;
 import ca.odell.glazedlists.swing.DefaultEventComboBoxModel;
 import ca.odell.glazedlists.swing.GlazedListsSwing;
 import ca.odell.glazedlists.swing.TextComponentMatcherEditor;
 import controller.dialogs.InventarioFormController;
+import controller.dialogs.NewMovementDialogController;
 import models.ComponenteIngredienteReceta;
 import models.MovimientoInventario;
 import models.MovimientoInventario.tipoMovimiento;
@@ -92,6 +86,7 @@ public class InventarioController {
 		
 		// Mostrar tabla inicial (componentes)
 		view.setTableModel(tableModelComponentes);
+		actualizarListaFiltrosDisponibles();
 	}
 	
 	private void registrarListeners() {
@@ -281,51 +276,12 @@ public class InventarioController {
 	}
 	  
 	private void newInventoryMovement() {
-		EventList<ComponenteIngredienteReceta> lista = new BasicEventList<>();
-		lista.addAll(componenteService.getListaSoloLectura());
+		new NewMovementDialogController(inventarioService, componenteService, new NewMovementDialog(null),false);
 		
-		//Quita elementos no inventariables
-		for (int i = lista.size() - 1; i >= 0; i--) {
-			
-		    if (lista.get(i).isInventariable() == false) {
-		        lista.remove(i);
-		    }
-		}
-		NewMovementDialog i = new NewMovementDialog(null, new DefaultEventComboBoxModel<ComponenteIngredienteReceta>(lista));
-		if(i.isMovimientoGuardado() == true) {
-			try {
-				inventarioService.guardarMovimientoInventario(i.getMovimientoInventario());
-				JOptionPane.showMessageDialog(null, "Guardado");
-			} catch (Exception e) {
-				JOptionPane.showMessageDialog(null, "ERROR: Movimiento no guardado, sin cambios");
-			}	
-			
-		}
 	}
 	
 	private void newProduccionMovement() {
-		EventList<ComponenteIngredienteReceta> lista = new BasicEventList<>();
-		lista.addAll(componenteService.getListaSoloLectura());
-		
-		//Mantiene recetas inventariables
-		for (int i = lista.size() - 1; i >= 0; i--) {
-		    System.out.println(lista.get(i).getNombre());
-		    System.out.println(lista.get(i).isInventariable());
-		    
-		    if (!lista.get(i).isReceta() || lista.get(i).isInventariable() == false) {
-		        lista.remove(i);
-		    }
-		}
-		NewMovementDialog i = new NewMovementDialog(null, new DefaultEventComboBoxModel<ComponenteIngredienteReceta>(lista));
-		if(i.isMovimientoGuardado() == true) {
-			MovimientoInventario m = i.getMovimientoInventario();
-			try {
-				inventarioService.guardarProduccion(m.getComponente_id(), m.getCantidad(), m.getMotivo());
-				JOptionPane.showMessageDialog(null, "Produccion exitosa");
-			} catch (Exception e) {
-				JOptionPane.showMessageDialog(null, "Produccion no guardada: " + e.getMessage());
-			}
-		}
+		new NewMovementDialogController(inventarioService, componenteService, new NewMovementDialog(null),true);
 	}
 	
 	private void cambiarTabla() {
