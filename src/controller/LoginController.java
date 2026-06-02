@@ -1,16 +1,30 @@
 package controller;
 
-import views.Hub;
 import views.Login;
+import views.Admin.HubFrame;
+import views.AutoVenta.HubVentaFrame;
 import views.Dialog.UserFormDialog;
 import excepciones.InvalidContraseña;
 import excepciones.InvalidUser;
 import models.User;
 import repository.LoginRepository;
 import repository.UserRepository;
+import services.CalculoRecetaService;
+import services.CarritoService;
+import services.CategoriaService;
+import services.ComponenteService;
+import services.EstructuraRecetaService;
+import services.InventarioService;
+import services.MenuCatalogoService;
+import services.PlatilloService;
+import services.VentasService;
 import utilidades.Session;
 
 import javax.swing.*;
+
+import controller.admin.HubAdminController;
+import controller.autoVenta.HubVentaController;
+
 import java.awt.*;
 import java.sql.SQLException;
 import java.util.List;
@@ -19,10 +33,25 @@ public class LoginController {
 
     private Login view;
     private LoginRepository repository;
-
+    
+    //Servicios
+  	private ComponenteService componenteService;
+  	private EstructuraRecetaService estructuraRecetaService;
+  	private CalculoRecetaService calculoRecetaService;
+  	private InventarioService inventarioService;
+  	private CategoriaService categoriaService;
+  	private PlatilloService platilloService;
+  	private VentasService ventasService;
+  	
+  	//Para venta
+  	private MenuCatalogoService menuCatalogoService;
+  	private CarritoService carritoService;
+  	
+  	
     public LoginController(Login view) {
         this.view = view;
         this.repository = new LoginRepository();
+        crearServicios();
         initController();
     }
 
@@ -30,41 +59,37 @@ public class LoginController {
         view.getBotonEntrar().addActionListener(e -> validarLogin()
         		
         );
-        
-        /*
-        view.getBotonRegistrar().addMouseListener(new java.awt.event.MouseAdapter() {
-            @Override
-            public void mouseExited(java.awt.event.MouseEvent e) {
-                view.getBotonRegistrar().setForeground(Color.black);
-            }
-            @Override
-            public void mouseEntered(java.awt.event.MouseEvent e) {
-                view.getBotonRegistrar().setForeground(new Color(170, 204, 0));
-            }
-            @Override
-            public void mouseClicked(java.awt.event.MouseEvent e) {
-                registro();
-            }
-        });
-        */
     }
 
     private void reinicarMensajesError() {
         view.getLabelAdvertenciaCorreo().setVisible(false);
         view.getLabelAdvertenciaContrasena().setVisible(false);
     }
+    
+    public void crearServicios() {
+		componenteService = new ComponenteService();
+		estructuraRecetaService = new EstructuraRecetaService();
+		categoriaService = new CategoriaService();
+		calculoRecetaService = new CalculoRecetaService(componenteService, estructuraRecetaService);
+		inventarioService = new InventarioService(componenteService, estructuraRecetaService);
+		platilloService = new PlatilloService(categoriaService);
+		
+		menuCatalogoService = new MenuCatalogoService(componenteService, platilloService, categoriaService, estructuraRecetaService);
+		carritoService = new CarritoService();
+		
+	}
 
     private void validarLogin() {
+    	
         reinicarMensajesError();
         User user;
         try {
             validarCredenciales();
             user = repository.login(view.getEntradaCorreo().getText(),new String(view.getEntradaContrasena().getPassword()));
-            repository.setSesionActiva(user, true);
             if(user == null) {
             	throw new InvalidUser("Correo invalido");
     		}
-            
+            repository.setSesionActiva(user, true);
         } catch (InvalidUser ex) {
             view.getLabelAdvertenciaCorreo().setText(ex.getMessage());
             view.getLabelAdvertenciaCorreo().setVisible(true);
@@ -87,11 +112,21 @@ public class LoginController {
         JOptionPane.showMessageDialog(view, "Acceso concedido", "Bienvenido", JOptionPane.INFORMATION_MESSAGE);
         
         if(Session.getRol().equals("admin")) {
-        	new HubController(new Hub());
-            view.dispose();
+        	new HubAdminController(new HubFrame(), view, componenteService, estructuraRecetaService,
+        			calculoRecetaService, inventarioService, categoriaService, platilloService);
+        	view.setVisible(false);
+        } else if(Session.getRol().equals("cajero")) {
+        	new HubVentaController(new HubVentaFrame(),menuCatalogoService,carritoService,ventasService,categoriaService);
+        	view.setVisible(false);
+        } else {
+        	JOptionPane.showMessageDialog(
+                    view, 
+                    "Acceso desconocido", 
+                    "Error", 
+                    JOptionPane.WARNING_MESSAGE
+                );
+        	return;
         }
-        
-        
         
     }
 

@@ -9,12 +9,13 @@ import java.util.List;
 
 import config.DatabaseConnection;
 import models.Platillo;
+import models.Platillo.Emblema;
 
 public class PlatillosRepository {
     
     public int savePlatillo(Platillo platillo) throws Exception {
-        String sql = "INSERT INTO platillos (componente_id, categoria_id, descripcion, imagen_url, precio_venta) "
-                + "VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO platillos (componente_id, categoria_id, descripcion, imagen_url, precio_venta, emblema) "
+                + "VALUES (?, ?, ?, ?, ?, ?)";
 
         try (Connection connection = DatabaseConnection.getConnection();
              PreparedStatement ps = connection.prepareStatement(sql, 
@@ -25,6 +26,8 @@ public class PlatillosRepository {
             ps.setString(3, platillo.getDescripcion());
             ps.setString(4, platillo.getImagenUrl());
             ps.setDouble(5, platillo.getPrecioVenta());
+            // CORREGIDO: Se usa getValorBaseDatos() para enviar el texto correcto con espacios a la DB
+            ps.setString(6, platillo.getEmblema().getValorBaseDatos());
             
             ps.executeUpdate();
             
@@ -47,7 +50,8 @@ public class PlatillosRepository {
                 + "categoria_id = ?, "
                 + "descripcion = ?, "
                 + "imagen_url = ?, "
-                + "precio_venta = ? "
+                + "precio_venta = ?, "
+                + "emblema = ? "
                 + "WHERE id = ?";
 
         try (Connection connection = DatabaseConnection.getConnection();
@@ -58,7 +62,8 @@ public class PlatillosRepository {
             ps.setString(3, platillo.getDescripcion());
             ps.setString(4, platillo.getImagenUrl());
             ps.setDouble(5, platillo.getPrecioVenta());
-            ps.setInt(6, platillo.getId());
+            ps.setString(6, platillo.getEmblema().getValorBaseDatos()); 
+            ps.setInt(7, platillo.getId());
 
             int filasAfectadas = ps.executeUpdate();
             
@@ -90,7 +95,13 @@ public class PlatillosRepository {
     }
     
     public Platillo getPlatilloById(int id) throws Exception {
-        String sql = "SELECT * FROM platillos WHERE id = ?";
+        String sql = "SELECT p.*, c.nombre as categoria_nombre, "
+                + "comp.nombre as componente_nombre, "
+                + "comp.calorias_por_unidad AS calorias_totales "
+                + "FROM platillos p "
+                + "INNER JOIN categorias c ON p.categoria_id = c.id "
+                + "INNER JOIN componentes comp ON p.componente_id = comp.id "
+                + "WHERE p.id = ?";
         
         try (Connection connection = DatabaseConnection.getConnection();
              PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -99,7 +110,10 @@ public class PlatillosRepository {
             
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
-                    return crearPlatilloPorRs(rs);
+                    Platillo platillo = crearPlatilloPorRs(rs);
+                    platillo.setCategoriaNombre(rs.getString("categoria_nombre"));
+                    platillo.setComponenteNombre(rs.getString("componente_nombre"));
+                    return platillo;
                 }
             }
         } catch (SQLException e) {
@@ -112,7 +126,8 @@ public class PlatillosRepository {
     public List<Platillo> getPlatillos() throws Exception {
         List<Platillo> lista = new ArrayList<>();
         String sql = "SELECT p.*, c.nombre as categoria_nombre, "
-                + "comp.nombre as componente_nombre "
+                + "comp.nombre as componente_nombre, "
+                + "comp.calorias_por_unidad AS calorias_totales "
                 + "FROM platillos p "
                 + "INNER JOIN categorias c ON p.categoria_id = c.id "
                 + "INNER JOIN componentes comp ON p.componente_id = comp.id";
@@ -123,7 +138,6 @@ public class PlatillosRepository {
 
             while (rs.next()) {
                 Platillo platillo = crearPlatilloPorRs(rs);
-                // Datos adicionales de los joins
                 platillo.setCategoriaNombre(rs.getString("categoria_nombre"));
                 platillo.setComponenteNombre(rs.getString("componente_nombre"));
                 lista.add(platillo);
@@ -135,7 +149,6 @@ public class PlatillosRepository {
         return lista;
     }
     
-    //Ayuda a crear platillos
     private Platillo crearPlatilloPorRs(ResultSet rs) throws SQLException {
         Platillo platillo = new Platillo();
         platillo.setId(rs.getInt("id"));
@@ -144,6 +157,8 @@ public class PlatillosRepository {
         platillo.setDescripcion(rs.getString("descripcion"));
         platillo.setImagenUrl(rs.getString("imagen_url"));
         platillo.setPrecioVenta(rs.getDouble("precio_venta"));
+        platillo.setCalorias(rs.getDouble("calorias_totales"));
+        platillo.setEmblema(Emblema.desdeString(rs.getString("emblema")));
         return platillo;
     }
 }

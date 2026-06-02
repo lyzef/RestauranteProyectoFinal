@@ -1,9 +1,12 @@
 package main;
 
-import controller.HubController;
+import javax.swing.JFrame;
+
 import controller.LoginController;
-import views.Hub;
+import controller.admin.HubAdminController;
 import views.Login;
+import views.Admin.HubFrame;
+import views.AutoVenta.HubVentaFrame;
 import views.Dialog.PlatilloDialog;
 
 public class Main {
@@ -14,8 +17,8 @@ public class Main {
         } catch (ClassNotFoundException e) {
             System.out.println("No se pudo inicializar la clase de conexión");
         }
-    	//new LoginController(new Login());
-        //new PlatilloDialog(null);
-       	new HubController(new Hub());
+    	new LoginController(new Login());
+    	
+        
     }
 }

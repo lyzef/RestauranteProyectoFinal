@@ -68,6 +68,8 @@ public class InventarioService {
         return listaMovimientoARegistrar;
     }
     
+    
+    
     private List<MovimientoInventario> descontarHijosDeInventario(MovimientoInventario mov) {
     	return descontarHijosDeInventario(mov.getComponente_id(),mov.getCantidad(),mov.getTipo_movimiento(),mov.getMotivo());
     }

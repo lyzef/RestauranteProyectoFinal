@@ -33,11 +33,12 @@ public class CategoriaService {
     }
     
     public void updateCategoria(Categoria categoria) throws Exception {
+        repo.updateCategoria(categoria);
+        
         listaCategoria.getReadWriteLock().writeLock().lock();
         try {
             for (int i = 0; i < listaCategoria.size(); i++) {
                 if (Objects.equals(listaCategoria.get(i).getId(), categoria.getId())) {
-                    repo.updateCategoria(categoria);
                     listaCategoria.set(i, categoria);
                     break;
                 }

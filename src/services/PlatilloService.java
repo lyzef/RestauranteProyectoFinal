@@ -94,40 +94,7 @@ public class PlatilloService {
         return GlazedLists.readOnlyList(this.listaPlatillos);
     }
     
-
-    /**
-     * Versión que incluye los nombres de las categorías
-     * @return Map clave es el nombre de la categoría y valor es un EventList de platillos
-     */
-    public Map<String, EventList<Platillo>> getPlatillosAgrupadosPorNombreCategoria() {
-        Map<String, EventList<Platillo>> platillosPorCategoria = new HashMap<>();
-        EventList<Categoria> categorias = categoriaService.getListaModificable();
-        
-        listaPlatillos.getReadWriteLock().readLock().lock();
-        try {
-            for (Platillo platillo : listaPlatillos) {
-                String nombreCategoria = "Sin categoría";
-                
-                // Buscar el nombre de la categoría
-                for (Categoria categoria : categorias) {
-                    if (categoria.getId() == platillo.getCategoriaId()) {
-                        nombreCategoria = categoria.getNombre();
-                        break;
-                    }
-                }
-                
-                // Si no existe la lista para esta categoría, crear una nueva
-                platillosPorCategoria.putIfAbsent(nombreCategoria, new BasicEventList<>());
-                
-                // Agregar el platillo a la lista correspondiente
-                platillosPorCategoria.get(nombreCategoria).add(platillo);
-            }
-        } finally {
-            listaPlatillos.getReadWriteLock().readLock().unlock();
-        }
-        
-        return platillosPorCategoria;
-    }
+    
     
     public EventList<Platillo> getPlatillosByCategoriaList(int categoriaId) {
         EventList<Platillo> platillosFiltrados = new BasicEventList<>();

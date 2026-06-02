@@ -25,6 +25,7 @@ import excepciones.invalidInput;
 import models.Categoria;
 import models.ComponenteIngredienteReceta;
 import models.Platillo;
+import models.Platillo.Emblema;
 import services.CategoriaService;
 import services.ComponenteService;
 import services.PlatilloService;
@@ -169,6 +170,7 @@ public class PlatilloDialogControlador {
 	            componenteService.getComponenteById(platillo.getComponenteId()));
 	        view.setDescripcion(platillo.getDescripcion());
 	        view.setPrecio(platillo.getPrecioVenta().toString());
+	        view.getEmblemaComboBox().setSelectedItem(platillo.getEmblema());
 	    }
 	}
 	
@@ -206,7 +208,7 @@ public class PlatilloDialogControlador {
 		platillo.setPrecioVenta(Double.parseDouble(view.getPrecio()));
 		platillo.setComponenteId(((ComponenteIngredienteReceta) view.getRecetaComboBox().getSelectedItem()).getId());
 		platillo.setComponenteNombre(((ComponenteIngredienteReceta) view.getRecetaComboBox().getSelectedItem()).getNombre());
-		
+		platillo.setEmblema((Emblema) view.getEmblemaComboBox().getSelectedItem());
 		
 		try {
 			if(tipoEdicion == tipoEdicionForm.CREAR) {

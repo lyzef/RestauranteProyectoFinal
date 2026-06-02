@@ -1,4 +1,4 @@
-package controller;
+package controller.admin;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -21,10 +21,12 @@ import services.PlatilloService;
 import tableFormat.UserTableFormat;
 import utilidades.Session;
 import views.*;
+import views.Admin.HubFrame;
 import views.Admin.MenuAdminView;
 
-public class HubController {
-	Hub view;
+public class HubAdminController {
+	HubFrame view;
+	Login login;
 	private UserController userController;
 	private InventarioController inventarioController;
 	private RecipeController recipeController;
@@ -36,24 +38,26 @@ public class HubController {
 	private CalculoRecetaService calculoRecetaService;
 	private InventarioService inventarioService;
 	private CategoriaService categoriaService;
-	private PlatilloService menuService;
+	private PlatilloService platilloService;
 	
-	public HubController(Hub hub) {
-		this.view = hub;
+	
+	
+	public HubAdminController(HubFrame view, Login login, ComponenteService componenteService,
+			EstructuraRecetaService estructuraRecetaService, CalculoRecetaService calculoRecetaService,
+			InventarioService inventarioService, CategoriaService categoriaService, PlatilloService platilloService) {
+		this.view = view;
+		this.login = login;
+		this.componenteService = componenteService;
+		this.estructuraRecetaService = estructuraRecetaService;
+		this.calculoRecetaService = calculoRecetaService;
+		this.inventarioService = inventarioService;
+		this.categoriaService = categoriaService;
+		this.platilloService = platilloService;
 		addListeners();
-		crearServicios();
 		showDashboard();
 	}
 	
-	public void crearServicios() {
-		componenteService = new ComponenteService();
-		estructuraRecetaService = new EstructuraRecetaService();
-		categoriaService = new CategoriaService();
-		
-		calculoRecetaService = new CalculoRecetaService(componenteService, estructuraRecetaService);
-		inventarioService = new InventarioService(componenteService, estructuraRecetaService);
-		menuService = new PlatilloService(categoriaService);
-	}
+	
 	
 	public void addListeners() {
 		view.getBotonUsuarios().addMouseListener( new MouseAdapter() {
@@ -121,7 +125,7 @@ public class HubController {
 	}
 	
 	private void showDashboard() {
-		view.showView(Hub.DASHBOARD);
+		view.showView(HubFrame.DASHBOARD);
 	}
 	
 	private void showUsers() {
@@ -129,7 +133,7 @@ public class HubController {
 		if(userController == null) {
 			userController = new UserController(view.getUserPanel());
 		}
-		view.showView(Hub.USERS);
+		view.showView(HubFrame.USERS);
 		
 	}
 	
@@ -139,7 +143,7 @@ public class HubController {
 		}
 		
 		//Cargar datos
-		view.showView(Hub.INVENTORY);
+		view.showView(HubFrame.INVENTORY);
 		
 	}
 	
@@ -147,15 +151,15 @@ public class HubController {
 		if(recipeController == null) {
 			recipeController = new RecipeController(view.getRecipePanel(),estructuraRecetaService,componenteService,calculoRecetaService);
 		}
-		view.showView(Hub.RECIPE);
+		view.showView(HubFrame.RECIPE);
 	}
 	
 	private void showMenu() {
 		if(menuController == null) {
-			menuController = new MenuAdminController(view.getMenuAdminPanel(),categoriaService,menuService,
+			menuController = new MenuAdminController(view.getMenuAdminPanel(),categoriaService,platilloService,
 					componenteService);
 		}
-		view.showView(Hub.MENU);
+		view.showView(HubFrame.MENU);
 	}
 
 }

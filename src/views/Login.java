@@ -1,8 +1,11 @@
 package views;
 
 import javax.swing.*;
+
+import controller.admin.UserController;
+
 import java.awt.*;
-import controller.UserController;
+
 import utilidades.GeneradorIconos;
 import views.Admin.UsersView;
 

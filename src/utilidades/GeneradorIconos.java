@@ -165,7 +165,7 @@ public class GeneradorIconos {
         
         if (!archivoImagen.exists()) {
             System.err.println("No se encontró la imagen en la ruta " + archivoImagen.getAbsolutePath());
-            return null; // Retornar un icono por defecto
+            return cargarIcono("/assets/image/exclamacion.png");
         }
 
         ImageIcon iconoOriginal = new ImageIcon(archivoImagen.getAbsolutePath());

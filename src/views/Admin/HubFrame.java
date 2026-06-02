@@ -1,4 +1,4 @@
-package views;
+package views.Admin;
 
 import java.awt.Image;
 import java.awt.Panel;
@@ -30,13 +30,8 @@ import utilidades.AppFont;
 import utilidades.GeneradorIconos;
 import utilidades.Paleta_Colores;
 import utilidades.views.BotonHub;
-import views.Admin.DashboardView;
-import views.Admin.InventoryView;
-import views.Admin.MenuAdminView;
-import views.Admin.RecipeView;
-import views.Admin.UsersView;
 
-public class Hub extends JFrame{
+public class HubFrame extends JFrame{
 	public static final String USERS = "USERS";
 	public static final String DASHBOARD = "DASHBOARD";
 	public static final String INVENTORY = "INVENTORY";
@@ -65,7 +60,7 @@ public class Hub extends JFrame{
 	public BotonHub botonMenu;
 	public BotonHub botonRecipe;
 
-	public Hub() {
+	public HubFrame() {
 		setSize(1400,900);
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		setResizable(true);
