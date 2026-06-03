@@ -26,8 +26,9 @@ public class CardPlatillo extends JPanel {
 
     private JLabel imagenPlatillo;
     private Platillo platillo;
+    private JButton botonAgregar;
     
-    public CardPlatillo(String nombre, String precio, String tiempo,
+    private CardPlatillo(String nombre, String precio, String tiempo,
                         String descripcion, String badge, Color colorBadge, String urlImagen) {
         setLayout(new BorderLayout());
         setOpaque(false);
@@ -40,6 +41,7 @@ public class CardPlatillo extends JPanel {
     public CardPlatillo(Platillo platillo) {
     	this(platillo.getComponenteNombre(),Double.toString(platillo.getPrecioVenta()),Double.toString(platillo.getCalorias()) + " Calorias",
     			platillo.getDescripcion(),platillo.getEmblema().getValorBaseDatos(),Paleta_Colores.ATENCION.getColor(),platillo.getImagenUrl());
+    	this.platillo = platillo;
     }
     
     //  PANEL IMAGEN
@@ -77,7 +79,7 @@ public class CardPlatillo extends JPanel {
         JPanel tiempoPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 8, 6));
         tiempoPanel.setOpaque(false);
         JLabel tiempoLbl = new JLabel(tiempo);
-        tiempoLbl.setFont(new Font("Arial", Font.BOLD, 10));
+        tiempoLbl.setFont(AppFont.bold().deriveFont(10f));
         tiempoLbl.setForeground(COLOR_TEXTO);
         tiempoLbl.setBackground(new Color(0, 0, 0, 150));
         tiempoLbl.setOpaque(true);
@@ -101,7 +103,7 @@ public class CardPlatillo extends JPanel {
         nombrePrecio.setMaximumSize(new Dimension(Integer.MAX_VALUE, 30));
 
         JLabel nombreLbl = new JLabel("<html><b>" + nombre + "</b></html>");
-        nombreLbl.setFont(new Font("Arial", Font.BOLD, 13));
+        nombreLbl.setFont(AppFont.bold().deriveFont(16f));
         nombreLbl.setForeground(COLOR_TEXTO);
 
         JLabel precioLbl = new JLabel("$"+precio);
@@ -114,8 +116,9 @@ public class CardPlatillo extends JPanel {
         info.add(Box.createVerticalStrut(8));
 
         //DESCRIPCION
-        JLabel descLbl = new JLabel("<html><p style='width:230px'>" + descripcion + "</p></html>");
-        descLbl.setFont(new Font("Arial", Font.PLAIN, 11));
+        JLabel descLbl = new JLabel("<html><p style='width:700px'>" + descripcion + "</p></html>");
+        //JLabel descLbl = new JLabel("<html><p style='width:230px'>" + descripcion + "</p></html>");
+        descLbl.setFont(AppFont.small().deriveFont(12f));
         descLbl.setForeground(COLOR_TEXTO_GRIS);
         descLbl.setAlignmentX(LEFT_ALIGNMENT);
         info.add(descLbl);
@@ -126,11 +129,12 @@ public class CardPlatillo extends JPanel {
         botones.setMaximumSize(new Dimension(Integer.MAX_VALUE, 36));
         botones.setAlignmentX(LEFT_ALIGNMENT);
 
-        JButton btnRechazar = crearBotonCard("-", new Color(239, 68, 68));
-        JButton btnAgregar  = crearBotonCard("+", new Color(16, 185, 129));
+        //JButton btnRechazar = crearBotonCard("-", new Color(239, 68, 68));
+        
+        botonAgregar  = crearBotonCard("Agregar", Paleta_Colores.EXITO.getColor());
 
-        botones.add(btnRechazar);
-        botones.add(btnAgregar);
+        //botones.add(btnRechazar);
+        botones.add(botonAgregar);
         info.add(botones);
 
         return info;
@@ -148,11 +152,12 @@ public class CardPlatillo extends JPanel {
             }
         };
         btn.setForeground(Color.WHITE);
-        btn.setFont(new Font("Arial", Font.BOLD, 16));
+        btn.setFont(AppFont.bold());
         btn.setContentAreaFilled(false);
         btn.setBorderPainted(false);
         btn.setFocusPainted(false);
-        btn.setPreferredSize(new Dimension(55, 38));
+        //btn.setPreferredSize(new Dimension(55, 38));
+        btn.setPreferredSize(new Dimension(120, 38));
         btn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         return btn;
     }
@@ -162,7 +167,7 @@ public class CardPlatillo extends JPanel {
     // ─────────────────────────────────────────────────────────────
     private JLabel crearBadge(String texto, Color color) {
         JLabel badge = new JLabel(texto);
-        badge.setFont(new Font("Arial", Font.BOLD, 9));
+        badge.setFont(AppFont.bold().deriveFont(12f));
         badge.setForeground(Color.WHITE);
         badge.setBackground(color);
         badge.setOpaque(true);
@@ -180,4 +185,19 @@ public class CardPlatillo extends JPanel {
     public void setImagen(ImageIcon icon) {
         imagenPlatillo.setIcon(icon);
     }
+
+	public JButton getBotonAgregar() {
+		return botonAgregar;
+	}
+
+	public Platillo getPlatillo() {
+		return platillo;
+	}
+
+	public void setPlatillo(Platillo platillo) {
+		this.platillo = platillo;
+	}
+    
+	
+    
 }

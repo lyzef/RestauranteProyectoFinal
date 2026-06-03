@@ -49,7 +49,7 @@ public class ValidadorEntradasTexto {
     	int totalArrobas = 0;
     	String parteLocal = "";
     	String dominio = "";
-    	String[] dominiosAdmitidos = {"gmail.com","outlook.com","outlook.es"};
+    	String[] dominiosAdmitidos = {"gmail.com","outlook.com","outlook.es","example.com"};
     	for(char c : texto.toCharArray()) {
     		//Verifica total arrobas
     		if(c == '@') {

@@ -57,7 +57,7 @@ public class HubVentaFrame extends JFrame {
 
     // VISTAS
     public MenuVentaView menuPanel;
-    // public CarritoView carritoPanel;
+    public CarritoView carritoPanel;
 
     public HubVentaFrame() {
         // MEDIDAS PARA POS VERTICAL 
@@ -91,7 +91,9 @@ public class HubVentaFrame extends JFrame {
         
         //Card layout
         menuPanel = new MenuVentaView();
+        carritoPanel = new CarritoView();
         panelPrincipal.add(menuPanel, MENU);
+        panelPrincipal.add(carritoPanel,CARRITO);
         
         contenedorPrincipal.setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
@@ -142,10 +144,10 @@ public class HubVentaFrame extends JFrame {
         
         JLabel madero = new JLabel("MADERO'S");
         madero.setFont(AppFont.bold().deriveFont(18f));
-        madero.setForeground(COLOR_ACENTO);
+        madero.setForeground(COLOR_FONDO);
         madero.setBorder(new EmptyBorder(2, 6, 2, 6));
         madero.setOpaque(true);
-        madero.setBackground(COLOR_ACENTO.darker().darker());
+        madero.setBackground(COLOR_ACENTO);
 
         JLabel restaurant = new JLabel("RESTAURANT");
         restaurant.setFont(AppFont.bold().deriveFont(16f));
@@ -261,7 +263,7 @@ public class HubVentaFrame extends JFrame {
 
     public MenuVentaView getMenuPanel() { return menuPanel; }
     
-    
+    public CarritoView getCarritoPanel() { return carritoPanel; }
     // MAIN
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {

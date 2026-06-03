@@ -2,11 +2,17 @@ package controller.autoVenta;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
+import controller.LoginController;
+import repository.LoginRepository;
 import services.CarritoService;
 import services.CategoriaService;
 import services.MenuCatalogoService;
 import services.VentasService;
+import utilidades.Session;
+import views.Login;
 import views.AutoVenta.HubVentaFrame;
 
 public class HubVentaController {
@@ -15,19 +21,23 @@ public class HubVentaController {
 	
 	//Controladores
 	MenuVentaController menuVentaController;
+	LoginController loginController;
+	CarritoController carritoController;
+	
 	MenuCatalogoService menuCatalogoService;
 	CarritoService carritoService;
 	VentasService ventasService;
 	CategoriaService categoriaService;
 	
 	public HubVentaController(HubVentaFrame view, MenuCatalogoService menuCatalogoService,
-			CarritoService carritoService, VentasService ventasService, CategoriaService categoriaService) {
+			CarritoService carritoService, VentasService ventasService, CategoriaService categoriaService, LoginController loginController) {
 		super();
 		this.view = view;
 		this.menuCatalogoService = menuCatalogoService;
 		this.carritoService = carritoService;
 		this.ventasService = ventasService;
 		this.categoriaService = categoriaService;
+		this.loginController = loginController;
 		addListeners();
 		
 		showMenu();
@@ -62,16 +72,37 @@ public class HubVentaController {
 		view.getBotonLogOut().addMouseListener( new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				
+				view.dispose();
+				loginController.abrirLogin();
 		    }
 		});
+		
+		view.addWindowListener(new WindowAdapter() {
+		    @Override
+		    public void windowClosing(WindowEvent e) {
+		    	if(Session.isLoggedIn()) {
+			    	new LoginRepository().setSesionActiva(Session.getCurrentUser(), false);
+		    	}
+		    	view.dispose();
+		    	loginController.cerrarApp();
+		    }
+		});		
 	}
 	
-	private void showMenu() {
+	public void showMenu() {
 		if(menuVentaController == null) {
-			menuVentaController = new  MenuVentaController(view.getMenuPanel(),menuCatalogoService,carritoService,ventasService,categoriaService);
+			menuVentaController = new  MenuVentaController(view.getMenuPanel(),menuCatalogoService,carritoService,ventasService,categoriaService,this);
 		}
 		view.showView(view.MENU);
 	}
+	
+	public void showCarrito() {
+		if(carritoController == null) {
+			carritoController = new  CarritoController(view.getCarritoPanel(), carritoService, this);
+		}
+		carritoController.crearCarrito();
+		view.showView(view.CARRITO);
+	}
+	
 	
 }

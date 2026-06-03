@@ -6,9 +6,8 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.util.List;
-
 import javax.swing.JOptionPane;
-
+import controller.LoginController;
 import models.User;
 import repository.LoginRepository;
 import repository.UserRepository;
@@ -25,8 +24,8 @@ import views.Admin.HubFrame;
 import views.Admin.MenuAdminView;
 
 public class HubAdminController {
-	HubFrame view;
-	Login login;
+	private HubFrame view;
+	private LoginController loginController;
 	private UserController userController;
 	private InventarioController inventarioController;
 	private RecipeController recipeController;
@@ -42,11 +41,11 @@ public class HubAdminController {
 	
 	
 	
-	public HubAdminController(HubFrame view, Login login, ComponenteService componenteService,
+	public HubAdminController(HubFrame view, LoginController login, ComponenteService componenteService,
 			EstructuraRecetaService estructuraRecetaService, CalculoRecetaService calculoRecetaService,
 			InventarioService inventarioService, CategoriaService categoriaService, PlatilloService platilloService) {
 		this.view = view;
-		this.login = login;
+		this.loginController = login;
 		this.componenteService = componenteService;
 		this.estructuraRecetaService = estructuraRecetaService;
 		this.calculoRecetaService = calculoRecetaService;
@@ -106,20 +105,16 @@ public class HubAdminController {
 		view.getBotonLogOut().addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				if(Session.isLoggedIn()) {
-			    	new LoginRepository().setSesionActiva(Session.getCurrentUser(), false);
-		    	}
 		    	view.dispose();
+		    	loginController.abrirLogin();
 		    }
 		});
 		
 		view.addWindowListener(new WindowAdapter() {
 		    @Override
 		    public void windowClosing(WindowEvent e) {
-		    	if(Session.isLoggedIn()) {
-			    	new LoginRepository().setSesionActiva(Session.getCurrentUser(), false);
-		    	}
 		    	view.dispose();
+		    	loginController.cerrarApp();
 		    }
 		});		
 	}

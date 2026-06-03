@@ -25,48 +25,16 @@ public class MenuVentaView extends JPanel {
     private static final Color COLOR_BADGE_AZUL    = new Color(59, 130, 246);
     
     //  CONFIGURACIÓN DE CARDS
-    private static final int CARD_ANCHO = 280;
-    private static final int CARD_ALTO  = 290;
+    public static final int CARD_ANCHO = 280;
+    public static final int CARD_ALTO  = 290;
     
     // CONTENEDOR DE CATEGORIAS
     JPanel secciones;
     
-    //  DATOS DEL MENÚ - PLATILLOS PRINCIPALES
-    private static final String[] NOMBRES = {
-        "El Taco Que Te Toca", "La Torta de Pierna Pa' Llevar", "Burrito Pa' Que Te Llenes",
-        "Chile Relleno de Sabor", "El Pájaro que Quema", "Paquete de Carnitas Pa' Comer"
-    };
-    private static final String[] PRECIOS = {"$45", "$120", "$95", "$80", "$180", "$250"};
-    private static final String[] TIEMPOS = {"15 MINS", "20 MINS", "15 MINS", "25 MINS", "30 MINS", "22 MINS"};
-    private static final String[] DESCRIPCIONES = {
-        "Loaded steak taco, doble tortilla con todo el sabor.",
-        "Torta mexicana con pierna marinada para los valientes.",
-        "Un burrito gigante relleno hasta el tope, garantizado.",
-        "Chile poblano relleno de queso con mucho 'sabor'.",
-        "Nuestro pollo rostizado estrella. Picante y ahumado.",
-        "Plato completo de carnitas famosas. Para compartir."
-    };
-    private static final String[] BADGES = {"TOP RATED", "HOT ITEM", "VERIFIED", "", "BEST SELLER", "FAMILIAR"};
-    private static final Color[] BADGE_COLORS = {
-        COLOR_BADGE_VERDE, COLOR_BADGE_ROJO, COLOR_BADGE_AZUL, null, COLOR_ACENTO, new Color(100, 60, 180)
-    };
-    
-    //  DATOS DEL MENÚ - BEBIDAS
-    private static final String[] NOMBRES_BEBIDAS = {
-        "Agua de Jamaica", "Limonada Mineral", "Horchata Fría", 
-        "Refresco del Chef", "Café de Olla", "Tepache Natural"
-    };
-    private static final String[] PRECIOS_BEBIDAS = {"$25", "$30", "$28", "$35", "$20", "$30"};
-    private static final String[] TIEMPOS_BEBIDAS = {"5 MINS", "5 MINS", "5 MINS", "5 MINS", "8 MINS", "5 MINS"};
-    private static final String[] DESCRIPCIONES_BEBIDAS = {
-        "Fresca agua de flor de jamaica natural.", "Limonada con gas y hierbabuena.",
-        "Horchata casera bien fría.", "Refresco especial de la casa.",
-        "Café de olla con canela tradicional.", "Tepache artesanal de piña fermentada."
-    };
-    private static final String[] BADGES_BEBIDAS = {"FAVORITA", "", "TOP", "", "ESPECIAL", "ARTESANAL"};
-    private static final Color[] BADGE_COLORS_BEBIDAS = {
-        new Color(239,68,68), null, new Color(16,185,129), null, COLOR_ACENTO, new Color(100,60,180)
-    };
+    // CARRITO 
+    JButton btnPedir;
+    JLabel lblCantidad;
+    JLabel lblTotal;
     
     //  CONSTRUCTOR
     public MenuVentaView() {
@@ -116,72 +84,6 @@ public class MenuVentaView extends JPanel {
         return contenido;
     }
     
-    public JPanel crearGridCategoria(EventList<Platillo> platillos) {
-    	JPanel grid = new JPanel(new FlowLayout(FlowLayout.LEFT, 14, 4)) {
-            @Override public Dimension getPreferredSize() {
-                int total = 0;
-                for (Component c : getComponents()) total += c.getPreferredSize().width + 14;
-                return new Dimension(total + 14, CARD_ALTO);
-            }
-        };
-        grid.setOpaque(false);
-        grid.setBorder(BorderFactory.createEmptyBorder(0, 0, 10, 0));
-
-        for (int i = 0; i < platillos.size(); i++) {
-            CardPlatillo card = new CardPlatillo(
-                platillos.get(i)
-            );
-            card.setPreferredSize(new Dimension(CARD_ANCHO, CARD_ALTO));
-            grid.add(card);
-        }
-        return grid;
-    }
-    
-    
-    /* GRIDS DE PLATILLOS Y BEBIDAS
-    private JPanel crearGridPlatillos() {
-        JPanel grid = new JPanel(new FlowLayout(FlowLayout.LEFT, 14, 4)) {
-            @Override public Dimension getPreferredSize() {
-                int total = 0;
-                for (Component c : getComponents()) total += c.getPreferredSize().width + 14;
-                return new Dimension(total + 14, CARD_ALTO);
-            }
-        };
-        grid.setOpaque(false);
-        grid.setBorder(BorderFactory.createEmptyBorder(0, 0, 10, 0));
-
-        for (int i = 0; i < NOMBRES.length; i++) {
-            CardPlatillo card = new CardPlatillo(
-                NOMBRES[i], PRECIOS[i], TIEMPOS[i], DESCRIPCIONES[i], BADGES[i], BADGE_COLORS[i]
-            );
-            card.setPreferredSize(new Dimension(CARD_ANCHO, CARD_ALTO));
-            grid.add(card);
-        }
-        return grid;
-    }
-    
-    private JPanel crearGridBebidas() {
-        JPanel grid = new JPanel(new FlowLayout(FlowLayout.LEFT, 14, 4)) {
-            @Override public Dimension getPreferredSize() {
-                int total = 0;
-                for (Component c : getComponents()) total += c.getPreferredSize().width + 14;
-                return new Dimension(total + 14, CARD_ALTO);
-            }
-        };
-        grid.setOpaque(false);
-        grid.setBorder(BorderFactory.createEmptyBorder(0, 0, 10, 0));
-
-        for (int i = 0; i < NOMBRES_BEBIDAS.length; i++) {
-            CardPlatillo card = new CardPlatillo(
-                NOMBRES_BEBIDAS[i], PRECIOS_BEBIDAS[i], TIEMPOS_BEBIDAS[i],
-                DESCRIPCIONES_BEBIDAS[i], BADGES_BEBIDAS[i], BADGE_COLORS_BEBIDAS[i]
-            );
-            card.setPreferredSize(new Dimension(CARD_ANCHO, CARD_ALTO));
-            grid.add(card);
-        }
-        return grid;
-    }
-    */
     
     //  SECCIÓN CARRUSEL GENÉRICA
     public JPanel crearSeccionCarrusel(String tituloNormal, String tituloColor, JPanel grid) {
@@ -253,11 +155,11 @@ public class MenuVentaView extends JPanel {
         infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.Y_AXIS));
         infoPanel.setOpaque(false);
 
-        JLabel lblCantidad = new JLabel("0 Productos");
+        lblCantidad = new JLabel("0 Productos");
         lblCantidad.setFont(new Font("Arial", Font.PLAIN, 12));
         lblCantidad.setForeground(COLOR_TEXTO_GRIS);
         
-        JLabel lblTotal = new JLabel("Total: $0.00");
+        lblTotal = new JLabel("Total: $0.00");
         lblTotal.setFont(new Font("Arial", Font.BOLD, 18));
         lblTotal.setForeground(COLOR_TEXTO);
 
@@ -265,7 +167,7 @@ public class MenuVentaView extends JPanel {
         infoPanel.add(Box.createVerticalStrut(4));
         infoPanel.add(lblTotal);
 
-        JButton btnPedir = crearBotonAcento("Ver Carrito");
+        btnPedir = crearBotonAcento("Ver Carrito");
         btnPedir.setPreferredSize(new Dimension(130, 40));
         btnPedir.setFont(new Font("Arial", Font.BOLD, 14));
         // Aquí podrías acceder a la instancia del Frame para cambiar la vista luego
@@ -312,4 +214,119 @@ public class MenuVentaView extends JPanel {
     	secciones.add(crearSeccionCarrusel(tituloNormal, tituloColor, grid));
     	secciones.add(Box.createVerticalStrut(20));
     }
+
+	public JButton getBtnPedir() {
+		return btnPedir;
+	}
+
+	public JLabel getLblCantidad() {
+		return lblCantidad;
+	}
+
+	public JLabel getLblTotal() {
+		return lblTotal;
+	}
+
+	public void setCantidadTexto(String lblCantidad) {
+		this.lblCantidad.setText(lblCantidad);
+	}
+
+	public void setTotalTexto(String lblTotal) {
+		this.lblTotal.setText(lblTotal);
+	}
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    /* GRIDS DE PLATILLOS Y BEBIDAS
+    private JPanel crearGridPlatillos() {
+        JPanel grid = new JPanel(new FlowLayout(FlowLayout.LEFT, 14, 4)) {
+            @Override public Dimension getPreferredSize() {
+                int total = 0;
+                for (Component c : getComponents()) total += c.getPreferredSize().width + 14;
+                return new Dimension(total + 14, CARD_ALTO);
+            }
+        };
+        grid.setOpaque(false);
+        grid.setBorder(BorderFactory.createEmptyBorder(0, 0, 10, 0));
+
+        for (int i = 0; i < NOMBRES.length; i++) {
+            CardPlatillo card = new CardPlatillo(
+                NOMBRES[i], PRECIOS[i], TIEMPOS[i], DESCRIPCIONES[i], BADGES[i], BADGE_COLORS[i]
+            );
+            card.setPreferredSize(new Dimension(CARD_ANCHO, CARD_ALTO));
+            grid.add(card);
+        }
+        return grid;
+    }
+    
+    private JPanel crearGridBebidas() {
+        JPanel grid = new JPanel(new FlowLayout(FlowLayout.LEFT, 14, 4)) {
+            @Override public Dimension getPreferredSize() {
+                int total = 0;
+                for (Component c : getComponents()) total += c.getPreferredSize().width + 14;
+                return new Dimension(total + 14, CARD_ALTO);
+            }
+        };
+        grid.setOpaque(false);
+        grid.setBorder(BorderFactory.createEmptyBorder(0, 0, 10, 0));
+
+        for (int i = 0; i < NOMBRES_BEBIDAS.length; i++) {
+            CardPlatillo card = new CardPlatillo(
+                NOMBRES_BEBIDAS[i], PRECIOS_BEBIDAS[i], TIEMPOS_BEBIDAS[i],
+                DESCRIPCIONES_BEBIDAS[i], BADGES_BEBIDAS[i], BADGE_COLORS_BEBIDAS[i]
+            );
+            card.setPreferredSize(new Dimension(CARD_ANCHO, CARD_ALTO));
+            grid.add(card);
+        }
+        return grid;
+    }
+    */
+ 
+    /*  DATOS DEL MENÚ - PLATILLOS PRINCIPALES
+    private static final String[] NOMBRES = {
+        "El Taco Que Te Toca", "La Torta de Pierna Pa' Llevar", "Burrito Pa' Que Te Llenes",
+        "Chile Relleno de Sabor", "El Pájaro que Quema", "Paquete de Carnitas Pa' Comer"
+    };
+    private static final String[] PRECIOS = {"$45", "$120", "$95", "$80", "$180", "$250"};
+    private static final String[] TIEMPOS = {"15 MINS", "20 MINS", "15 MINS", "25 MINS", "30 MINS", "22 MINS"};
+    private static final String[] DESCRIPCIONES = {
+        "Loaded steak taco, doble tortilla con todo el sabor.",
+        "Torta mexicana con pierna marinada para los valientes.",
+        "Un burrito gigante relleno hasta el tope, garantizado.",
+        "Chile poblano relleno de queso con mucho 'sabor'.",
+        "Nuestro pollo rostizado estrella. Picante y ahumado.",
+        "Plato completo de carnitas famosas. Para compartir."
+    };
+    private static final String[] BADGES = {"TOP RATED", "HOT ITEM", "VERIFIED", "", "BEST SELLER", "FAMILIAR"};
+    private static final Color[] BADGE_COLORS = {
+        COLOR_BADGE_VERDE, COLOR_BADGE_ROJO, COLOR_BADGE_AZUL, null, COLOR_ACENTO, new Color(100, 60, 180)
+    };
+    
+    //  DATOS DEL MENÚ - BEBIDAS
+    private static final String[] NOMBRES_BEBIDAS = {
+        "Agua de Jamaica", "Limonada Mineral", "Horchata Fría", 
+        "Refresco del Chef", "Café de Olla", "Tepache Natural"
+    };
+    private static final String[] PRECIOS_BEBIDAS = {"$25", "$30", "$28", "$35", "$20", "$30"};
+    private static final String[] TIEMPOS_BEBIDAS = {"5 MINS", "5 MINS", "5 MINS", "5 MINS", "8 MINS", "5 MINS"};
+    private static final String[] DESCRIPCIONES_BEBIDAS = {
+        "Fresca agua de flor de jamaica natural.", "Limonada con gas y hierbabuena.",
+        "Horchata casera bien fría.", "Refresco especial de la casa.",
+        "Café de olla con canela tradicional.", "Tepache artesanal de piña fermentada."
+    };
+    private static final String[] BADGES_BEBIDAS = {"FAVORITA", "", "TOP", "", "ESPECIAL", "ARTESANAL"};
+    private static final Color[] BADGE_COLORS_BEBIDAS = {
+        new Color(239,68,68), null, new Color(16,185,129), null, COLOR_ACENTO, new Color(100,60,180)
+    };
+    */
+    
 }

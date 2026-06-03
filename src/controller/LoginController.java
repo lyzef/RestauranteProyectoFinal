@@ -6,6 +6,7 @@ import views.AutoVenta.HubVentaFrame;
 import views.Dialog.UserFormDialog;
 import excepciones.InvalidContraseña;
 import excepciones.InvalidUser;
+import excepciones.invalidInput;
 import models.User;
 import repository.LoginRepository;
 import repository.UserRepository;
@@ -19,6 +20,7 @@ import services.MenuCatalogoService;
 import services.PlatilloService;
 import services.VentasService;
 import utilidades.Session;
+import utilidades.ValidadorEntradasTexto;
 
 import javax.swing.*;
 
@@ -54,7 +56,31 @@ public class LoginController {
         crearServicios();
         initController();
     }
+    
+    public void cerrarApp() {
+    	//Desloguear
+    	if(Session.isLoggedIn()) {
+	    	new LoginRepository().setSesionActiva(Session.getCurrentUser(), false);
+    	}
+    	view.dispose();
+    }
+    
+    public void abrirLogin() {
+    	//Desloguear
+    	if(Session.isLoggedIn()) {
+	    	new LoginRepository().setSesionActiva(Session.getCurrentUser(), false);
+    	}
+    	view.setVisible(true);
+    	view.setEnabled(true);
+    }
 
+    private void cerrarLogin() {
+    	view.getEntradaCorreo().setText("");
+    	view.getEntradaContrasena().setText("");
+    	view.setVisible(false);
+    	view.setEnabled(false);
+    }
+    
     private void initController() {
         view.getBotonEntrar().addActionListener(e -> validarLogin()
         		
@@ -112,12 +138,12 @@ public class LoginController {
         JOptionPane.showMessageDialog(view, "Acceso concedido", "Bienvenido", JOptionPane.INFORMATION_MESSAGE);
         
         if(Session.getRol().equals("admin")) {
-        	new HubAdminController(new HubFrame(), view, componenteService, estructuraRecetaService,
+        	new HubAdminController(new HubFrame(), this, componenteService, estructuraRecetaService,
         			calculoRecetaService, inventarioService, categoriaService, platilloService);
-        	view.setVisible(false);
+        	cerrarLogin();
         } else if(Session.getRol().equals("cajero")) {
-        	new HubVentaController(new HubVentaFrame(),menuCatalogoService,carritoService,ventasService,categoriaService);
-        	view.setVisible(false);
+        	new HubVentaController(new HubVentaFrame(),menuCatalogoService,carritoService,ventasService,categoriaService,this);
+        	cerrarLogin();
         } else {
         	JOptionPane.showMessageDialog(
                     view, 
@@ -133,8 +159,13 @@ public class LoginController {
     private void validarCredenciales() throws InvalidUser, InvalidContraseña {
         String correo = view.getEntradaCorreo().getText().trim();
         String pass = new String(view.getEntradaContrasena().getPassword());
-
-        if (correo.isEmpty()) throw new InvalidUser("Escribe el correo");
+        
+        try {
+			ValidadorEntradasTexto.validarContenido(correo, "CORREO");
+		} catch (invalidInput e) {
+			throw new InvalidUser("Escribe el correo");
+		}
+        
         if (pass.isEmpty()) throw new InvalidContraseña("Escribe la contraseña");
     }
 }

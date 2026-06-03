@@ -125,6 +125,7 @@ public class Platillo {
 	    DE_TEMPORADA("DE TEMPORADA"),
 	    VEGANO("VEGANO"),
 	    SIN_GLUTEN("SIN GLUTEN"),
+	    INFANTIL("INFANTIL"),
 	    SUPER("SUPER");
 
 	    private final String valorBaseDatos;
