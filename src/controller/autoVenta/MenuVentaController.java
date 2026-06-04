@@ -73,7 +73,6 @@ public class MenuVentaController {
 			public void actionPerformed(ActionEvent e) {
 				System.out.println("ACTIVO");
 				hub.showCarrito();
-
 			}
 		});
 		
@@ -93,16 +92,18 @@ public class MenuVentaController {
 	
 	private void calcularAtributosDeCarrito() {
 		float cantidad = 0;
+		int cantidadProductos = 0;
+		
 		for(ItemCarrito item : carritoService.getOnlyReadCarrito()) {
+			cantidadProductos += item.cantidad();
 			cantidad += item.producto().getPrecioVenta() * item.cantidad();
 		}
-		
-		view.setTotalTexto("$" + cantidad + " MXN");
-		view.setCantidadTexto(carritoService.getSize() + " Articulos");
+		view.setCantidadTexto("Total de productos: " + cantidadProductos);
+		view.setTotalTexto("Subtotal: $" + cantidad + " MXN");
 	}
 	
 	
-	private void cargarMenu() {
+	public void cargarMenu() {
 		Map<String, EventList<Platillo>> menuPorCategoriasMap = menuCatalogoService.getPlatillosAgrupadosPorNombreCategoria();
 		
 		
@@ -115,7 +116,7 @@ public class MenuVentaController {
 			
 			view.addSeccion(categoria, ".", crearGridCategoria(lista));
 		}
-		
+		calcularAtributosDeCarrito();
 	}
 	
 	public JPanel crearGridCategoria(EventList<Platillo> platillos) {

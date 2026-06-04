@@ -10,7 +10,11 @@ public class CarritoService {
     private final EventList<ItemCarrito> carrito = new BasicEventList<>();
     
     public record ItemCarrito(Platillo producto, int cantidad) {}
-
+    
+    public CarritoService() {
+    	
+    }
+    
     /**
      * Agrega un platillo al carrito. 
      * Si ya existe, incrementa su cantidad en 1.
@@ -142,6 +146,12 @@ public class CarritoService {
         } finally {
             carrito.getReadWriteLock().writeLock().unlock();
         }
+    }
+    
+    public void limpiarCarrito() {
+    	if(carrito != null) {
+    		carrito.clear();
+    	}
     }
 
     public EventList<ItemCarrito> getOnlyReadCarrito() {

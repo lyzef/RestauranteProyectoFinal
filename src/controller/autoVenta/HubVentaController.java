@@ -89,6 +89,17 @@ public class HubVentaController {
 		});		
 	}
 	
+	/*
+	 * Recarga de datos asi como creacion de controlador si no existe
+	 */
+	public void showMenuReset() {
+		if(menuVentaController == null) {
+			menuVentaController = new  MenuVentaController(view.getMenuPanel(),menuCatalogoService,carritoService,ventasService,categoriaService,this);
+		}
+		menuVentaController.cargarMenu();
+		view.showView(view.MENU);
+	}
+	
 	public void showMenu() {
 		if(menuVentaController == null) {
 			menuVentaController = new  MenuVentaController(view.getMenuPanel(),menuCatalogoService,carritoService,ventasService,categoriaService,this);
@@ -98,7 +109,7 @@ public class HubVentaController {
 	
 	public void showCarrito() {
 		if(carritoController == null) {
-			carritoController = new  CarritoController(view.getCarritoPanel(), carritoService, this);
+			carritoController = new  CarritoController(view.getCarritoPanel(), carritoService, this,ventasService);
 		}
 		carritoController.crearCarrito();
 		view.showView(view.CARRITO);

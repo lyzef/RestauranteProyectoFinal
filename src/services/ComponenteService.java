@@ -18,7 +18,11 @@ public class ComponenteService {
 
     public ComponenteService() {
         this.listaComponentes = new BasicEventList<>();
-        cargarDatosDesdeBD();
+        try {
+			cargarDatosDesdeBD();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
     }
     
     public EventList<ComponenteIngredienteReceta> getListaModificable() {
@@ -67,6 +71,10 @@ public class ComponenteService {
     	return null;
     }
     
+    public ComponenteIngredienteReceta getComponenteByIdFromDB(int id) throws Exception {
+    	return repo.getComponenteById(id);
+    }
+    
     public FilterList<ComponenteIngredienteReceta> getAllRecetas() {
         Matcher<ComponenteIngredienteReceta> matcherRecetas = new Matcher<ComponenteIngredienteReceta>() {
             @Override
@@ -83,13 +91,15 @@ public class ComponenteService {
         return new FilterList<>(this.listaComponentes, matcherInventariables);
     }
     
-    public void cargarDatosDesdeBD() {
-    	try {
-    		listaComponentes.clear();
+    public void cargarDatosDesdeBD() throws Exception {
+	
+		try {
+			listaComponentes.clear();
 			listaComponentes.addAll(repo.getComponentes());
 		} catch (Exception e) {
-			System.out.println("Error : Lista componente no cargada , RAZON " + e.getMessage());
+			throw new Exception("Datos de componente no cargados");
 		}
+		
     }
     
     

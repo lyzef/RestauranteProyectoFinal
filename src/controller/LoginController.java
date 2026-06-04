@@ -16,6 +16,7 @@ import services.CategoriaService;
 import services.ComponenteService;
 import services.EstructuraRecetaService;
 import services.InventarioService;
+import services.LoadService;
 import services.MenuCatalogoService;
 import services.PlatilloService;
 import services.VentasService;
@@ -44,6 +45,7 @@ public class LoginController {
   	private CategoriaService categoriaService;
   	private PlatilloService platilloService;
   	private VentasService ventasService;
+  	private LoadService loadService;
   	
   	//Para venta
   	private MenuCatalogoService menuCatalogoService;
@@ -93,15 +95,17 @@ public class LoginController {
     }
     
     public void crearServicios() {
+    	//Primero los servicios padre
 		componenteService = new ComponenteService();
 		estructuraRecetaService = new EstructuraRecetaService();
 		categoriaService = new CategoriaService();
+		carritoService = new CarritoService();
 		calculoRecetaService = new CalculoRecetaService(componenteService, estructuraRecetaService);
 		inventarioService = new InventarioService(componenteService, estructuraRecetaService);
 		platilloService = new PlatilloService(categoriaService);
-		
+		loadService = new LoadService(componenteService, categoriaService, estructuraRecetaService, inventarioService, platilloService);
 		menuCatalogoService = new MenuCatalogoService(componenteService, platilloService, categoriaService, estructuraRecetaService);
-		carritoService = new CarritoService();
+		ventasService = new VentasService(inventarioService, carritoService, loadService,componenteService);
 		
 	}
 

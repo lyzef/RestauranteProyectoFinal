@@ -33,10 +33,18 @@ public class MenuCatalogoService {
 		this.categoriaService = categoriaService;
 		this.estructuraService = estructuraService;
 	}
-
+	
+	
+	//Comprueba que existe suficiente inventario en stock asi como que este disponible segun el admin
 	private boolean comprobarPlatilloDisponible(int idReceta) {
     	ComponenteIngredienteReceta receta = componenteService.getComponenteById(idReceta);
     	
+    	// Esta activa (Por admin)
+    	if(receta.isDisponibilidadManual() == false) {
+			return false;
+		}
+    	
+    	// Si cuenta checar existencias
     	if(receta.isInventariable()) {
     		return receta.getStockActual() >= receta.getStockMinimoBloqueo() ? true : false;
     	}
@@ -44,6 +52,13 @@ public class MenuCatalogoService {
     	//Si no es inventariable entonces obtenemos sus hijos y quitamos su stock
         List<Estructura_receta> hijos = estructuraService.getHijosByID(idReceta);
         
+        // Comprueba que TENGA minimo UN hijo 
+        if(hijos == null || hijos.isEmpty()) {
+            System.out.println("Receta " + receta.getNombre() + " no tiene ingredientes asignados");
+            return false;
+        }
+        
+        // Verificamos chamacos 
         for (Estructura_receta hijo : hijos) {
         	if(!comprobarPlatilloDisponible(hijo.getChild_id())) {
         		return false;
@@ -51,6 +66,9 @@ public class MenuCatalogoService {
         	}
          
         }
+   
+        // Si todos los hijos tiene stock suficiente en caso que sean inventariables
+        // y tiene min un hijo 
         return true;
     }
 	

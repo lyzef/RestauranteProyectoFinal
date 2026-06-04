@@ -113,7 +113,7 @@ public class PlatilloService {
         return platillosFiltrados;
     }
     
-    public EventList<Platillo> getPlatillosByComponenteId(int componenteId) {
+    public EventList<Platillo> getPlatilloByComponenteId(int componenteId) {
         EventList<Platillo> platillosFiltrados = new BasicEventList<>();
         
         listaPlatillos.getReadWriteLock().readLock().lock();
@@ -128,6 +128,14 @@ public class PlatilloService {
         }
         
         return platillosFiltrados;
+    }
+    
+    /**
+     * Busca un platillo directamente en base de datos con todos sus datos de disponibilidad
+     * Útil para validar stock y disponibilidad antes de una venta
+     */
+    public Platillo getPlatilloByIdFromDB(int id) throws Exception {
+        return platilloRepo.getPlatilloById(id);
     }
     
     public int getCantidadPlatillos() {

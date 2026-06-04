@@ -60,7 +60,22 @@ public class InventarioRepository {
 	               + "FROM componentes";
 		return ejecutarConsultaComponentes(sql);
 	}
-
+	
+	public ComponenteIngredienteReceta getComponenteById(int id) throws Exception {
+	    String sql = "SELECT id, nombre, es_receta, tipo_componente, unidad_medida, "
+	               + "costo_unitario, calorias_por_unidad, stock_actual, stock_minimo_bloqueo, "
+	               + "stock_minimo_alerta, disponibilidad_manual, es_inventariable "
+	               + "FROM componentes WHERE id = ?";
+	    
+	    List<ComponenteIngredienteReceta> resultados = ejecutarConsultaComponentesConParametro(sql, id);
+	    
+	    if (resultados.isEmpty()) {
+	        throw new Exception("No se encontró el componente con ID: " + id);
+	    }
+	    
+	    return resultados.get(0);
+	}
+	
 	public void  updateComponente(ComponenteIngredienteReceta componente) throws Exception {
 	    String sqlUpdate = "UPDATE componentes SET "
 	            + "nombre = ?, "

@@ -3,9 +3,13 @@ package controller.autoVenta;
 import java.awt.Container;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+
+import javax.swing.JOptionPane;
 
 import ca.odell.glazedlists.EventList;
 import ca.odell.glazedlists.event.ListEvent;
@@ -14,6 +18,7 @@ import models.ComponenteIngredienteReceta;
 import models.Platillo;
 import services.CarritoService;
 import services.CarritoService.ItemCarrito;
+import services.VentasService;
 import utilidades.views.CardCarritoPlatillo;
 import utilidades.views.CardIngrediente;
 import views.AutoVenta.CarritoView;
@@ -21,17 +26,19 @@ import views.AutoVenta.CarritoView;
 public class CarritoController {
 	CarritoView view;
 	CarritoService carritoService;
+	VentasService ventasService;
 	HubVentaController hubVentaController;
 	
 	ArrayList<CardCarritoPlatillo>  listCardPlatillos = new ArrayList<CardCarritoPlatillo>();
 	EventList<ItemCarrito> carrito;
 	
 	public CarritoController(CarritoView view, CarritoService carritoService,
-			HubVentaController hubVentaController) {
+			HubVentaController hubVentaController,VentasService ventasService) {
 		super();
 		this.view = view;
 		this.carritoService = carritoService;
 		this.hubVentaController = hubVentaController;
+		this.ventasService = ventasService;
 		
 		carrito = carritoService.getCarrito();
 		crearCarrito();
@@ -45,6 +52,22 @@ public class CarritoController {
 	               calcularAtributosDeCarrito();
 			}
 			
+		});
+		
+		view.getBtnPedir().addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				
+				try {
+					ventasService.realizarVenta();
+				} catch (Exception error) {
+					JOptionPane.showMessageDialog(view, error.getMessage());
+					error.printStackTrace();
+				} finally {
+					hubVentaController.showMenuReset();
+				}
+				
+			}
 		});
 		
 	}
@@ -69,6 +92,14 @@ public class CarritoController {
 		
 		card.getCantidadField().addActionListener(e -> {
 			carritoService.modificarCantidadPlatillo(card.getPlatillo(), (int) card.getCantidad());
+		});
+
+		// Listener para perder foco
+		card.getCantidadField().addFocusListener(new FocusAdapter() {
+		    @Override
+		    public void focusLost(FocusEvent e) {
+		    	carritoService.modificarCantidadPlatillo(card.getPlatillo(), (int) card.getCantidad());
+		    }
 		});
 	}
 	
@@ -96,12 +127,13 @@ public class CarritoController {
 	
 	private void calcularAtributosDeCarrito() {
 		float cantidad = 0;
+		int cantidadProductos = 0;
 		for(ItemCarrito item : carritoService.getOnlyReadCarrito()) {
+			cantidadProductos += item.cantidad();
 			cantidad += item.producto().getPrecioVenta() * item.cantidad();
 		}
-		
-		view.setTotalLabel("$" + cantidad + " MXN");
-		view.setCantidadLabel("Productos : "+ carritoService.getSize());
-		view.setTotalProductos(carritoService.getSize());
+		view.setCantidadLabel("Total de articulos: " + cantidadProductos);
+		view.setTotalLabel("Subtotal: $" + cantidad + " MXN");
 	}
+	
 }

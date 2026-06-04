@@ -41,12 +41,13 @@ public class InventarioService {
 	
 	}
 	
-    private List<MovimientoInventario> descontarHijosDeInventario(int idReceta, double cantidad, tipoMovimiento tipoMovimiento,String motivo) {
+    public List<MovimientoInventario> crearMovimientosParaRecetaEHijos(int idReceta, double cantidad, tipoMovimiento tipoMovimiento,String motivo) {
     	ComponenteIngredienteReceta receta = componenteService.getComponenteById(idReceta);
     	List<MovimientoInventario> listaMovimientoARegistrar = new ArrayList<MovimientoInventario>();
     	
+    	//Si la receta es por lotes se descuenta al momento
     	if(receta.isInventariable()) {
-    		//Crea el movimiento
+    		//Crea el movimiento para hijos inventariable
     		MovimientoInventario movimiento = new MovimientoInventario(idReceta, receta.getNombre(), tipoMovimiento, 
     				cantidad, cantidad * receta.getCostoUnitario(), motivo);
     		listaMovimientoARegistrar.add(movimiento);
@@ -61,7 +62,7 @@ public class InventarioService {
         	double cantidadNecesaria = cantidad * hijo.getCantidad();
             
             listaMovimientoARegistrar.addAll(
-                    descontarHijosDeInventario(hijo.getChild_id(), cantidadNecesaria, tipoMovimiento, motivo)
+            		crearMovimientosParaRecetaEHijos(hijo.getChild_id(), cantidadNecesaria, tipoMovimiento, motivo)
             );
             
         }
@@ -69,10 +70,11 @@ public class InventarioService {
     }
     
     
-    
+    /*
     private List<MovimientoInventario> descontarHijosDeInventario(MovimientoInventario mov) {
     	return descontarHijosDeInventario(mov.getComponente_id(),mov.getCantidad(),mov.getTipo_movimiento(),mov.getMotivo());
     }
+    */
     
     public void guardarProduccion(int idReceta, double cantidad,String motivo) throws Exception {
     	ComponenteIngredienteReceta receta = componenteService.getComponenteById(idReceta);
@@ -87,7 +89,7 @@ public class InventarioService {
             double cantidadNecesaria = cantidad * hijo.getCantidad();
             
             movimientosSalida.addAll(
-                    descontarHijosDeInventario(
+            		crearMovimientosParaRecetaEHijos(
                             hijo.getChild_id(), 
                             cantidadNecesaria, 
                             tipoMovimiento.SALIDA, 
@@ -99,6 +101,10 @@ public class InventarioService {
         repo.saveMovimientosDeInventario(movimientosSalida);
         listaMovimientos.addAll(movimientosSalida);
     	
+    }
+    
+    public void subirConjuntoMovimientos(List<MovimientoInventario> movimientos) throws Exception {
+    	repo.saveMovimientosDeInventario(movimientos);
     }
     
     public EventList<MovimientoInventario> getListaModificable() {

@@ -121,12 +121,17 @@ public class MovimientoInventario {
     public enum tipoMovimiento {
         ENTRADA("Entrada"),
         SALIDA("Salida"), 
-        AJUSTE("Ajuste");
+        AJUSTE("Ajuste"),
+    	VENTA("Venta");
 
         private final String nombre;
 
         tipoMovimiento(String nombre) {
             this.nombre = nombre;
+        }
+        
+        public String traerValorDeDB(tipoMovimiento e) {
+        	return e.name();
         }
         
         public static tipoMovimiento fromString(String text) {

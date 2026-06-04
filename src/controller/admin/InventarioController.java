@@ -231,6 +231,14 @@ public class InventarioController {
 		}	
 	}
 	
+	private void loadComponentesTable() {
+		try {
+			componenteService.cargarDatosDesdeBD();
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(view, "Error al cargar componentes: " + e.getMessage());
+		}
+	}
+	
 	private void loadMovimientoTable() {
 		try {
 			inventarioService.cargarMovimientos();
@@ -291,7 +299,7 @@ public class InventarioController {
 		
 		if(tablaInventarioDesplegada) {
 			// Cambiar a tabla de componentes
-			componenteService.cargarDatosDesdeBD();
+			loadComponentesTable();
 			view.setTableModel(tableModelComponentes);
 			view.setBtnCambiarTablaText("Ver movimientos");;
 		} else {

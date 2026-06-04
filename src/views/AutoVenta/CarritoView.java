@@ -30,7 +30,7 @@ public class CarritoView extends JPanel {
     
     private JPanel panelIngredientes;
     private JLabel titulo;
-    private JLabel labelTotalProductos;
+    private JLabel Slogan;
     
     private JLabel lblCantidad;
     private JLabel lblTotal;
@@ -57,14 +57,14 @@ public class CarritoView extends JPanel {
         titulo.setForeground(Paleta_Colores.TEXTO_PRINCIPAL.getColor());
         titulo.setAlignmentX(Component.CENTER_ALIGNMENT);
         
-        labelTotalProductos = new JLabel("Total de productos: 0");
-        labelTotalProductos.setFont(AppFont.normal());
-        labelTotalProductos.setForeground(Paleta_Colores.ATENCION.getColor());
-        labelTotalProductos.setAlignmentX(Component.CENTER_ALIGNMENT);
+        Slogan = new JLabel("Algo bello pal camello");
+        Slogan.setFont(AppFont.normal());
+        Slogan.setForeground(Paleta_Colores.ATENCION.getColor());
+        Slogan.setAlignmentX(Component.CENTER_ALIGNMENT);
         
         panelContenedorSuperior.add(titulo);
         panelContenedorSuperior.add(Box.createVerticalStrut(5));
-        panelContenedorSuperior.add(labelTotalProductos);
+        panelContenedorSuperior.add(Slogan);
         
         panelIngredientes = new JPanel();
         panelIngredientes.setOpaque(false);
@@ -112,9 +112,9 @@ public class CarritoView extends JPanel {
         infoPanel.add(Box.createVerticalStrut(4));
         infoPanel.add(lblTotal);
 
-        btnPedir = crearBotonAcento("Ver Carrito");
+        btnPedir = crearBotonAcento("Ir a pagar");
         btnPedir.setPreferredSize(new Dimension(130, 40));
-        btnPedir.setFont(new Font("Arial", Font.BOLD, 14));
+        btnPedir.setFont(AppFont.normal().deriveFont(Font.BOLD));
         
         bar.add(infoPanel, BorderLayout.WEST);
         bar.add(btnPedir, BorderLayout.EAST);
@@ -169,10 +169,6 @@ public class CarritoView extends JPanel {
     public void setTitulo(String t) { 
         titulo.setText(t); 
     }
-    
-    public void setTotalProductos(int cantidad) {
-        labelTotalProductos.setText("Total de productos: " + cantidad);
-    }
 
     // Métodos para modificar los labels desde el controlador
     public void setCantidadLabel(String texto) {
@@ -181,10 +177,6 @@ public class CarritoView extends JPanel {
     
     public void setTotalLabel(String texto) {
         lblTotal.setText(texto);
-    }
-    
-    public void setTotalProductosLabel(String texto) {
-        labelTotalProductos.setText(texto);
     }
 
     public JLabel getLblCantidad() { return lblCantidad; }
