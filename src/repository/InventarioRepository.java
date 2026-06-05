@@ -10,7 +10,7 @@ import java.util.List;
 
 import config.DatabaseConnection;
 import models.ComponenteIngredienteReceta;
-import models.Estructura_receta;
+import models.EstructuraReceta;
 import models.MovimientoInventario;
 import models.MovimientoInventario.tipoMovimiento;
 import models.User;
@@ -148,7 +148,7 @@ public class InventarioRepository {
 	    }
 	}
 
-	public void saveEstructuraReceta(int parentId, List<Estructura_receta> ingredientes) throws Exception {
+	public void saveEstructuraReceta(int parentId, List<EstructuraReceta> ingredientes) throws Exception {
 	    
 	    String sqlDelete = "DELETE FROM estructura_receta WHERE parent_id = ?";
 	    String sqlInsert = "INSERT INTO estructura_receta (parent_id, child_id, cantidad, es_opcional) VALUES (?, ?, ?, ?)";
@@ -163,7 +163,7 @@ public class InventarioRepository {
 	            stmtDelete.setInt(1, parentId);
 	            stmtDelete.executeUpdate();
 
-	            for (Estructura_receta ingrediente : ingredientes) {
+	            for (EstructuraReceta ingrediente : ingredientes) {
 	                stmtInsert.setInt(1, parentId); 
 	                stmtInsert.setInt(2, ingrediente.getChild_id());
 	                stmtInsert.setDouble(3, ingrediente.getCantidad());
@@ -211,9 +211,9 @@ public class InventarioRepository {
 	    }
 	}
 	
-	public List<Estructura_receta> getTodasLasEstructuras() {
+	public List<EstructuraReceta> getTodasLasEstructuras() {
 	    
-	    List<Estructura_receta> listaCompleta = new ArrayList<>();
+	    List<EstructuraReceta> listaCompleta = new ArrayList<>();
 	    String sql = "SELECT parent_id, child_id, cantidad, es_opcional FROM estructura_receta";
 
 	    try (Connection connection = DatabaseConnection.getConnection();
@@ -226,7 +226,7 @@ public class InventarioRepository {
 	            double cantidad = rs.getDouble("cantidad");
 	            boolean opcional = rs.getBoolean("es_opcional");
 	            
-	            Estructura_receta ingrediente = new Estructura_receta(parent, child, cantidad, opcional);
+	            EstructuraReceta ingrediente = new EstructuraReceta(parent, child, cantidad, opcional);
 	            listaCompleta.add(ingrediente);
 	        }
 
@@ -305,9 +305,36 @@ public class InventarioRepository {
 		        
 		    } catch (SQLException e) {
 		        throw new Exception("Error al preparar la conexión o la consulta: " + e.getMessage(), e);
-		    }
-		}
-
+	    }
+	}
+	 
+	 /*
+	  * Permite una conexion personalizada
+	  * 
+	  * Usado para venta de producto
+	  */
+	 public void saveMovimientosDeInventario(List<MovimientoInventario> movimientos, Connection conn) throws Exception {
+	        String sql = "INSERT INTO movimientos_inventario (componente_id, tipo_movimiento, cantidad, costo_movimiento, motivo) VALUES (?, ?, ?, ?, ?)";
+	        
+	        // Usamos la conexión recibida por parámetro. Solo el PreparedStatement se auto-cierra.
+	        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {		        
+	            
+	            for (MovimientoInventario mov : movimientos) {
+	                pstmt.setInt(1, mov.getComponente_id());
+	                pstmt.setString(2, mov.getTipo_movimiento().name()); 
+	                pstmt.setDouble(3, mov.getCantidad());
+	                pstmt.setDouble(4, mov.getCosto_movimiento());
+	                pstmt.setString(5, mov.getMotivo());
+	                
+	                pstmt.addBatch();
+	            }
+	            pstmt.executeBatch();
+	            
+	        } catch (SQLException e) {
+	            throw new Exception("Error al guardar movimientos de inventario en batch: " + e.getMessage(), e);
+        }
+	 }
+	 
 	 public List<MovimientoInventario> getMovimientosInventario() throws Exception {
 	        List<MovimientoInventario> lista = new ArrayList<>();
 	        String sql = "SELECT m.*, c.nombre FROM movimientos_inventario m LEFT JOIN "

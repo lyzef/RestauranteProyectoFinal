@@ -16,7 +16,7 @@ import ca.odell.glazedlists.SortedList;
 import ca.odell.glazedlists.swing.DefaultEventComboBoxModel;
 import excepciones.invalidInput;
 import models.ComponenteIngredienteReceta;
-import models.Estructura_receta;
+import models.EstructuraReceta;
 import services.CalculoRecetaService;
 import services.EstructuraRecetaService;
 import utilidades.ValidadorEntradasTexto;
@@ -30,7 +30,7 @@ public class RecetaFormController {
 	
 	//Listas
 	EventList<ComponenteIngredienteReceta> listaComponentes;
-	EventList<Estructura_receta> listaEstructuraReceta;
+	EventList<EstructuraReceta> listaEstructuraReceta;
 	ComponenteIngredienteReceta receta;
 	
 	//Lista de hijos de receta
@@ -40,11 +40,11 @@ public class RecetaFormController {
 	DefaultEventComboBoxModel<ComponenteIngredienteReceta> modelComboBox; 
 	
 	//Lista de hijos actual
-	 java.util.List<Estructura_receta> hijos = new ArrayList<Estructura_receta>();
+	 java.util.List<EstructuraReceta> hijos = new ArrayList<EstructuraReceta>();
 	
 	 boolean soloVer;
 	 
-	public RecetaFormController(EventList<ComponenteIngredienteReceta> listaComponentes,EventList<Estructura_receta> listaEstructuraReceta, RecetaDialog view,
+	public RecetaFormController(EventList<ComponenteIngredienteReceta> listaComponentes,EventList<EstructuraReceta> listaEstructuraReceta, RecetaDialog view,
 			ComponenteIngredienteReceta receta, boolean soloVer, CalculoRecetaService calculoRecetaService) {
 		
 		this.view = view;
@@ -216,7 +216,7 @@ public class RecetaFormController {
 	}
 	
 	private void cargarHijos() {
-		for(Estructura_receta recetaHijo : listaEstructuraReceta) {
+		for(EstructuraReceta recetaHijo : listaEstructuraReceta) {
 			if(recetaHijo.getParent_id() == receta.getId()) {
 				for(ComponenteIngredienteReceta ingrediente : listaComponentes) {
 					if(ingrediente.getId() == recetaHijo.getChild_id()) {
@@ -233,7 +233,7 @@ public class RecetaFormController {
 	private void guardarListaHijos() {
 		hijos = new ArrayList<>();
 		for(CardIngrediente card : listaCardIngredientes) {
-			Estructura_receta et = new Estructura_receta(receta.getId(),
+			EstructuraReceta et = new EstructuraReceta(receta.getId(),
 					card.getIngrediente().getId() , card.getCantidad(), card.isOpcional());
 			
 			if(et.getCantidad() > 0) {
@@ -256,7 +256,7 @@ public class RecetaFormController {
 		view.getCampoPrecioTotal().setText(Double.toString(receta.getCostoUnitario()));
 	}
 	
-	public java.util.List<Estructura_receta> getHijos() {
+	public java.util.List<EstructuraReceta> getHijos() {
 		return hijos;
 	}
 	

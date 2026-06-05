@@ -28,7 +28,7 @@ import services.ComponenteService;
 import services.InventarioService;
 import services.MenuCatalogoService;
 import services.PlatilloService;
-import services.VentasService;
+import services.VentaProductoService;
 import utilidades.views.CardIngrediente;
 import utilidades.views.CardPlatillo;
 import views.AutoVenta.MenuVentaView;
@@ -40,12 +40,12 @@ public class MenuVentaController {
 	MenuCatalogoService menuCatalogoService;
 	CategoriaService categoriaService;
 	CarritoService carritoService;
-	VentasService ventasService;
+	VentaProductoService ventasService;
 	
 	HubVentaController hub;
 	
 	public MenuVentaController(MenuVentaView view, MenuCatalogoService menuCatalogoService,
-			CarritoService carritoService, VentasService ventasService, CategoriaService categoriaService,HubVentaController hub) {
+			CarritoService carritoService, VentaProductoService ventasService, CategoriaService categoriaService,HubVentaController hub) {
 		super();
 		this.view = view;
 		this.menuCatalogoService = menuCatalogoService;
@@ -79,6 +79,7 @@ public class MenuVentaController {
 		
 	}
 	
+	
 	private void vincularBotonAgregarACarrito(CardPlatillo card) {
 		// Anade un elemento al carrito
 		card.getBotonAgregar().addMouseListener(new MouseAdapter() {
@@ -105,7 +106,7 @@ public class MenuVentaController {
 	
 	public void cargarMenu() {
 		Map<String, EventList<Platillo>> menuPorCategoriasMap = menuCatalogoService.getPlatillosAgrupadosPorNombreCategoria();
-		
+		limpiarMenu();
 		
 		for(String categoria : menuPorCategoriasMap.keySet()) {
 			EventList<Platillo> lista = menuPorCategoriasMap.get(categoria);
@@ -140,5 +141,9 @@ public class MenuVentaController {
         }
         return grid;
     }
+	
+	public void limpiarMenu() {
+		view.getSecciones().removeAll();
+	}
 	
 }

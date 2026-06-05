@@ -37,6 +37,7 @@ public class HubVentaFrame extends JFrame {
     // CONSTANTES DEL CARDLAYOUT
     public static final String MENU = "MENU";
     public static final String CARRITO = "CARRITO";
+    public static final String PAGO = "PAGO";
     
     // COLORES DEL TEMA (Extraídos del primer MenuView)
     private static final Color COLOR_FONDO  = new Color(15, 23, 42);
@@ -58,6 +59,7 @@ public class HubVentaFrame extends JFrame {
     // VISTAS
     public MenuVentaView menuPanel;
     public CarritoView carritoPanel;
+    public PagoView pagoPanel;
 
     public HubVentaFrame() {
         // MEDIDAS PARA POS VERTICAL 
@@ -92,8 +94,10 @@ public class HubVentaFrame extends JFrame {
         //Card layout
         menuPanel = new MenuVentaView();
         carritoPanel = new CarritoView();
+        pagoPanel = new PagoView();
         panelPrincipal.add(menuPanel, MENU);
         panelPrincipal.add(carritoPanel,CARRITO);
+        panelPrincipal.add(pagoPanel,PAGO);
         
         contenedorPrincipal.setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
@@ -264,10 +268,6 @@ public class HubVentaFrame extends JFrame {
     public MenuVentaView getMenuPanel() { return menuPanel; }
     
     public CarritoView getCarritoPanel() { return carritoPanel; }
-    // MAIN
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            new HubVentaFrame();
-        });
-    }
+    
+    public PagoView getPagoPanel() { return pagoPanel; }
 }

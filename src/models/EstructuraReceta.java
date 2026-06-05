@@ -1,16 +1,16 @@
 package models;
 
-public class Estructura_receta {
+public class EstructuraReceta {
 	private int parent_id;
 	private int child_id;
 	private double cantidad;
 	private boolean es_opcional;
 	
-	public Estructura_receta() {
+	public EstructuraReceta() {
 		
 	}
 
-	public Estructura_receta(int parent_id, int child_id, double cantidad, boolean es_opcional) {
+	public EstructuraReceta(int parent_id, int child_id, double cantidad, boolean es_opcional) {
 		super();
 		this.parent_id = parent_id;
 		this.child_id = child_id;

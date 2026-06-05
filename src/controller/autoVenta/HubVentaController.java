@@ -10,7 +10,7 @@ import repository.LoginRepository;
 import services.CarritoService;
 import services.CategoriaService;
 import services.MenuCatalogoService;
-import services.VentasService;
+import services.VentaProductoService;
 import utilidades.Session;
 import views.Login;
 import views.AutoVenta.HubVentaFrame;
@@ -23,19 +23,20 @@ public class HubVentaController {
 	MenuVentaController menuVentaController;
 	LoginController loginController;
 	CarritoController carritoController;
+	PagoController pagoController;
 	
 	MenuCatalogoService menuCatalogoService;
 	CarritoService carritoService;
-	VentasService ventasService;
+	VentaProductoService ventaProductoService;
 	CategoriaService categoriaService;
 	
 	public HubVentaController(HubVentaFrame view, MenuCatalogoService menuCatalogoService,
-			CarritoService carritoService, VentasService ventasService, CategoriaService categoriaService, LoginController loginController) {
+			CarritoService carritoService, VentaProductoService ventaProductoService, CategoriaService categoriaService, LoginController loginController) {
 		super();
 		this.view = view;
 		this.menuCatalogoService = menuCatalogoService;
 		this.carritoService = carritoService;
-		this.ventasService = ventasService;
+		this.ventaProductoService = ventaProductoService;
 		this.categoriaService = categoriaService;
 		this.loginController = loginController;
 		addListeners();
@@ -94,7 +95,7 @@ public class HubVentaController {
 	 */
 	public void showMenuReset() {
 		if(menuVentaController == null) {
-			menuVentaController = new  MenuVentaController(view.getMenuPanel(),menuCatalogoService,carritoService,ventasService,categoriaService,this);
+			menuVentaController = new  MenuVentaController(view.getMenuPanel(),menuCatalogoService,carritoService,ventaProductoService,categoriaService,this);
 		}
 		menuVentaController.cargarMenu();
 		view.showView(view.MENU);
@@ -102,17 +103,25 @@ public class HubVentaController {
 	
 	public void showMenu() {
 		if(menuVentaController == null) {
-			menuVentaController = new  MenuVentaController(view.getMenuPanel(),menuCatalogoService,carritoService,ventasService,categoriaService,this);
+			menuVentaController = new  MenuVentaController(view.getMenuPanel(),menuCatalogoService,carritoService,ventaProductoService,categoriaService,this);
 		}
 		view.showView(view.MENU);
 	}
 	
 	public void showCarrito() {
 		if(carritoController == null) {
-			carritoController = new  CarritoController(view.getCarritoPanel(), carritoService, this,ventasService);
+			carritoController = new  CarritoController(view.getCarritoPanel(), carritoService,this,ventaProductoService);
 		}
 		carritoController.crearCarrito();
 		view.showView(view.CARRITO);
+	}
+	
+	public void showPagoView() {
+		if(pagoController == null) {
+			pagoController = new  PagoController(view.getPagoPanel(), carritoService,ventaProductoService,this);
+		}
+		pagoController.generarTicketDePago();
+		view.showView(view.PAGO);
 	}
 	
 	

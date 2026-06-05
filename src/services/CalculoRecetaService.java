@@ -3,7 +3,7 @@ package services;
 import java.util.List;
 
 import models.ComponenteIngredienteReceta;
-import models.Estructura_receta;
+import models.EstructuraReceta;
 
 public class CalculoRecetaService {
 
@@ -26,9 +26,9 @@ public class CalculoRecetaService {
         double caloriasTotales = 0.0;
         
         //Si es una receta devuelve las calorias totales
-        List<Estructura_receta> hijos = estructuraService.getHijosByID(idReceta);
+        List<EstructuraReceta> hijos = estructuraService.getHijosByID(idReceta);
 
-        for (Estructura_receta hijo : hijos) {
+        for (EstructuraReceta hijo : hijos) {
         	// Metodo recursivo
             double caloriasHijo = calcularCaloriasTotales(hijo.getChild_id());
             
@@ -40,9 +40,9 @@ public class CalculoRecetaService {
     }
     
   //Para hijos en memoria
-    public double calcularCaloriasTotales(List<Estructura_receta> hijos) {
+    public double calcularCaloriasTotales(List<EstructuraReceta> hijos) {
     	double caloriasTotales = 0.0;
-    	for (Estructura_receta hijo : hijos) {
+    	for (EstructuraReceta hijo : hijos) {
         	// Metodo recursivo
             double caloriasHijo = calcularCaloriasTotales(hijo.getChild_id());
             
@@ -64,9 +64,9 @@ public class CalculoRecetaService {
         double costoTotal = 0.0;
         
         //Si es una receta devuelve las calorias totales
-        List<Estructura_receta> hijos = estructuraService.getHijosByID(idReceta);
+        List<EstructuraReceta> hijos = estructuraService.getHijosByID(idReceta);
 
-        for (Estructura_receta hijo : hijos) {
+        for (EstructuraReceta hijo : hijos) {
         	// Metodo recursivo
             double costoHijo = calcularCostoTotal(hijo.getChild_id());
             
@@ -78,9 +78,9 @@ public class CalculoRecetaService {
     }
     
     //Para estructuras de recetas aun no declaradas (HIJOS EN MEMORIA)
-    public double calcularCostoTotal(List<Estructura_receta> hijos) {
+    public double calcularCostoTotal(List<EstructuraReceta> hijos) {
     	double costoTotal = 0.0;
-    	for (Estructura_receta hijo : hijos) {
+    	for (EstructuraReceta hijo : hijos) {
         	// Metodo recursivo
             double costoHijo = calcularCostoTotal(hijo.getChild_id());
             

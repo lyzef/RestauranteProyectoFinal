@@ -1,18 +1,21 @@
 package services;
 
+import javax.swing.JOptionPane;
+
 import ca.odell.glazedlists.BasicEventList;
 import ca.odell.glazedlists.EventList;
 import ca.odell.glazedlists.GlazedLists;
 import models.Platillo;
+import services.CarritoService.ItemCarrito;
 
 public class CarritoService {
-	
+	ComponenteService componenteService;
     private final EventList<ItemCarrito> carrito = new BasicEventList<>();
     
     public record ItemCarrito(Platillo producto, int cantidad) {}
     
-    public CarritoService() {
-    	
+    public CarritoService(ComponenteService componenteService) {
+    	this.componenteService = componenteService;
     }
     
     /**
@@ -38,10 +41,10 @@ public class CarritoService {
                 carrito.remove(indice);
                 carrito.add(indice, new ItemCarrito(platillo, nuevaCantidad));
 
-            	System.out.println("Item " + platillo.getComponenteNombre() + " "+ nuevaCantidad);
+            	System.out.println("Item " + platillo.getComponenteNombre() + " tiene "+ nuevaCantidad);
             } else {
                 // Si no existe, se agrega nuevo con cantidad inicial de 1
-            	System.out.println("Item anadido");
+            	System.out.println("Nuevo item anadido " + platillo.getComponenteNombre());
                 carrito.add(new ItemCarrito(platillo, 1));
             }
         } finally {
@@ -137,7 +140,7 @@ public class CarritoService {
                 carrito.add(index, new ItemCarrito(platillo, nuevaCantidad));
                 System.out.println("Cantidad de " + platillo.getDescripcion() + " actualizada a: " + nuevaCantidad);
             } else {
-                // Si no existe y la nueva cantidad es positiva, agregarlo
+                // Si no existe y la nueva cantidad es positiva, se agregar
                 if (nuevaCantidad > 0) {
                     carrito.add(new ItemCarrito(platillo, nuevaCantidad));
                     System.out.println("Platillo " + platillo.getDescripcion() + " agregado con cantidad: " + nuevaCantidad);
@@ -146,6 +149,33 @@ public class CarritoService {
         } finally {
             carrito.getReadWriteLock().writeLock().unlock();
         }
+    }
+    
+    public boolean verificarDisponibilidadDelCarrito() throws Exception {
+		int articulosNoValidos = 0;
+	        
+	    // Validación de disponibilidad
+	    for(ItemCarrito item : carrito) {
+	        if(componenteService.getComponenteByIdFromDB(item.producto().getComponenteId()).isDisponibilidadManual() == false) {
+	            eliminarPlatillo(item.producto());
+	            articulosNoValidos++;
+	        }
+	    }
+	    
+	    if(articulosNoValidos > 0) {
+	        JOptionPane.showMessageDialog(null, "Artículos sin existencia encontrados en el carrito.");
+	        return false;
+	    }
+	    
+	    return true;
+    }
+    
+    public double costoTotalDelCarrito() {
+    	double subtotal = 0;
+        for (ItemCarrito item : carrito) {
+            subtotal += item.producto().getPrecioVenta() * item.cantidad();
+        }
+        return subtotal;
     }
     
     public void limpiarCarrito() {

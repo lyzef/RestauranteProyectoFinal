@@ -7,16 +7,16 @@ import ca.odell.glazedlists.BasicEventList;
 import ca.odell.glazedlists.EventList;
 import ca.odell.glazedlists.GlazedLists;
 import models.ComponenteIngredienteReceta;
-import models.Estructura_receta;
+import models.EstructuraReceta;
 import repository.InventarioRepository;
 
 public class EstructuraRecetaService {
 	InventarioRepository repo;
-	EventList<Estructura_receta> lista;
+	EventList<EstructuraReceta> lista;
 	
 	public EstructuraRecetaService() {
 		repo = new InventarioRepository();
-		lista = new BasicEventList<Estructura_receta>();
+		lista = new BasicEventList<EstructuraReceta>();
 		try {
 			cargarDatosDesdeBD();
 		} catch (Exception e) {
@@ -24,11 +24,11 @@ public class EstructuraRecetaService {
 		}
 	}
 	
-	public EventList<Estructura_receta> getListaModificable() {
+	public EventList<EstructuraReceta> getListaModificable() {
         return this.lista;
     }
     
-    public EventList<Estructura_receta> getListaSoloLectura() {
+    public EventList<EstructuraReceta> getListaSoloLectura() {
         return GlazedLists.readOnlyList(this.lista);
     }
     
@@ -39,13 +39,13 @@ public class EstructuraRecetaService {
     }
     
     //Guarda componentes y actualiza la tabla
-    public void saveHijos(List<Estructura_receta> ingredientes) throws Exception {
+    public void saveHijos(List<EstructuraReceta> ingredientes) throws Exception {
     	if(ingredientes.isEmpty()) {
     		throw new Exception("Error : Lista vacia");
     	}
     	
     	int parent_id = ingredientes.get(0).getParent_id();
-    	for(Estructura_receta e: ingredientes) {
+    	for(EstructuraReceta e: ingredientes) {
     		if(e.getParent_id() != parent_id) {
     			throw new Exception("Error : parents id diferentes");
     		}
@@ -55,10 +55,10 @@ public class EstructuraRecetaService {
     	cargarDatosDesdeBD();
     }
     
-    public List<Estructura_receta> getHijosByID(int ParentId) {
-    	List<Estructura_receta> hijos = new ArrayList<Estructura_receta>();
+    public List<EstructuraReceta> getHijosByID(int ParentId) {
+    	List<EstructuraReceta> hijos = new ArrayList<EstructuraReceta>();
     	
-    	for(Estructura_receta receta : lista) {
+    	for(EstructuraReceta receta : lista) {
     		if(receta.getParent_id() == ParentId) {
     			hijos.add(receta);
     		}

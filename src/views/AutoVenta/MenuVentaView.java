@@ -215,6 +215,12 @@ public class MenuVentaView extends JPanel {
     	secciones.add(Box.createVerticalStrut(20));
     }
 
+    
+    
+	public JPanel getSecciones() {
+		return secciones;
+	}
+
 	public JButton getBtnPedir() {
 		return btnPedir;
 	}

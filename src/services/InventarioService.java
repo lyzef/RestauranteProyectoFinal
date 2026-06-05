@@ -1,5 +1,6 @@
 package services;
 
+import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,7 +8,7 @@ import ca.odell.glazedlists.BasicEventList;
 import ca.odell.glazedlists.EventList;
 import ca.odell.glazedlists.GlazedLists;
 import models.ComponenteIngredienteReceta;
-import models.Estructura_receta;
+import models.EstructuraReceta;
 import models.MovimientoInventario;
 import models.MovimientoInventario.tipoMovimiento;
 import repository.InventarioRepository;
@@ -56,9 +57,9 @@ public class InventarioService {
     	}
     	
     	//Si no es inventariable entonces obtenemos sus hijos y quitamos su stock
-        List<Estructura_receta> hijos = estructuraService.getHijosByID(idReceta);
+        List<EstructuraReceta> hijos = estructuraService.getHijosByID(idReceta);
         
-        for (Estructura_receta hijo : hijos) {
+        for (EstructuraReceta hijo : hijos) {
         	double cantidadNecesaria = cantidad * hijo.getCantidad();
             
             listaMovimientoARegistrar.addAll(
@@ -83,9 +84,9 @@ public class InventarioService {
 		
     	List<MovimientoInventario> movimientosSalida = new ArrayList<>();
     	movimientosSalida.add(movimiento);
-        List<Estructura_receta> hijos = estructuraService.getHijosByID(idReceta);
+        List<EstructuraReceta> hijos = estructuraService.getHijosByID(idReceta);
         
-        for (Estructura_receta hijo : hijos) {
+        for (EstructuraReceta hijo : hijos) {
             double cantidadNecesaria = cantidad * hijo.getCantidad();
             
             movimientosSalida.addAll(
@@ -105,6 +106,13 @@ public class InventarioService {
     
     public void subirConjuntoMovimientos(List<MovimientoInventario> movimientos) throws Exception {
     	repo.saveMovimientosDeInventario(movimientos);
+    }
+
+    /*
+     * Permite una conexion personalizada
+     */
+    public void subirConjuntoMovimientos(List<MovimientoInventario> movimientos, Connection conexion) throws Exception {
+    	repo.saveMovimientosDeInventario(movimientos,conexion);
     }
     
     public EventList<MovimientoInventario> getListaModificable() {

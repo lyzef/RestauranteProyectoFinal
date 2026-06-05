@@ -19,7 +19,8 @@ import services.InventarioService;
 import services.LoadService;
 import services.MenuCatalogoService;
 import services.PlatilloService;
-import services.VentasService;
+import services.VentaProductoService;
+import services.VentaService;
 import utilidades.Session;
 import utilidades.ValidadorEntradasTexto;
 
@@ -42,9 +43,10 @@ public class LoginController {
   	private EstructuraRecetaService estructuraRecetaService;
   	private CalculoRecetaService calculoRecetaService;
   	private InventarioService inventarioService;
+  	private VentaService ventaService;
   	private CategoriaService categoriaService;
   	private PlatilloService platilloService;
-  	private VentasService ventasService;
+  	private VentaProductoService ventaProductoService;
   	private LoadService loadService;
   	
   	//Para venta
@@ -99,13 +101,14 @@ public class LoginController {
 		componenteService = new ComponenteService();
 		estructuraRecetaService = new EstructuraRecetaService();
 		categoriaService = new CategoriaService();
-		carritoService = new CarritoService();
+		carritoService = new CarritoService(componenteService);
+		ventaService = new VentaService();
 		calculoRecetaService = new CalculoRecetaService(componenteService, estructuraRecetaService);
 		inventarioService = new InventarioService(componenteService, estructuraRecetaService);
 		platilloService = new PlatilloService(categoriaService);
 		loadService = new LoadService(componenteService, categoriaService, estructuraRecetaService, inventarioService, platilloService);
 		menuCatalogoService = new MenuCatalogoService(componenteService, platilloService, categoriaService, estructuraRecetaService);
-		ventasService = new VentasService(inventarioService, carritoService, loadService,componenteService);
+		ventaProductoService = new VentaProductoService(inventarioService, carritoService, loadService, componenteService, ventaService);
 		
 	}
 
@@ -146,7 +149,7 @@ public class LoginController {
         			calculoRecetaService, inventarioService, categoriaService, platilloService);
         	cerrarLogin();
         } else if(Session.getRol().equals("cajero")) {
-        	new HubVentaController(new HubVentaFrame(),menuCatalogoService,carritoService,ventasService,categoriaService,this);
+        	new HubVentaController(new HubVentaFrame(),menuCatalogoService,carritoService,ventaProductoService,categoriaService,this);
         	cerrarLogin();
         } else {
         	JOptionPane.showMessageDialog(

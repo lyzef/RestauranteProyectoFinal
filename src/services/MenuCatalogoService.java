@@ -10,7 +10,7 @@ import ca.odell.glazedlists.EventList;
 import ca.odell.glazedlists.FilterList;
 import models.Categoria;
 import models.ComponenteIngredienteReceta;
-import models.Estructura_receta;
+import models.EstructuraReceta;
 import models.MovimientoInventario;
 import models.Platillo;
 import models.MovimientoInventario.tipoMovimiento;
@@ -41,6 +41,7 @@ public class MenuCatalogoService {
     	
     	// Esta activa (Por admin)
     	if(receta.isDisponibilidadManual() == false) {
+    		System.out.println("Receta " + receta.getNombre() + " bloqueada por admin");
 			return false;
 		}
     	
@@ -50,7 +51,7 @@ public class MenuCatalogoService {
     	}
     	
     	//Si no es inventariable entonces obtenemos sus hijos y quitamos su stock
-        List<Estructura_receta> hijos = estructuraService.getHijosByID(idReceta);
+        List<EstructuraReceta> hijos = estructuraService.getHijosByID(idReceta);
         
         // Comprueba que TENGA minimo UN hijo 
         if(hijos == null || hijos.isEmpty()) {
@@ -59,7 +60,7 @@ public class MenuCatalogoService {
         }
         
         // Verificamos chamacos 
-        for (Estructura_receta hijo : hijos) {
+        for (EstructuraReceta hijo : hijos) {
         	if(!comprobarPlatilloDisponible(hijo.getChild_id())) {
         		return false;
         		

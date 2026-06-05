@@ -29,7 +29,7 @@ import models.Platillo.Emblema;
 import services.CategoriaService;
 import services.ComponenteService;
 import services.PlatilloService;
-import services.VentasService;
+import services.VentaProductoService;
 import utilidades.GeneradorIconos;
 import utilidades.ValidadorEntradasTexto;
 import utilidades.views.PanelTipoPreguntaUtil;
