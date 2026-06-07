@@ -18,7 +18,7 @@ public class Main {
             System.out.println("No se pudo inicializar la clase de conexión");
         }
     	new LoginController(new Login());
-    	
+
         
     }
 }

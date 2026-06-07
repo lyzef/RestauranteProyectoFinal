@@ -14,7 +14,7 @@ import models.Venta;
 import models.Venta.tipoMetodoPago;
 import models.Venta.tipoPedido;
 import services.CarritoService.ItemCarrito;
-import utilidades.Session;
+import utilidades.*;
 
 public class VentaProductoService {
     InventarioService inventarioService;
@@ -62,14 +62,14 @@ public class VentaProductoService {
         return movimientos;
     }
     
-    public void realizarVenta(tipoMetodoPago metodoPago) throws Exception {
+    public Venta realizarVenta(tipoMetodoPago metodoPago) throws Exception {
         List<MovimientoInventario> movimientosSalida;
         List<DetalleVenta> detallesVenta;
         Connection conexion = null;
         
         // Crear Venta
         Venta venta = new Venta();
-        venta.setUsuarioID(Session.getCurrentUser().getId());
+        venta.setUsuarioID(SessionUtilities.getCurrentUser().getId());
         venta.setTotalVenta(carritoService.costoTotalDelCarrito());
         venta.setMetodoPago(metodoPago);
         venta.setTipoPedidoVenta(tipoPedido.COMER_AQUI);
@@ -89,7 +89,7 @@ public class VentaProductoService {
             conexion.setAutoCommit(false); // Inicia transacción
 
             //registrarVentaCompleta tiene que asignar el ID de la venta a los detalles internamente
-            ventaService.registrarVentaCompleta(venta, detallesVenta, conexion);
+            venta = ventaService.registrarVentaCompleta(venta, detallesVenta, conexion);
             inventarioService.subirConjuntoMovimientos(movimientosSalida, conexion);
             
             conexion.commit(); 
@@ -118,6 +118,7 @@ public class VentaProductoService {
         }
         
         limpiarYRenovarParaNuevaVenta();
+        return venta;
     }
     
     private void limpiarYRenovarParaNuevaVenta() {

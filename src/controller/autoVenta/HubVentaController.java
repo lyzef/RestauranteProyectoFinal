@@ -11,7 +11,8 @@ import services.CarritoService;
 import services.CategoriaService;
 import services.MenuCatalogoService;
 import services.VentaProductoService;
-import utilidades.Session;
+import services.VentaService;
+import utilidades.SessionUtilities;
 import views.Login;
 import views.AutoVenta.HubVentaFrame;
 
@@ -81,8 +82,8 @@ public class HubVentaController {
 		view.addWindowListener(new WindowAdapter() {
 		    @Override
 		    public void windowClosing(WindowEvent e) {
-		    	if(Session.isLoggedIn()) {
-			    	new LoginRepository().setSesionActiva(Session.getCurrentUser(), false);
+		    	if(SessionUtilities.isLoggedIn()) {
+			    	new LoginRepository().setSesionActiva(SessionUtilities.getCurrentUser(), false);
 		    	}
 		    	view.dispose();
 		    	loginController.cerrarApp();
@@ -120,7 +121,7 @@ public class HubVentaController {
 		if(pagoController == null) {
 			pagoController = new  PagoController(view.getPagoPanel(), carritoService,ventaProductoService,this);
 		}
-		pagoController.generarTicketDePago();
+		pagoController.generarPreTicketDePago();
 		view.showView(view.PAGO);
 	}
 	

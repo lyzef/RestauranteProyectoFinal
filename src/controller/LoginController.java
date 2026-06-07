@@ -21,7 +21,7 @@ import services.MenuCatalogoService;
 import services.PlatilloService;
 import services.VentaProductoService;
 import services.VentaService;
-import utilidades.Session;
+import utilidades.SessionUtilities;
 import utilidades.ValidadorEntradasTexto;
 
 import javax.swing.*;
@@ -63,16 +63,16 @@ public class LoginController {
     
     public void cerrarApp() {
     	//Desloguear
-    	if(Session.isLoggedIn()) {
-	    	new LoginRepository().setSesionActiva(Session.getCurrentUser(), false);
+    	if(SessionUtilities.isLoggedIn()) {
+	    	new LoginRepository().setSesionActiva(SessionUtilities.getCurrentUser(), false);
     	}
     	view.dispose();
     }
     
     public void abrirLogin() {
     	//Desloguear
-    	if(Session.isLoggedIn()) {
-	    	new LoginRepository().setSesionActiva(Session.getCurrentUser(), false);
+    	if(SessionUtilities.isLoggedIn()) {
+	    	new LoginRepository().setSesionActiva(SessionUtilities.getCurrentUser(), false);
     	}
     	view.setVisible(true);
     	view.setEnabled(true);
@@ -141,14 +141,14 @@ public class LoginController {
         	return;
 		}
         
-        Session.login(user);
+        SessionUtilities.login(user);
         JOptionPane.showMessageDialog(view, "Acceso concedido", "Bienvenido", JOptionPane.INFORMATION_MESSAGE);
         
-        if(Session.getRol().equals("admin")) {
+        if(SessionUtilities.getRol().equals("admin")) {
         	new HubAdminController(new HubFrame(), this, componenteService, estructuraRecetaService,
-        			calculoRecetaService, inventarioService, categoriaService, platilloService);
+        			calculoRecetaService, inventarioService, categoriaService, platilloService,ventaService);
         	cerrarLogin();
-        } else if(Session.getRol().equals("cajero")) {
+        } else if(SessionUtilities.getRol().equals("cajero")) {
         	new HubVentaController(new HubVentaFrame(),menuCatalogoService,carritoService,ventaProductoService,categoriaService,this);
         	cerrarLogin();
         } else {

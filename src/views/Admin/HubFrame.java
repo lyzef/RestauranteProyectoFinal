@@ -26,6 +26,7 @@ import javax.swing.JScrollPane;
 import javax.swing.border.Border;
 import javax.swing.border.MatteBorder;
 
+import models.Venta;
 import utilidades.AppFont;
 import utilidades.GeneradorIconos;
 import utilidades.Paleta_Colores;
@@ -38,7 +39,9 @@ public class HubFrame extends JFrame{
 	public static final String SELLS = "SELLS";
 	public static final String MENU = "MENU";
 	public static final String RECIPE = "RECIPE";
+	public static final String VENTA = "VENTA";
 	
+	private JLabel nombre;
 	
 	private CardLayout cardLayout;
 	private JPanel panelPrincipal;
@@ -46,19 +49,20 @@ public class HubFrame extends JFrame{
 	private JLabel barraNavegacion;
 	private BotonHub botonLogOut;
 	
-	public UsersView userPanel;
-	public DashboardView dashboardPanel;
-	public InventoryView inventarioPanel;
-	public RecipeView recetasPanel; 
-	public MenuAdminView menuAdminPanel;
+	private UsersView userPanel;
+	private DashboardView dashboardPanel;
+	private InventoryView inventarioPanel;
+	private RecipeView recetasPanel; 
+	private MenuAdminView menuAdminPanel;
+	private VentaView ventaPanel;
 
-	public BotonHub botonUsuarios;
-	public BotonHub botonInventario;
-	public BotonHub botonReportes;
-	public BotonHub botonVentas;
-	public BotonHub botonDashboard;
-	public BotonHub botonMenu;
-	public BotonHub botonRecipe;
+	private BotonHub botonUsuarios;
+	private BotonHub botonInventario;
+	private BotonHub botonReportes;
+	private BotonHub botonVentas;
+	private BotonHub botonDashboard;
+	private BotonHub botonMenu;
+	private BotonHub botonRecipe;
 
 	public HubFrame() {
 		setSize(1400,900);
@@ -88,6 +92,7 @@ public class HubFrame extends JFrame{
 		panelPrincipal.add(crearInventario(),INVENTORY);
 		panelPrincipal.add(crearRecetas(),RECIPE);
 		panelPrincipal.add(crearMenu(),MENU);
+		panelPrincipal.add(crearVenta(),VENTA);
 		
 		//Layout en contenedor principal
 		contenedorPrincipal.setLayout(new GridBagLayout());
@@ -131,7 +136,7 @@ public class HubFrame extends JFrame{
 		barraNavegacion = new JLabel();
 		GeneradorIconos.aplicarIcono("/assets/image/lista.png", barraNavegacion, Paleta_Colores.TEXTO_PRINCIPAL.getColor());
 		
-		JLabel nombre = new JLabel("  Madero system");
+		nombre = new JLabel("  Madero's system");
 		nombre.setFont(AppFont.title());
 		nombre.setForeground(Paleta_Colores.TEXTO_PRINCIPAL.getColor());
 		
@@ -228,12 +233,20 @@ public class HubFrame extends JFrame{
 		return menuAdminPanel;
 	}
 	
+	public JPanel crearVenta() {
+		ventaPanel = new VentaView();
+		return ventaPanel;
+	}
+	
 	public void showView(String view) {
 		cardLayout.show(panelPrincipal, view);
 	}
 	
 	
 	//Getter y setters
+	public void setTextTitulo(String t) {
+		nombre.setText(" Madero's system - " + t);
+	}
 	
 	public JPanel getBotonUsuarios() {
 		return botonUsuarios;
@@ -277,6 +290,10 @@ public class HubFrame extends JFrame{
 	
 	public MenuAdminView getMenuAdminPanel() {
 		return menuAdminPanel;
+	}
+	
+	public VentaView getVentaPanel() {
+		return ventaPanel;
 	}
 
 	public void setDashboardPanel(DashboardView dashboardPanel) {

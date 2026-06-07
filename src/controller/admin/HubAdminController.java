@@ -17,8 +17,9 @@ import services.ComponenteService;
 import services.EstructuraRecetaService;
 import services.InventarioService;
 import services.PlatilloService;
+import services.VentaService;
 import tableFormat.UserTableFormat;
-import utilidades.Session;
+import utilidades.SessionUtilities;
 import views.*;
 import views.Admin.HubFrame;
 import views.Admin.MenuAdminView;
@@ -30,6 +31,7 @@ public class HubAdminController {
 	private InventarioController inventarioController;
 	private RecipeController recipeController;
 	private MenuAdminController menuController;
+	private VentaAdminController ventaAdminController;
 	
 	//Servicios
 	private ComponenteService componenteService;
@@ -38,12 +40,14 @@ public class HubAdminController {
 	private InventarioService inventarioService;
 	private CategoriaService categoriaService;
 	private PlatilloService platilloService;
+	private VentaService ventaService;
 	
 	
 	
 	public HubAdminController(HubFrame view, LoginController login, ComponenteService componenteService,
 			EstructuraRecetaService estructuraRecetaService, CalculoRecetaService calculoRecetaService,
-			InventarioService inventarioService, CategoriaService categoriaService, PlatilloService platilloService) {
+			InventarioService inventarioService, CategoriaService categoriaService, PlatilloService platilloService,
+			VentaService ventaService) {
 		this.view = view;
 		this.loginController = login;
 		this.componenteService = componenteService;
@@ -52,6 +56,7 @@ public class HubAdminController {
 		this.inventarioService = inventarioService;
 		this.categoriaService = categoriaService;
 		this.platilloService = platilloService;
+		this.ventaService = ventaService;
 		addListeners();
 		showDashboard();
 	}
@@ -94,6 +99,13 @@ public class HubAdminController {
 		    }
 		});
 		
+		view.getBotonVentas().addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				showVentas();
+		    }
+		});
+		
 		view.getBarraNavegacion().addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -121,6 +133,7 @@ public class HubAdminController {
 	
 	private void showDashboard() {
 		view.showView(HubFrame.DASHBOARD);
+		view.setTextTitulo("Dashboard");
 	}
 	
 	private void showUsers() {
@@ -128,6 +141,7 @@ public class HubAdminController {
 		if(userController == null) {
 			userController = new UserController(view.getUserPanel());
 		}
+		view.setTextTitulo("Gestor de usuarios");
 		view.showView(HubFrame.USERS);
 		
 	}
@@ -136,8 +150,8 @@ public class HubAdminController {
 		if(inventarioController == null) {
 			inventarioController = new InventarioController(view.getInventarioPanel(),componenteService,inventarioService);
 		}
-		
 		//Cargar datos
+		view.setTextTitulo("Gestor de Inventario");
 		view.showView(HubFrame.INVENTORY);
 		
 	}
@@ -146,6 +160,7 @@ public class HubAdminController {
 		if(recipeController == null) {
 			recipeController = new RecipeController(view.getRecipePanel(),estructuraRecetaService,componenteService,calculoRecetaService);
 		}
+		view.setTextTitulo("Recetas");
 		view.showView(HubFrame.RECIPE);
 	}
 	
@@ -154,7 +169,17 @@ public class HubAdminController {
 			menuController = new MenuAdminController(view.getMenuAdminPanel(),categoriaService,platilloService,
 					componenteService);
 		}
+		view.setTextTitulo("Configuracion del menu");
 		view.showView(HubFrame.MENU);
+	}
+	
+	private void showVentas() {
+		if(ventaAdminController == null) {
+			ventaAdminController = new VentaAdminController(ventaService,view.getVentaPanel());
+		}
+		view.setTextTitulo("Ventas");
+		ventaAdminController.cargarDatosDelDia();
+		view.showView(HubFrame.VENTA);
 	}
 
 }

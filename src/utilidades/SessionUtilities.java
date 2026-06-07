@@ -3,7 +3,7 @@ package utilidades;
 import models.User;
 
 //Clase con atributo estatica que permite conocer el TIPO de usuario ACTUAL
-public class Session {
+public class SessionUtilities {
 	
 	private static User currentUser;
 	

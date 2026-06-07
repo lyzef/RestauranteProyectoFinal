@@ -3,8 +3,7 @@ package models;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
-
-import models.MovimientoInventario.tipoMovimiento;
+import java.util.Calendar;
 
 public class Venta {
     private int id;
@@ -31,7 +30,7 @@ public class Venta {
                  tipoMetodoPago metodoPago, tipoPedido tipoPedidoVenta, String estado) {
         this.id = id;
         this.usuarioID = usuarioID;
-        this.fechaHora = fechaHora;
+        this.fechaHora = redondearMilisegundos(fechaHora);
         this.totalVenta = totalVenta;
         this.metodoPago = metodoPago;
         this.tipoPedidoVenta = tipoPedidoVenta;
@@ -60,17 +59,12 @@ public class Venta {
     }
     
     public void setFechaHora(Timestamp fechaHora) {
-        this.fechaHora = fechaHora;
+        this.fechaHora = redondearMilisegundos(fechaHora);
     }
     
     // Setter con LocalDateTime (más moderno)
     public void setFechaHora(LocalDateTime fechaHora) {
-        this.fechaHora = Timestamp.valueOf(fechaHora);
-    }
-    
-    // Setter con String (formato: "YYYY-MM-DD HH:MM:SS")
-    public void setFechaHora(String fechaHora) {
-        this.fechaHora = Timestamp.valueOf(fechaHora);
+        this.fechaHora = redondearMilisegundos(Timestamp.valueOf(fechaHora));
     }
     
     // Getter como LocalDateTime
@@ -148,6 +142,20 @@ public class Venta {
 
     public void setDetalles(List<DetalleVenta> detalles) {
         this.detalles = detalles;
+    }
+    
+    /**
+     * Redondea solo los milisegundos a 0
+     * Ejemplo: 2024-01-15 14:30:45.123 -> 2024-01-15 14:30:45.000
+     */
+    private Timestamp redondearMilisegundos(Timestamp timestamp) {
+        if (timestamp == null) return null;
+        
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(timestamp.getTime());
+        cal.set(Calendar.MILLISECOND, 0);
+        
+        return new Timestamp(cal.getTimeInMillis());
     }
     
     // Métodos útiles
