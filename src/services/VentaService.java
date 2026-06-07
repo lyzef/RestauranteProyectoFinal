@@ -3,7 +3,9 @@ package services;
 import java.sql.Connection;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import models.DetalleVenta;
 import models.Venta;
@@ -199,5 +201,58 @@ public class VentaService {
      */
     public boolean existeVenta(int id) throws Exception {
         return getVentaById(id) != null;
+    }
+    
+    public static class ResumenCocinaDTO {
+        public List<Venta> comandas = new ArrayList<>();
+        public int totalPendientes = 0;
+        public int totalEnProceso = 0;
+        .
+    }
+
+    /**
+     * Obtiene el panel general para la pantalla del Cocinero
+     */
+    public ResumenCocinaDTO getDashboardCocina() throws Exception {
+        ResumenCocinaDTO resumen = new ResumenCocinaDTO();
+        List<DetalleVenta> pendientes = detalleVentaRepo.getDetallesPendientes();
+        
+        // Usamos un mapa para agrupar los detalles por ID de Venta
+        
+        // 1
+        	// Hamburguesa
+        	// Pizza
+        
+        Map<Integer, Venta> mapaVentas = new java.util.LinkedHashMap<>();
+        
+        for (DetalleVenta det : pendientes) {
+            if (det.isEnProceso()) resumen.totalEnProceso++;
+            else if (det.isPendiente()) resumen.totalPendientes++;
+
+            Venta venta = mapaVentas.get(det.getVentaId());
+            if (venta == null) {
+                // Obtenemos los metadatos principales del ticket (sin traer todos los detalles)
+                venta = ventaRepo.getVentaById(det.getVentaId()); 
+                venta.setDetalles(new ArrayList<>()); // Inicializamos la lista vacía
+                mapaVentas.put(det.getVentaId(), venta);
+            }
+            // Agregamos SOLO los platos pendientes a este ticket
+            venta.getDetalles().add(det); 
+        }
+        
+        resumen.comandas.addAll(mapaVentas.values());
+        return resumen;
+ 
+    }
+
+    /**
+     * Acciones rápidas para los botones de la interfaz
+     */
+    public void iniciarPreparacionPlato(int idDetalle) throws Exception {
+        detalleVentaRepo.iniciarPreparacion(idDetalle);
+    }
+
+    public void completarPreparacionPlato(int idDetalle) throws Exception {
+        detalleVentaRepo.completarPreparacion(idDetalle);
     }
 }

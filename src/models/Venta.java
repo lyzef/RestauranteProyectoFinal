@@ -156,6 +156,12 @@ public class Venta {
         this.detalles = detalles;
     }
     
+    public String getTiempoTranscurrido() {
+        if (fechaHora == null) return "0 MIN";
+        long mins = (System.currentTimeMillis() - fechaHora.getTime()) / 60000;
+        return mins + " MIN";
+    }
+    
     /**
      * Redondea solo los milisegundos a 0
      * Ejemplo: 2024-01-15 14:30:45.123 -> 2024-01-15 14:30:45.000

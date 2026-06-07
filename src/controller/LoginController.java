@@ -3,6 +3,7 @@ package controller;
 import views.Login;
 import views.Admin.HubFrame;
 import views.AutoVenta.HubVentaFrame;
+import views.Cocina.VistaCocinero;
 import views.Dialog.UserFormDialog;
 import excepciones.InvalidContraseña;
 import excepciones.InvalidUser;
@@ -28,6 +29,7 @@ import javax.swing.*;
 
 import controller.admin.HubAdminController;
 import controller.autoVenta.HubVentaController;
+import controller.cocina.CocinaController;
 
 import java.awt.*;
 import java.sql.SQLException;
@@ -151,7 +153,10 @@ public class LoginController {
         } else if(SessionUtilities.getRol().equals("cajero")) {
         	new HubVentaController(new HubVentaFrame(),menuCatalogoService,carritoService,ventaProductoService,categoriaService,this);
         	cerrarLogin();
-        } else {
+        } else if(SessionUtilities.getRol().equals("cocinero")) {
+        	new CocinaController(new VistaCocinero(), ventaService);
+        	cerrarLogin();
+        }else {
         	JOptionPane.showMessageDialog(
                     view, 
                     "Acceso desconocido", 
