@@ -3,6 +3,9 @@ package models;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
+
+import models.DetalleVenta.EstadoCocina;
+
 import java.util.Calendar;
 
 public class Venta {
@@ -15,6 +18,7 @@ public class Venta {
     private String estado;
     
     private String nombreUsuario;
+    private EstadoCocina estadoCocina;
     private int cantidadProductos; 
     private int cantidadUnidades;
     
@@ -136,7 +140,15 @@ public class Venta {
         this.cantidadUnidades = cantidadUnidades;
     }
     
-    public List<DetalleVenta> getDetalles() {
+    public EstadoCocina getEstadoCocina() {
+		return estadoCocina;
+	}
+
+	public void setEstadoCocina(EstadoCocina estadoCocina) {
+		this.estadoCocina = estadoCocina;
+	}
+
+	public List<DetalleVenta> getDetalles() {
         return detalles;
     }
 

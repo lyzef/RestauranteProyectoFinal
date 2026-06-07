@@ -14,7 +14,9 @@ import ca.odell.glazedlists.matchers.MatcherEditor;
 import ca.odell.glazedlists.swing.AdvancedTableModel;
 import ca.odell.glazedlists.swing.GlazedListsSwing;
 import ca.odell.glazedlists.swing.TextComponentMatcherEditor;
+import controller.dialogs.InventarioFormController;
 import controller.dialogs.RecetaFormController;
+import controller.dialogs.tipoEdicionForm;
 import models.ComponenteIngredienteReceta;
 import services.CalculoRecetaService;
 import services.ComponenteService;
@@ -23,6 +25,7 @@ import tableFormat.ComponenteTableFormat;
 import tableFormat.filtros.ComponenteTextFilterator;
 import tableFormat.filtros.ComponenteTextFilterator.TipoFiltroComponente;
 import views.Admin.RecipeView;
+import views.Dialog.InventarioDialog;
 import views.Dialog.RecetaDialog;
 
 public class RecipeController {
@@ -72,7 +75,7 @@ public class RecipeController {
 		    }
 		});
 		
-		view.getBtnVer().addMouseListener(new MouseAdapter() {
+		view.getBtnVerIngredientes().addMouseListener(new MouseAdapter() {
 			@Override
 		    public void mousePressed(MouseEvent e) {
 				int row = view.getSelectedRow();
@@ -81,6 +84,57 @@ public class RecipeController {
 	                return;
 	            }
             	verReceta(tableModelComponentes.getElementAt(row)); //MUY IMPORTANTE, la lista filtrada y table model controla la tabla
+	           
+		    }
+		});
+		
+		// Modificar recetas
+		
+		view.getBtnCrear().addMouseListener(new MouseAdapter() {
+			@Override
+		    public void mousePressed(MouseEvent e) {
+				new InventarioFormController(new InventarioDialog(null), null,componenteService,tipoEdicionForm.CREARRECETA);
+		    }
+		});
+		
+		view.getBtnEditarReceta().addMouseListener(new MouseAdapter() {
+			@Override
+		    public void mousePressed(MouseEvent e) {
+				int row = view.getSelectedRow();
+	            if(row == -1) {
+	                JOptionPane.showMessageDialog(view, "Selecciona un elemento");
+	                return;
+	            }
+        		new InventarioFormController(new InventarioDialog(null), listaFiltradaComponentes.get(row),componenteService,tipoEdicionForm.EDITAR); //MUY IMPORTANTE, la lista filtrada controla la tabla
+		    }
+		});
+		
+		view.getBtnDelete().addMouseListener(new MouseAdapter() {
+			@Override
+		    public void mousePressed(MouseEvent e) {
+				int row = view.getSelectedRow();
+	            if(row == -1) {
+	                JOptionPane.showMessageDialog(view, "Selecciona un elemento");
+	                return;
+	            }
+            	try {
+					componenteService.deleteComponente(listaFiltradaComponentes.get(row));
+				} catch (Exception e1) {
+					JOptionPane.showMessageDialog(view, "Objeto no eliminado");
+					System.out.println("Objeto no eliminado ... " + e);
+				}
+		    }
+		});
+		
+		view.getBtnVer().addMouseListener(new MouseAdapter() {
+			@Override
+		    public void mousePressed(MouseEvent e) {
+				int row = view.getSelectedRow();
+	            if(row == -1) {
+	                JOptionPane.showMessageDialog(view, "Selecciona un elemento");
+	                return;
+	            }
+            	new InventarioFormController(new InventarioDialog(null), listaFiltradaComponentes.get(row),componenteService,tipoEdicionForm.VER);
 	           
 		    }
 		});

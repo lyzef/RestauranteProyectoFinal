@@ -11,6 +11,7 @@ import java.util.List;
 
 import config.DatabaseConnection;
 import models.Venta;
+import models.DetalleVenta.EstadoCocina;
 import models.Venta.tipoMetodoPago;
 import models.Venta.tipoPedido;
 
@@ -47,8 +48,7 @@ public class VentasRepository {
     
     /*
      * Guardamos con una conexion personalizada
-     * 
-     * Usada en venta de productos con commit manual
+     * * Usada en venta de productos con commit manual
      */
     public int saveVenta(Venta venta, Connection connection) throws Exception {
         String sql = "INSERT INTO ventas (usuario_id, fecha_hora, total_venta, metodo_pago, tipo_pedido, estado) "
@@ -77,11 +77,12 @@ public class VentasRepository {
         }
     }
     
-    // Obtener venta por ID con cantidad de productos y unidades
+    // Obtener venta por ID con cantidad de productos, unidades y estado de cocina
     public Venta getVentaById(int id) throws Exception {
         String sql = "SELECT v.*, u.nombre as nombre_usuario, "
                    + "COUNT(DISTINCT dv.id) as cantidad_productos, "
-                   + "COALESCE(SUM(dv.cantidad), 0) as cantidad_unidades "
+                   + "COALESCE(SUM(dv.cantidad), 0) as cantidad_unidades, "
+                   + "MAX(dv.estado_cocina) as estado_cocina " // Trae el estado predominante/último de la cocina
                    + "FROM ventas v "
                    + "LEFT JOIN usuarios u ON v.usuario_id = u.id "
                    + "LEFT JOIN detalle_venta dv ON v.id = dv.venta_id "
@@ -104,12 +105,13 @@ public class VentasRepository {
         return null;
     }
     
-    // Obtener todas las ventas con cantidad de productos y unidades
+    // Obtener todas las ventas con cantidad de productos, unidades y estado de cocina
     public List<Venta> getAllVentas() throws Exception {
         List<Venta> lista = new ArrayList<>();
         String sql = "SELECT v.*, u.nombre as nombre_usuario, "
                    + "COUNT(DISTINCT dv.id) as cantidad_productos, "
-                   + "COALESCE(SUM(dv.cantidad), 0) as cantidad_unidades "
+                   + "COALESCE(SUM(dv.cantidad), 0) as cantidad_unidades, "
+                   + "MAX(dv.estado_cocina) as estado_cocina "
                    + "FROM ventas v "
                    + "LEFT JOIN usuarios u ON v.usuario_id = u.id "
                    + "LEFT JOIN detalle_venta dv ON v.id = dv.venta_id "
@@ -134,7 +136,8 @@ public class VentasRepository {
         List<Venta> lista = new ArrayList<>();
         String sql = "SELECT v.*, u.nombre as nombre_usuario, "
                    + "COUNT(DISTINCT dv.id) as cantidad_productos, "
-                   + "COALESCE(SUM(dv.cantidad), 0) as cantidad_unidades "
+                   + "COALESCE(SUM(dv.cantidad), 0) as cantidad_unidades, "
+                   + "MAX(dv.estado_cocina) as estado_cocina "
                    + "FROM ventas v "
                    + "LEFT JOIN usuarios u ON v.usuario_id = u.id "
                    + "LEFT JOIN detalle_venta dv ON v.id = dv.venta_id "
@@ -164,7 +167,8 @@ public class VentasRepository {
         List<Venta> lista = new ArrayList<>();
         String sql = "SELECT v.*, u.nombre as nombre_usuario, "
                    + "COUNT(DISTINCT dv.id) as cantidad_productos, "
-                   + "COALESCE(SUM(dv.cantidad), 0) as cantidad_unidades "
+                   + "COALESCE(SUM(dv.cantidad), 0) as cantidad_unidades, "
+                   + "MAX(dv.estado_cocina) as estado_cocina "
                    + "FROM ventas v "
                    + "LEFT JOIN usuarios u ON v.usuario_id = u.id "
                    + "LEFT JOIN detalle_venta dv ON v.id = dv.venta_id "
@@ -188,12 +192,13 @@ public class VentasRepository {
         return lista;
     }
     
-    // Obtener ventas por estado
+    // Obtener ventas por estado de la venta
     public List<Venta> getVentasByEstado(String estado) throws Exception {
         List<Venta> lista = new ArrayList<>();
         String sql = "SELECT v.*, u.nombre as nombre_usuario, "
                    + "COUNT(DISTINCT dv.id) as cantidad_productos, "
-                   + "COALESCE(SUM(dv.cantidad), 0) as cantidad_unidades "
+                   + "COALESCE(SUM(dv.cantidad), 0) as cantidad_unidades, "
+                   + "MAX(dv.estado_cocina) as estado_cocina "
                    + "FROM ventas v "
                    + "LEFT JOIN usuarios u ON v.usuario_id = u.id "
                    + "LEFT JOIN detalle_venta dv ON v.id = dv.venta_id "
@@ -292,6 +297,13 @@ public class VentasRepository {
         venta.setNombreUsuario(rs.getString("nombre_usuario"));
         venta.setCantidadProductos(rs.getInt("cantidad_productos")); // número de detalles venta
         venta.setCantidadUnidades(rs.getInt("cantidad_unidades"));   // suma total de cantidades
+        
+        String estadoCocinaDB = rs.getString("estado_cocina");
+        if (estadoCocinaDB != null) {
+            venta.setEstadoCocina(EstadoCocina.fromString(estadoCocinaDB));
+        } else {
+            venta.setEstadoCocina(EstadoCocina.PENDIENTE); 
+        }
         
         return venta;
     }

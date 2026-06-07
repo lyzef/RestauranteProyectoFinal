@@ -11,6 +11,7 @@ import javax.swing.event.ListSelectionListener;
 import ca.odell.glazedlists.BasicEventList;
 import ca.odell.glazedlists.EventList;
 import ca.odell.glazedlists.FilterList;
+import ca.odell.glazedlists.matchers.Matcher;
 import ca.odell.glazedlists.matchers.MatcherEditor;
 import ca.odell.glazedlists.swing.AdvancedTableModel;
 import ca.odell.glazedlists.swing.DefaultEventComboBoxModel;
@@ -18,6 +19,7 @@ import ca.odell.glazedlists.swing.GlazedListsSwing;
 import ca.odell.glazedlists.swing.TextComponentMatcherEditor;
 import controller.dialogs.InventarioFormController;
 import controller.dialogs.NewMovementDialogController;
+import controller.dialogs.tipoEdicionForm;
 import models.ComponenteIngredienteReceta;
 import models.MovimientoInventario;
 import models.MovimientoInventario.tipoMovimiento;
@@ -94,7 +96,7 @@ public class InventarioController {
 			@Override
 		    public void mousePressed(MouseEvent e) {
 				if(tablaInventarioDesplegada) {
-					openFormComponente(null);
+					new InventarioFormController(new InventarioDialog(null), null,componenteService,tipoEdicionForm.CREAR);
 				} else {
 					JOptionPane.showMessageDialog(view, "Use el botón de nuevo movimiento para agregar movimientos");
 				}
@@ -111,7 +113,7 @@ public class InventarioController {
 	            }
 	            
 	            if(tablaInventarioDesplegada) {
-	            	openFormComponente(listaFiltradaComponentes.get(row)); //MUY IMPORTANTE, la lista filtrada controla la tabla
+	            	new InventarioFormController(new InventarioDialog(null), listaFiltradaComponentes.get(row),componenteService,tipoEdicionForm.EDITAR); //MUY IMPORTANTE, la lista filtrada controla la tabla
 	            } else {
 	            	JOptionPane.showMessageDialog(view, "Los movimientos no se pueden editar");
 	            }
@@ -150,7 +152,7 @@ public class InventarioController {
 	            }
 	            
 	            if(tablaInventarioDesplegada) {
-	            	new InventarioFormController(new InventarioDialog(null), listaFiltradaComponentes.get(row), false);
+	            	new InventarioFormController(new InventarioDialog(null), listaFiltradaComponentes.get(row),componenteService,tipoEdicionForm.VER);
 	            }
 		    }
 		});
@@ -211,26 +213,6 @@ public class InventarioController {
 
 	}
 	
-	
-	private void openFormComponente(ComponenteIngredienteReceta componente) {
-        InventarioFormController dialog = new InventarioFormController(new InventarioDialog(null), componente, true);
-        
-        if(dialog.saved) {
-            ComponenteIngredienteReceta componenteSaved = dialog.getComponente();
-            
-            try {
-				if(componente == null) {
-					componenteService.saveComponente(componenteSaved);
-				} else {
-					componenteService.updateComponente(componenteSaved);
-				}
-			} catch(Exception e) {
-				e.printStackTrace();
-				JOptionPane.showMessageDialog(view, e.getMessage());
-			}
-		}	
-	}
-	
 	private void loadComponentesTable() {
 		try {
 			componenteService.cargarDatosDesdeBD();
@@ -257,7 +239,17 @@ public class InventarioController {
 			textFilteratorComponentes
 		);
 		
-		listaFiltradaComponentes = new FilterList<>(componenteService.getListaSoloLectura(), editorFiltroComponentes);
+		FilterList<ComponenteIngredienteReceta> listaSoloIngredientes = new FilterList<>(
+			    componenteService.getListaSoloLectura(),
+			    new Matcher<ComponenteIngredienteReceta>() {
+			        @Override
+			        public boolean matches(ComponenteIngredienteReceta item) {
+			            return item != null && !item.isReceta();
+			        }
+			    }
+		);
+		
+		listaFiltradaComponentes = new FilterList<>(listaSoloIngredientes, editorFiltroComponentes);
     	tableModelComponentes = GlazedListsSwing.eventTableModelWithThreadProxyList(
     		listaFiltradaComponentes, 
     		new ComponenteTableFormat()
@@ -302,11 +294,13 @@ public class InventarioController {
 			loadComponentesTable();
 			view.setTableModel(tableModelComponentes);
 			view.setBtnCambiarTablaText("Ver movimientos");;
+			view.setTituloTabla("Tabla de ingrediente");
 		} else {
 			// Cambiar a tabla de movimientos
 			loadMovimientoTable();
 			view.setTableModel(tableModelMovimientos);
 			view.setBtnCambiarTablaText("Ver Componentes");
+			view.setTituloTabla("Tabla de movimientos");
 		}
 		
 	}

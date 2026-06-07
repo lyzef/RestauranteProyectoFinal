@@ -50,6 +50,11 @@ public class MenuCatalogoService {
     		return receta.getStockActual() >= receta.getStockMinimoBloqueo() ? true : false;
     	}
     	
+    	// Si no esta bloqueda, no es inventariable y no es una receta es un INSUMO NO INVENTARIABLE
+    	if(!receta.isReceta()) {
+    		return true;
+    	}
+    	
     	//Si no es inventariable entonces obtenemos sus hijos y quitamos su stock
         List<EstructuraReceta> hijos = estructuraService.getHijosByID(idReceta);
         

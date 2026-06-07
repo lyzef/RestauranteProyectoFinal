@@ -47,6 +47,8 @@ public class InventoryView extends JPanel{
     BarraBusquedaFiltro barraBusquedaConFiltro;
     
     //Modificadores de tabla
+    JLabel tituloTabla;
+    
     private JPanel btnMovimientoInventariable;
     private JPanel btnRegistrarProduccion;
     private JPanel btnCambiarTabla;
@@ -125,11 +127,11 @@ public class InventoryView extends JPanel{
 		panelTitulo.setOpaque(false);
 		panelTitulo.setLayout(new BoxLayout(panelTitulo, BoxLayout.X_AXIS));
 		
-		JLabel titulo = new JLabel("Tabla de insumos");
-		titulo.setFont(AppFont.title());
-		titulo.setForeground(Paleta_Colores.TEXTO_PRINCIPAL.getColor());
+		tituloTabla = new JLabel("Tabla de insumos");
+		tituloTabla.setFont(AppFont.title());
+		tituloTabla.setForeground(Paleta_Colores.TEXTO_PRINCIPAL.getColor());
 		
-		panelTitulo.add(titulo);
+		panelTitulo.add(tituloTabla);
 		
 		//Acciones
 		JPanel panelAcciones = new JPanel();
@@ -326,6 +328,10 @@ public class InventoryView extends JPanel{
 	
 	public void setBtnCambiarTablaText (String t) {
 		((BotonPersonalizado) btnCambiarTabla).setTexto(t);;
+	}
+
+	public void setTituloTabla(String tituloTabla) {
+		this.tituloTabla.setText(tituloTabla);
 	}
     
 	

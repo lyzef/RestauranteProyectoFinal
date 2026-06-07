@@ -240,7 +240,7 @@ public class HubVentaFrame extends JFrame {
         btn.setBackground(COLOR_CARD);
         btn.setBorder(BorderFactory.createLineBorder(new Color(60, 80, 110), 1));
         btn.setFocusPainted(false);
-        btn.setPreferredSize(new Dimension(34, 34));
+        btn.setPreferredSize(new Dimension(25, 25));
         btn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         return btn;
     }

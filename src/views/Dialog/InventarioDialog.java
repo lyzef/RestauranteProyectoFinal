@@ -216,8 +216,12 @@ public class InventarioDialog extends JDialog{
 		return listaDePreguntas;
 	}
 
-	public Boolean getEsReceta() {
+	public Boolean getEsRecetaBoolean() {
 		return esReceta.isSelected();
+	}
+	
+	public JCheckBox getEsReceta() {
+		return esReceta;
 	}
 
 	public Boolean getDisponibilidadManual() {

@@ -8,42 +8,53 @@ import javax.swing.JOptionPane;
 import controller.PreguntaController;
 import excepciones.invalidInput;
 import models.ComponenteIngredienteReceta;
+import services.ComponenteService;
+import services.InventarioService;
 import utilidades.ValidadorEntradasTexto;
 import utilidades.views.PanelTipoPreguntaUtil;
 import views.Dialog.InventarioDialog;
 
+
 public class InventarioFormController {
 	private InventarioDialog view;
 	private ComponenteIngredienteReceta componente;
-	private boolean editable;
-	public boolean saved;
+	private ComponenteService componenteService;
+	private tipoEdicionForm tipoEdicion;
 	
-	public InventarioFormController(InventarioDialog view , ComponenteIngredienteReceta componente, boolean editable) {
+	public InventarioFormController(InventarioDialog view , ComponenteIngredienteReceta componente,ComponenteService componenteService ,tipoEdicionForm tipoEdicion) {
 		this.view = view;
 		this.componente = componente;
-		this.editable = editable;
+		this.tipoEdicion = tipoEdicion;
+		this.componenteService = componenteService;
 		
-		if(componente != null) {
+		// Configuración de títulos según el tipo de edición
+		if(tipoEdicion == tipoEdicionForm.EDITAR) {
 			view.setTitulo("Modificar componente");
-		} else {
+		} else if(tipoEdicion == tipoEdicionForm.CREAR) {
 			view.setTitulo("Crear componente");
+		} else if(tipoEdicion == tipoEdicionForm.CREARRECETA) {
+			//Siempre sera receta
+			view.getEsReceta().setSelected(true);
+			view.getEsReceta().setEnabled(false);
+			view.setTitulo("Crear receta");
+		} else if(tipoEdicion == tipoEdicionForm.VER) {
+			view.setTitulo("Ver componente");
 		}
 	
 		InitializeListeners();
 		loadForm();
 		
-		//Anadido de pregunta controller a pregunta
+		// Añadido de pregunta controller a pregunta
+		boolean esEditable = (tipoEdicion != tipoEdicionForm.VER);
+		
 		for(PanelTipoPreguntaUtil p: view.getListaDePreguntas()) {
-			if(editable) {
+			if(esEditable) {
 				PreguntaController.registrarPanel(p);
 			} else {
-				p.setEditable(editable); 
+				p.setEditable(esEditable); 
 			}
 		}
 		
-		if(editable == false) {
-			view.setTitulo("Ver componente");
-		}
 		
 		view.setVisible(true);
 	}
@@ -58,7 +69,6 @@ public class InventarioFormController {
 		view.addWindowListener(new WindowAdapter() {
 		    @Override
 		    public void windowClosing(WindowEvent e) {
-		    	
 		    	if(view.solicitarCierre("Cerrar formulario?") == JOptionPane.YES_OPTION) {
 					view.dispose();
 				}
@@ -68,16 +78,15 @@ public class InventarioFormController {
 		view.getBotonFinalizar().addActionListener(e -> {
 			endFormulario();
 		});
-		
 	}
 	
 	
 	private void endFormulario() {
-		if(editable == false) {
+		// Si solo es visualización, cerramos el formulario directamente
+		if(tipoEdicion == tipoEdicionForm.VER) {
 			view.dispose();
 			return;
 		}
-		
 		
 		view.setSubTitulo("");
 		
@@ -87,17 +96,14 @@ public class InventarioFormController {
 		}
 		
 		String tipoComponente = "ingrediente";
-		
-		if(view.getEsReceta()) {
+		if(view.getEsRecetaBoolean()) {
 			tipoComponente = "receta";
 		}
 		
 		if(view.solicitarCierre("Guardar " + tipoComponente) == JOptionPane.YES_OPTION) {
+			saveComponente();
 			view.dispose();
 		}
-		
-		saveComponente();
-		saved = true;
 	}
 	
 	private void loadForm() {
@@ -133,7 +139,7 @@ public class InventarioFormController {
 			componente = new ComponenteIngredienteReceta();
 			
 			componente.setNombre(view.getNombre());
-			componente.setEsReceta(view.getEsReceta());
+			componente.setEsReceta(view.getEsRecetaBoolean());
 			componente.setTipoComponente(view.getTipoComponente());
 			componente.setUnidadMedida(view.getUnidadMedida());
 			componente.setCostoUnitario(Double.parseDouble(view.getCostoUnitario()));
@@ -143,11 +149,22 @@ public class InventarioFormController {
 			componente.setStockMinimoAlerta(Double.parseDouble(view.getStockMinimoAlerta()));
 			componente.setDisponibilidadManual(view.getDisponibilidadManual());
 			componente.setEsInventariable(view.getEsInventariable());
+			
+			if(tipoEdicion == tipoEdicionForm.CREAR || tipoEdicion == tipoEdicionForm.CREARRECETA) {
+				try {
+					componenteService.saveComponente(componente);
+				} catch (Exception e) {
+					JOptionPane.showMessageDialog(view, "Componente no pudo ser guardado ..." + e.getMessage());
+				}
+			} else {
+				JOptionPane.showMessageDialog(view, "Error inesperado, no guardado");
+			}
+			
 			return;
 		}
 		//Existente
 		componente.setNombre(view.getNombre());
-		componente.setEsReceta(view.getEsReceta());
+		componente.setEsReceta(view.getEsRecetaBoolean());
 		componente.setTipoComponente(view.getTipoComponente());
 		componente.setUnidadMedida(view.getUnidadMedida());
 		componente.setCostoUnitario(Double.parseDouble(view.getCostoUnitario()));
@@ -157,6 +174,16 @@ public class InventarioFormController {
 		componente.setStockMinimoAlerta(Double.parseDouble(view.getStockMinimoAlerta()));
 		componente.setDisponibilidadManual(view.getDisponibilidadManual());
 		componente.setEsInventariable(view.getEsInventariable());
+		
+		if(tipoEdicion == tipoEdicionForm.EDITAR) {
+			try {
+				componenteService.updateComponente(componente);
+			} catch (Exception e) {
+				JOptionPane.showMessageDialog(view, "Componente no pudo ser actualizado ..." + e.getMessage());
+			}
+		} else {
+			JOptionPane.showMessageDialog(view, "Error inesperado, no actualizado");
+		}
 	}
 
 	public ComponenteIngredienteReceta getComponente() {
@@ -166,6 +193,5 @@ public class InventarioFormController {
 	public void setComponente(ComponenteIngredienteReceta componente) {
 		this.componente = componente;
 	}
-	
 	
 }

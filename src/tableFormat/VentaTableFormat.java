@@ -12,6 +12,7 @@ public class VentaTableFormat implements TableFormat<Venta>{
         "Fecha Hora",
         "Total",
         "Metodo de pago",
+        "Cocina",
         "Productos",
         "Unidades"
 	    };
@@ -35,8 +36,9 @@ public class VentaTableFormat implements TableFormat<Venta>{
             case 3: return c.getFechaHoraFormateada();
             case 4: return c.getTotalVenta();
             case 5: return c.getMetodoPago().toString();
-            case 6: return c.getCantidadProductos();
-            case 7: return c.getCantidadUnidades();
+            case 6: return c.getEstadoCocina().toString();
+            case 7: return c.getCantidadProductos();
+            case 8: return c.getCantidadUnidades();
             default: return null;
         }
     }

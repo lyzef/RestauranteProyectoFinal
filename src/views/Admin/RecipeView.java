@@ -33,7 +33,12 @@ public class RecipeView extends JPanel{
 	JPanel panelFormulario;
 	PanelPersonalizadoTabla panelTabla;
 	//Boton tabla
+	BotonPersonalizado btnCrear;
+	BotonPersonalizado btnEditarReceta;
 	BotonPersonalizado btnVer;
+	BotonPersonalizado btnDelete;
+	
+	BotonPersonalizado btnVerIngredientes;
 	BotonPersonalizado btnEdit;
 	
 	
@@ -84,8 +89,18 @@ public class RecipeView extends JPanel{
 		//Acciones
 		JPanel panelAcciones = new JPanel();
 		panelAcciones.setOpaque(false);
-        
-        
+		
+		btnVer = new BotonPersonalizado("Ver",Paleta_Colores.ACENTO_PRIMARIO.getColor());
+        btnCrear = new BotonPersonalizado("Añadir", Paleta_Colores.EXITO.getColor());
+        btnEditarReceta = new BotonPersonalizado("Editar", Paleta_Colores.ATENCION.getColor());
+        btnDelete = new BotonPersonalizado("Borrar", Paleta_Colores.URGENTE.getColor());
+		
+		panelAcciones.setOpaque(false);
+		panelAcciones.add(Box.createHorizontalGlue());
+		panelAcciones.add(btnCrear);
+		panelAcciones.add(btnEditarReceta);
+		panelAcciones.add(btnDelete);
+		panelAcciones.add(btnVer);
 	        
 		
 		//Busqueda
@@ -98,12 +113,12 @@ public class RecipeView extends JPanel{
 		
 		JPanel panelBotones = new JPanel();
 		panelBotones.setOpaque(false);
-		btnVer = new BotonPersonalizado("Ver",Paleta_Colores.ACENTO_PRIMARIO.getColor());
+		btnVerIngredientes = new BotonPersonalizado("Solo Ver",Paleta_Colores.ACENTO_PRIMARIO.getColor());
         btnEdit = new BotonPersonalizado("Modificar ingredientes", Paleta_Colores.ATENCION.getColor());
         
         panelBotones.add(Box.createHorizontalGlue());
         panelBotones.add(btnEdit);
-        panelBotones.add(btnVer);
+        panelBotones.add(btnVerIngredientes);
         
 		JPanel panelPrincipal = new PanelRedondeadoConMargen();
         panelPrincipal.setLayout(new GridBagLayout());
@@ -180,16 +195,32 @@ public class RecipeView extends JPanel{
 
 	//Getters y setters
 	
-	public BotonPersonalizado getBtnVer() {
-		return btnVer;
+	public BotonPersonalizado getBtnVerIngredientes() {
+		return btnVerIngredientes;
 	}
-
+	
 	public BotonPersonalizado getBtnEdit() {
 		return btnEdit;
 	}
 
+	public BotonPersonalizado getBtnCrear() {
+		return btnCrear;
+	}
+
+	public BotonPersonalizado getBtnEditarReceta() {
+		return btnEditarReceta;
+	}
+
+	public BotonPersonalizado getBtnVer() {
+		return btnVer;
+	}
+
+	public BotonPersonalizado getBtnDelete() {
+		return btnDelete;
+	}
+
 	public void setBtnVer(BotonPersonalizado btnVer) {
-		this.btnVer = btnVer;
+		this.btnVerIngredientes = btnVer;
 	}
 
 	public void setBtnEdit(BotonPersonalizado btnEdit) {
