@@ -282,6 +282,65 @@ public class VentasRepository {
         return 0;
     }
     
+    public double getTicketPromedioSemanaActual() throws Exception {
+        String sql = "SELECT COALESCE(ROUND(AVG(total_venta), 2), 0.0) AS ticket_promedio "
+                   + "FROM ventas "
+                   + "WHERE estado = 'PAGADO' "
+                   + "AND YEARWEEK(fecha_hora, 1) = YEARWEEK(NOW(), 1)";
+        
+        try (Connection connection = DatabaseConnection.getConnection();
+             PreparedStatement ps = connection.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            
+            if (rs.next()) {
+                return rs.getDouble("ticket_promedio");
+            }
+        } catch (SQLException e) {
+            throw new Exception("Error al consultar el ticket promedio de la semana actual: " + e.getMessage(), e);
+        }
+        return 0.0;
+    }
+    
+    public double getTiempoPromedioPreparacionSemanaActual() throws Exception {
+        String sql = "SELECT COALESCE(ROUND(AVG(TIMESTAMPDIFF(MINUTE, fecha_hora_inicio, fecha_hora_fin)), 2), 0.0) AS tiempo_promedio "
+                   + "FROM detalle_venta "
+                   + "WHERE estado_cocina = 'COMPLETADO' "
+                   + "AND fecha_hora_inicio IS NOT NULL "
+                   + "AND fecha_hora_fin IS NOT NULL "
+                   + "AND YEARWEEK(fecha_hora_fin, 1) = YEARWEEK(NOW(), 1)";
+        
+        try (Connection connection = DatabaseConnection.getConnection();
+             PreparedStatement ps = connection.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            
+            if (rs.next()) {
+                return rs.getDouble("tiempo_promedio");
+            }
+        } catch (SQLException e) {
+            throw new Exception("Error al consultar el tiempo promedio de preparación de la semana actual: " + e.getMessage(), e);
+        }
+        return 0.0;
+    }
+    
+    //Temporal este va en detalle ventas
+    public int getCantidadComandasPendientes() throws Exception {
+        String sql = "SELECT COUNT(*) as cantidad "
+                   + "FROM detalle_venta "
+                   + "WHERE estado_cocina = 'PENDIENTE'";
+        
+        try (Connection connection = DatabaseConnection.getConnection();
+             PreparedStatement ps = connection.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            
+            if (rs.next()) {
+                return rs.getInt("cantidad");
+            }
+        } catch (SQLException e) {
+            throw new Exception("Error al consultar la cantidad de comandas pendientes: " + e.getMessage(), e);
+        }
+        return 0;
+    }
+    
     // Método privado para crear objeto Venta desde ResultSet
     private Venta crearVenta(ResultSet rs) throws SQLException {
         Venta venta = new Venta();

@@ -333,6 +333,10 @@ public class InventoryView extends JPanel{
 	public void setTituloTabla(String tituloTabla) {
 		this.tituloTabla.setText(tituloTabla);
 	}
+
+	public JTable getTabla() {
+		return tabla;
+	}
     
 	
 	

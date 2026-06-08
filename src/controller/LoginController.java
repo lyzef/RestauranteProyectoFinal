@@ -154,7 +154,7 @@ public class LoginController {
         	new HubVentaController(new HubVentaFrame(),menuCatalogoService,carritoService,ventaProductoService,categoriaService,this);
         	cerrarLogin();
         } else if(SessionUtilities.getRol().equals("cocinero")) {
-        	new CocinaController(new VistaCocinero(), ventaService);
+        	new CocinaController(new VistaCocinero(), ventaService,this);
         	cerrarLogin();
         }else {
         	JOptionPane.showMessageDialog(

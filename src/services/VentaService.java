@@ -207,7 +207,6 @@ public class VentaService {
         public List<Venta> comandas = new ArrayList<>();
         public int totalPendientes = 0;
         public int totalEnProceso = 0;
-        .
     }
 
     /**
@@ -219,9 +218,9 @@ public class VentaService {
         
         // Usamos un mapa para agrupar los detalles por ID de Venta
         
-        // 1
-        	// Hamburguesa
-        	// Pizza
+        // ID 1 venta
+        	// Hamburguesa detalle
+        	// Pizza detalle
         
         Map<Integer, Venta> mapaVentas = new java.util.LinkedHashMap<>();
         

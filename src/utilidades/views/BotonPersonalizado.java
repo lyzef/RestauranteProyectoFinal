@@ -113,6 +113,7 @@ public class BotonPersonalizado extends PanelRedondeadoConMargen {
         etiquetaTexto.setText(texto);
     }
     
+    //No funciona del todo
     public void simularClick() {
         // Simular presión
         cambiarColorFondo(colorPresionado);

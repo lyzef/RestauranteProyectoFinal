@@ -26,6 +26,7 @@ import ca.odell.glazedlists.swing.TextComponentMatcherEditor;
 import controller.dialogs.CategoriaFormController;
 import models.DetalleVenta;
 import models.Venta;
+import repository.VentasRepository;
 import services.VentaService;
 import tableFormat.VentaTableFormat;
 import tableFormat.filtros.VentaTextFilterator;
@@ -38,6 +39,7 @@ public class VentaAdminController {
     //Servicios
     VentaService ventaService;
     VentaView view;
+    VentasRepository repo;
     
     //Propio de la tabla y busqueda
     private EventList<Venta> listaVentas = new BasicEventList<Venta>();
@@ -54,9 +56,11 @@ public class VentaAdminController {
         super();
         this.ventaService = ventaService;
         this.view = ventaView;
+        this.repo = new VentasRepository();
         
         crearTabla();
         addListeners();
+        crearModulosEstadisticaVenta();
     }
     
     private void addListeners() {
@@ -108,6 +112,18 @@ public class VentaAdminController {
 		});
     }
     
+    private void crearModulosEstadisticaVenta() {
+    	try {
+			view.getModuloTotalVentas().setValor(repo.getTotalVentasDelDia() + "");
+			view.getModuloCantidadVentasHoy().setValor(repo.getCantidadVentasDelDia() + "");
+			view.getModuloCantidadVentasHoy().setSubtitulo(repo.getCantidadComandasPendientes()+ " Pendientes ");
+			view.getModuloTicketPromedio().setValor(repo.getTicketPromedioSemanaActual() + "");
+			view.getModuloTiempoPromedioPreparacion().setValor(repo.getTiempoPromedioPreparacionSemanaActual()+"");
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(view, "Estadisticas no lograron ser cargadas");
+		}
+    }
+    
     private void cancelarVenta(Venta venta) {
     	try {
 			ventaService.cancelarVenta(venta.getId());
@@ -126,6 +142,7 @@ public class VentaAdminController {
     }
     
     private void buscarPorFecha() {
+    	crearModulosEstadisticaVenta();
     	Date fechaInicio = view.getFechaInicio();
     	Date fechaFinal = view.getFechaFin();
     	
@@ -181,7 +198,7 @@ public class VentaAdminController {
 			DetalleVenta detalleVenta = ventaConDetalles.getDetalles().getFirst();
 			SimpleDateFormat formateador = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 	        String fechaInicioConvertida = detalleVenta.getFechaHoraInicio() != null ? formateador.format(detalleVenta.getFechaHoraInicio()) : "Sin iniciar";
-	        String fechaFinalConvertida = detalleVenta.getFechaHoraInicio() != null ? formateador.format(detalleVenta.getFechaHoraFin()) : "Sin terminar";
+	        String fechaFinalConvertida = detalleVenta.getFechaHoraFin() != null ? formateador.format(detalleVenta.getFechaHoraFin()) : "Sin terminar";
 			
 			TicketVentaDialog ticketConDetalles = new TicketVentaDialog(null);
 			ticketConDetalles.setCajero(ventaConDetalles.getNombreUsuario());

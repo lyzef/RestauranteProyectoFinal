@@ -68,7 +68,7 @@ public class HubFrame extends JFrame{
 		setSize(1400,900);
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		setResizable(true);
-		setTitle("Formulario");
+		setTitle("Administracion");
 		setLocationRelativeTo(null);
 		
 		ImageIcon i = GeneradorIconos.cargarIcono("/assets/image/IconoApliacionPrincipal.jpg");
@@ -129,7 +129,6 @@ public class HubFrame extends JFrame{
 		Border margenEntrePanel = BorderFactory.createEmptyBorder(15, 20, 15, 20);
 		Border lineaInferior = new MatteBorder(0, 0, 1, 0, Paleta_Colores.CONTENEDORES.getColor());
 
-		// Combinamos: la línea va afuera y el margen adentro
 		barra.setBorder(BorderFactory.createCompoundBorder(lineaInferior, margenEntrePanel));
 		
 		barra.setBackground(Paleta_Colores.FONDO.getColor());
@@ -155,7 +154,6 @@ public class HubFrame extends JFrame{
 		Border margenEntrePanel = BorderFactory.createEmptyBorder(15, 20, 15, 20);
 		Border lineaInferior = new MatteBorder(0, 1, 0, 0, Paleta_Colores.CONTENEDORES.getColor());
 
-		// Combinamos: la línea va afuera y el margen adentro
 		panelLateral.setBorder(BorderFactory.createCompoundBorder(lineaInferior, margenEntrePanel));
 		
 		botonDashboard = new BotonHub("Dashboard", "/assets/image/aplicaciones.png",colorIconos);

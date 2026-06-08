@@ -11,11 +11,13 @@ import javax.swing.event.ListSelectionListener;
 import ca.odell.glazedlists.BasicEventList;
 import ca.odell.glazedlists.EventList;
 import ca.odell.glazedlists.FilterList;
+import ca.odell.glazedlists.SortedList;
 import ca.odell.glazedlists.matchers.Matcher;
 import ca.odell.glazedlists.matchers.MatcherEditor;
 import ca.odell.glazedlists.swing.AdvancedTableModel;
 import ca.odell.glazedlists.swing.DefaultEventComboBoxModel;
 import ca.odell.glazedlists.swing.GlazedListsSwing;
+import ca.odell.glazedlists.swing.TableComparatorChooser;
 import ca.odell.glazedlists.swing.TextComponentMatcherEditor;
 import controller.dialogs.InventarioFormController;
 import controller.dialogs.NewMovementDialogController;
@@ -75,8 +77,13 @@ public class InventarioController {
 		
 		registrarListeners();
 		
+		inicializarEstadisticas();
+	}
+	
+	private void inicializarEstadisticas() {
 		try {
 			view.moduloItemsBajoStock.setValor(Integer.toString(repo.getItemsConBajoStock()));
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -196,6 +203,7 @@ public class InventarioController {
 			@Override
 		    public void mousePressed(MouseEvent e) {
 		        cambiarTabla();
+		        inicializarEstadisticas();
 		    }
 		});
 	}
@@ -268,10 +276,12 @@ public class InventarioController {
 		);
 		
 		listaFiltradaMovimientos = new FilterList<>(eventListMovimientos, editorFiltroMovimientos);
+		
     	tableModelMovimientos = GlazedListsSwing.eventTableModelWithThreadProxyList(
-    		listaFiltradaMovimientos, 
+    			listaFiltradaMovimientos, 
     		new MovimientoInventariotTableFormat()
     	);    	
+    	
     	return tableModelMovimientos;
 	}
 	  

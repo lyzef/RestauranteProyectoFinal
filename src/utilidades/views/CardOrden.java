@@ -213,5 +213,5 @@ public class CardOrden extends JPanel {
         g2.fill(new RoundRectangle2D.Float(0, 0, getWidth(), getHeight(), 14, 14));
         g2.dispose();
     }
-    .
+ 
 }

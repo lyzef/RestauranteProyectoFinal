@@ -50,8 +50,8 @@ public class Login extends JFrame {
         panelImagen.setBackground(colorFondo);
 
         try {
-            ImageIcon tacoOriginal = new ImageIcon("src/image/Logo.png"); 
-            Image tacoEscalado = tacoOriginal.getImage().getScaledInstance(300, 300, Image.SCALE_SMOOTH);
+            ImageIcon logo = GeneradorIconos.cargarIcono("/assets/image/logoPrincipal.png");
+            Image tacoEscalado = logo.getImage().getScaledInstance(300, 300, Image.SCALE_SMOOTH);
             JLabel labelTaco = new JLabel(new ImageIcon(tacoEscalado));
             labelTaco.setHorizontalAlignment(SwingConstants.CENTER);
             panelImagen.add(labelTaco);

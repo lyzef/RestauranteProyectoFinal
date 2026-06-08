@@ -30,10 +30,10 @@ import utilidades.views.PanelRedondeadoConMargen;
 public class VentaView extends JPanel{
 	
 	//Modulos superiores
-	public ModuloParaEstadistica moduloVentas;
-    public ModuloParaEstadistica moduloItemsBajoStock;
-    public ModuloParaEstadistica moduloDineroGastadoMensual;
-    public ModuloParaEstadistica moduloOrdenesHoy;
+	public ModuloParaEstadistica moduloTotalVentas;
+    public ModuloParaEstadistica moduloTicketPromedio;
+    public ModuloParaEstadistica moduloTiempoPromedioPreparacion;
+    public ModuloParaEstadistica moduloCantidadVentasHoy;
     
     JLabel titulo;
     
@@ -61,23 +61,23 @@ public class VentaView extends JPanel{
 		GridBagConstraints gbc = new GridBagConstraints();
 		
 		// Modulos superiores
-		moduloVentas = new ModuloParaEstadistica(
-            "Ventas hoy", "Sin datos", "Aumento en 0% desde ayer", 
+		moduloTotalVentas = new ModuloParaEstadistica(
+            "Total Ventas", "Sin datos", "Por hoy", 
             Paleta_Colores.ATENCION.getColor(), "/assets/image/dineroIcon.png"
         );
         
-		moduloItemsBajoStock = new ModuloParaEstadistica(
-            "Items con bajo stock", "Sin datos", "Atencion", 
-            Paleta_Colores.URGENTE.getColor(), "/assets/image/triangle-warning.png"
+		moduloTicketPromedio = new ModuloParaEstadistica(
+            "Ticket promedio", "Sin datos", "Por semana", 
+            Paleta_Colores.EXITO.getColor(), "/assets/image/receipt.png"
         );
         
-		moduloDineroGastadoMensual = new ModuloParaEstadistica(
-            "Gasto mensual", "Sin datos", "%00 mas que el anterior", 
-            Paleta_Colores.ACENTO_PRIMARIO.getColor(), "/assets/image/receipt.png"
+		moduloTiempoPromedioPreparacion = new ModuloParaEstadistica(
+            "T.Promedio de preparacion", "Sin datos", "Por semana", 
+            Paleta_Colores.ACENTO_PRIMARIO.getColor(), "/assets/image/hat-chef.png"
         );
 		
-		moduloOrdenesHoy = new ModuloParaEstadistica(
-            "Ordenes hoy", "Sin datos", "0 pendientes", 
+		moduloCantidadVentasHoy = new ModuloParaEstadistica(
+            "Cantidad ventas de hoy", "Sin datos", "0 pendientes", 
             Paleta_Colores.ATENCION.getColor(), "/assets/image/shopping-cart.png"
 	    );
 		
@@ -87,13 +87,13 @@ public class VentaView extends JPanel{
 		
 		// Tres modulos superiores
 		gbc.gridx = 0;
-		this.add(moduloVentas,gbc);
+		this.add(moduloTotalVentas,gbc);
 		gbc.gridx = 1;
-		this.add(moduloItemsBajoStock,gbc);
+		this.add(moduloTicketPromedio,gbc);
 		gbc.gridx = 2;
-		this.add(moduloDineroGastadoMensual,gbc);
+		this.add(moduloTiempoPromedioPreparacion,gbc);
 		gbc.gridx = 3;
-		this.add(moduloOrdenesHoy,gbc);
+		this.add(moduloCantidadVentasHoy,gbc);
 		
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.weighty = 0.1;
@@ -299,7 +299,23 @@ public class VentaView extends JPanel{
 	public void setTextoTituloTabla(String t){
 		titulo.setText(t);
 	}
-	
+
+	public ModuloParaEstadistica getModuloTotalVentas() {
+		return moduloTotalVentas;
+	}
+
+	public ModuloParaEstadistica getModuloTicketPromedio() {
+		return moduloTicketPromedio;
+	}
+
+	public ModuloParaEstadistica getModuloTiempoPromedioPreparacion() {
+		return moduloTiempoPromedioPreparacion;
+	}
+
+	public ModuloParaEstadistica getModuloCantidadVentasHoy() {
+		return moduloCantidadVentasHoy;
+	}
+
 	public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             JFrame frame = new JFrame("Prueba de VentaView");
